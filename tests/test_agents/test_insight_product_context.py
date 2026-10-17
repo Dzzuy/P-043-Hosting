@@ -1,0 +1,64 @@
+"""Product cards stay scoped to the car and policy date being discussed."""
+
+from types import SimpleNamespace
+
+from src.agents.copilot.insights import _extract_sentences, build_complementary_insights, build_product_insights
+from src.agents.copilot.state import Citation
+from src.knowledge.chunking import chunk_document
+from src.knowledge.schemas import KnowledgeDocument
+
+
+def document(identifier, model, kind, content, **overrides):
+    return KnowledgeDocument(
+        document_id=identifier, title=f"Thông tin {model}", product_model=model,
+        document_type=kind, content=content, effective_date="2026-09-01",
+        source="https://example.com/source", **overrides,
+    )
+
+
+def test_highlights_supplement_a_price_answer_with_the_same_products_specs_and_current_policy():
+    documents = [
+        document("specs", "VF 5", "product_specs", "Công suất tối đa\n134 hp\nDung lượng pin khả dụng\n37,23 kWh"),
+        document("wrong-car", "VF 9", "product_specs", "VF 9 có công suất 300 kW."),
+        document("current", "VF 5", "promotion", "VF 5 được miễn phí sạc đến hết năm 2027. Điều kiện: Áp dụng cho xe cá nhân."),
+        document("expired", "VF 5", "promotion", "VF 5 được giảm giá 90%.", expiry_date="2026-09-30", status="expired"),
+    ]
+    chunks = [chunk for doc in documents for chunk in chunk_document(doc)]
+    snapshot = SimpleNamespace(documents=documents, chunks={chunk.chunk_id: chunk for chunk in chunks})
+    cards = build_complementary_insights(
+        {"snapshot": snapshot, "product_models": ["VF 5"], "resolved_date": "2026-10-14"},
+        "VF 5 Plus có giá 496 triệu đồng.",
+    )
+    assert {card.citation.document_id for card in cards} == {"specs", "current"}
+    assert {card.category for card in cards} == {"highlight", "policy"}
+    assert "37,23 kWh" in next(card.summary for card in cards if card.category == "highlight")
+    assert "xe cá nhân" in next(card.essential_conditions for card in cards if card.category == "policy")
+
+
+def test_shared_price_table_never_publishes_other_cars_as_the_products_highlight():
+    citation = Citation(
+        citation_id="C1", chunk_id="prices", document_id="price-list", title="Bảng giá",
+        product_model="ALL", document_type="price_list",
+        excerpt="MSRP kèm pin (bao gồm VAT)\nVF 2 | 188.000.000 VNĐ\nVF 5 | Plus | 496.000.000 VNĐ",
+    )
+    cards = build_product_insights({"product_models": ["VF 5"]}, existing_citations=[citation])
+    assert len(cards) == 1
+    assert cards[0].category == "policy" and cards[0].product_model == "VF 5"
+    assert "496.000.000" in cards[0].summary and "188.000.000" not in cards[0].summary
+    assert cards[0].citation.excerpt == citation.excerpt
+
+
+def test_numeric_values_and_decimal_commas_survive_sentence_cleanup():
+    assert _extract_sentences("326,4 km mỗi lần sạc. Pin 37,23 kWh.") == [
+        "326,4 km mỗi lần sạc.", "Pin 37,23 kWh.",
+    ]
+
+
+def test_policy_conditions_keep_the_complete_numeric_limit():
+    citation = Citation(
+        citation_id="C1", chunk_id="warranty", document_id="warranty", title="Bảo hành VF 5",
+        product_model="VF 5", document_type="policy",
+        excerpt="VF 5 được bảo hành 7 năm hoặc 160.000 km, tùy điều kiện nào đến trước.",
+    )
+    card = build_product_insights({"product_models": ["VF 5"]}, existing_citations=[citation])[0]
+    assert "160.000 km" in card.essential_conditions

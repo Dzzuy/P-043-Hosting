@@ -27,7 +27,7 @@ class CapturingEvaluationModel:
 
 @pytest.fixture
 def scenario():
-    return ScenarioRepository(SCENARIOS).get("SCENARIO_01_VF5_TAXI")
+    return ScenarioRepository(SCENARIOS).get("SCENARIO_01_VF5_TAXI").model_copy(update={"policy_expectations": []})
 
 
 @pytest.fixture
@@ -397,3 +397,155 @@ async def test_active_session_cannot_be_evaluated(scenario, completed_state):
 
     with pytest.raises(EvaluationError, match="active role-play"):
         await evaluator.evaluate(scenario, completed_state, approved_evidence())
+
+
+@pytest.mark.asyncio
+async def test_config_context_and_deterministic_metadata(scenario, completed_state, caplog):
+    output = evaluation_output()
+    output["recommended_next_practice"]["target_id"] = "missing-scenario"
+    model = CapturingEvaluationModel(output)
+    completed_state.__dict__["closing_outcome"] = "close"
+    result = await RoleplayEvaluator(model, judge_model="configured-judge").evaluate(
+        scenario, completed_state, approved_evidence()
+    )
+    context = model.calls[0]["context"]
+    assert all("ideal_sales_response" not in item for item in context["scenario"]["objections"])
+    assert "acceptable_outcomes" in context["scenario"]
+    assert "policy_expectations" in context["scenario"]
+    assert result.closing_outcome == "close"
+    assert result.closing_outcome_label == scenario.acceptable_outcomes[0].label
+    assert result.judge_model == "configured-judge"
+    assert result.recommended_next_practice is None
+    assert "missing-scenario" in caplog.text
+
+
+@pytest.mark.asyncio
+async def test_misconduct_caps_scores(scenario, completed_state):
+    completed_state.__dict__["termination_status"] = "advisor_misconduct"
+    result = await RoleplayEvaluator(CapturingEvaluationModel(evaluation_output())).evaluate(
+        scenario, completed_state, approved_evidence()
+    )
+    assert all(item.score is None or item.score == 1 for item in result.evaluations)
+    assert "sai phạm" in result.summary_weaknesses[0]
+
+
+@pytest.mark.asyncio
+async def test_expected_policies_cannot_be_unassessed(scenario, completed_state):
+    scenario.policy_expectations = ScenarioRepository().get(scenario.scenario_id).policy_expectations
+    with pytest.raises(EvaluationError, match="policy_accuracy must be assessed"):
+        await RoleplayEvaluator(CapturingEvaluationModel(evaluation_output())).evaluate(
+            scenario, completed_state, approved_evidence()
+        )
+
+
+@pytest.mark.asyncio
+async def test_one_turn_misconduct_allows_unassessed_policy(scenario, completed_state):
+    scenario.policy_expectations = ScenarioRepository().get(scenario.scenario_id).policy_expectations
+    completed_state.termination_status = TerminationStatus.ADVISOR_MISCONDUCT
+    completed_state.messages = [RoleplayMessage(message_id="advisor-1", role="advisor", content="Đồ ngu")]
+    completed_state.factual_claims = []
+    output = evaluation_output()
+    output["evaluations"][0]["evidence"][0]["quote"] = "Đồ ngu"
+    output["factual_findings"] = []
+    result = await RoleplayEvaluator(CapturingEvaluationModel(output)).evaluate(scenario, completed_state, [])
+    assert result.evaluations[3].score is None
+
+
+@pytest.mark.asyncio
+async def test_policy_requirement_retries_with_specific_correction(scenario, completed_state):
+    scenario.policy_expectations = ScenarioRepository().get(scenario.scenario_id).policy_expectations
+
+    class CorrectingModel(CapturingEvaluationModel):
+        async def evaluate(self, *, system_prompt, context):
+            self.calls.append(context.copy())
+            output = evaluation_output()
+            if len(self.calls) == 2:
+                policy = next(item for item in output["evaluations"] if item["criterion"] == "policy_accuracy")
+                policy.update(
+                    status="assessed",
+                    score=1,
+                    evidence=[{"message_id": "advisor-2", "quote": completed_state.messages[-1].content}],
+                )
+            return output
+
+    model = CorrectingModel(None)
+    await RoleplayEvaluator(model).evaluate(scenario, completed_state, approved_evidence())
+    assert len(model.calls) == 2
+    assert "policy_accuracy" in model.calls[1]["correction_required"]
+
+
+@pytest.mark.asyncio
+async def test_no_policy_discussion_allows_unassessed_or_evidenced_missed_opportunity(scenario, completed_state):
+    scenario.policy_expectations = ScenarioRepository().get(scenario.scenario_id).policy_expectations
+    completed_state.messages[-1].content = "Anh có muốn đặt lịch lái thử không?"
+    completed_state.factual_claims = []
+    output = evaluation_output()
+    output["factual_findings"] = []
+    model = CapturingEvaluationModel(output)
+    await RoleplayEvaluator(model).evaluate(scenario, completed_state, [])
+    policy = next(item for item in output["evaluations"] if item["criterion"] == "policy_accuracy")
+    policy.update(
+        status="assessed",
+        score=1,
+        evidence=[{"message_id": "advisor-2", "quote": completed_state.messages[-1].content}],
+    )
+    result = await RoleplayEvaluator(model).evaluate(scenario, completed_state, [])
+    assert next(item for item in result.evaluations if item.criterion is CriterionType.POLICY_ACCURACY).score == 1
+
+
+@pytest.mark.asyncio
+async def test_current_policy_context_uses_resolver_and_session_date(scenario, completed_state):
+    from datetime import UTC, date, datetime
+
+    from src.agents.roleplay.contracts import PolicyExpectation
+    from src.integrations.practice_policy import ResolvedPolicy, ResolvedPolicySource
+
+    expectation = PolicyExpectation(
+        policy_id="current",
+        level="expected",
+        topic="Chính sách hiện hành",
+        lookup={"query": "Chính sách", "document_type": "policy", "product_model": "ALL"},
+    )
+    scenario = scenario.model_copy(update={"policy_expectations": [expectation]})
+    completed_state.created_at = datetime(2026, 10, 1, 18, tzinfo=UTC)
+
+    class Resolver:
+        def resolve(self, supplied_scenario, target_date):
+            assert supplied_scenario is scenario
+            assert target_date == date(2026, 10, 2)
+            return [
+                ResolvedPolicy(
+                    policy_id="current",
+                    level="expected",
+                    topic=expectation.topic,
+                    status="found",
+                    sources=[
+                        ResolvedPolicySource(
+                            document_id="policy-a", version="2026.1", quote=approved_evidence()[0].content
+                        )
+                    ],
+                )
+            ]
+
+    output = evaluation_output()
+    policy_score = next(item for item in output["evaluations"] if item["criterion"] == "policy_accuracy")
+    policy_score.update(
+        status="assessed", score=2, evidence=[{"message_id": "advisor-2", "quote": "Chính sách A đang áp dụng"}]
+    )
+    model = CapturingEvaluationModel(output)
+    result = await RoleplayEvaluator(model, policy_resolver=Resolver()).evaluate(
+        scenario,
+        completed_state,
+        approved_evidence(),
+    )
+    context = model.calls[0]["context"]
+    assert context["current_policy_evidence"][0]["sources"][0]["document_id"] == "policy-a"
+    assert context["scenario"]["policy_expectations"] == [
+        {
+            "policy_id": "current",
+            "level": "expected",
+            "topic": "Chính sách hiện hành",
+            "requires_eligibility_check": False,
+        }
+    ]
+    assert result.factual_findings[0].status == "supported"

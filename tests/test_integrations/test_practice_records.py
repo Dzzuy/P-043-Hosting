@@ -63,6 +63,26 @@ async def test_history_is_scoped_to_advisor_and_retains_every_attempt(tmp_path):
 
 
 @pytest.mark.asyncio
+async def test_saved_pending_attempt_survives_repository_restart_and_can_be_retried(tmp_path):
+    url = f"sqlite:///{tmp_path / 'records.db'}"
+    records = SQLPracticeRecordsRepository(url)
+    await records.register("attempt-1", "scenario-1", "advisor-a")
+    await records.mark_evaluation_pending("attempt-1")
+
+    reopened = SQLPracticeRecordsRepository(url)
+    history = await reopened.history("advisor-a")
+    assert len(history) == 1
+    assert history[0].completed_at is not None
+    assert history[0].evaluation_status.value == "pending"
+
+    await reopened.mark_evaluation_failed("attempt-1")
+    assert (await reopened.history("advisor-a"))[0].evaluation_status.value == "failed"
+    await reopened.mark_evaluation_pending("attempt-1")
+    await reopened.complete("attempt-1", draft("attempt-1"))
+    assert (await reopened.history("advisor-a"))[0].evaluation_status.value == "complete"
+
+
+@pytest.mark.asyncio
 async def test_manager_queue_shows_latest_unreviewed_per_advisor_scenario(tmp_path):
     records = SQLPracticeRecordsRepository(f"sqlite:///{tmp_path / 'records.db'}")
     for session_id in ("attempt-1", "attempt-2"):

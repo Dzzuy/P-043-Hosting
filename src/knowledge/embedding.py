@@ -2,7 +2,9 @@ import logging
 
 from langchain_core.embeddings import Embeddings
 
+from src.knowledge.chunking import chunk_embedding_text
 from src.knowledge.schemas import KnowledgeChunk
+from src.observability import span
 from src.services.llm import get_embeddings
 
 logger = logging.getLogger(__name__)
@@ -12,6 +14,17 @@ class KnowledgeEmbeddingService:
     """Service tạo vector embedding chuẩn 1536 chiều (mặc định OpenAI text-embedding-3-small)."""
 
     def __init__(self, embeddings: Embeddings | None = None):
+        from src.config import get_settings
+        from src.knowledge.index_readiness import embedding_identity
+
+        self.provenance = embedding_identity(get_settings())
+        if embeddings is not None:
+            self.provenance = {
+                "provider": "hash" if hasattr(embeddings, "dimension") else "custom",
+                "model": get_settings().embedding_model_name
+                if hasattr(embeddings, "dimension")
+                else getattr(embeddings, "model", "unknown"),
+            }
         self.embeddings = embeddings or get_embeddings()
 
     @property
@@ -35,12 +48,13 @@ class KnowledgeEmbeddingService:
         if not chunks:
             return []
         # Crawled tables may omit the model name inside a chunk; retain its identity in the vector.
-        texts = [f"{c.metadata.title}\n{c.metadata.product_model}\n{c.content}" for c in chunks]
+        texts = [chunk_embedding_text(c) for c in chunks]
         return self.embeddings.embed_documents(texts)
 
     def embed_query(self, query: str) -> list[float]:
         """Mã hóa câu hỏi truy vấn của người dùng thành vector."""
-        return self.embeddings.embed_query(query)
+        with span("embedding.query", provider=self.provenance.get("provider"), model=self.provenance.get("model")):
+            return self.embeddings.embed_query(query)
 
     def embed_texts(self, texts: list[str]) -> list[list[float]]:
         """Mã hóa danh sách chuỗi văn bản thành vector."""

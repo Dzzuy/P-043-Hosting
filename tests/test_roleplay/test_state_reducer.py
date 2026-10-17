@@ -169,3 +169,30 @@ def test_trust_and_interest_levels_stay_within_bounds(initial_state, scenario):
 
     assert updated.trust_level == 1
     assert updated.interest_level == 1
+
+
+@pytest.mark.parametrize(
+    "unsafe,finish,expected",
+    [
+        (False, False, TerminationStatus.DROPPED_OUT),
+        (False, True, TerminationStatus.ADVISOR_ENDED),
+        (True, True, TerminationStatus.ADVISOR_MISCONDUCT),
+    ],
+)
+def test_off_topic_termination_precedence(initial_state, scenario, unsafe, finish, expected):
+    initial_state.consecutive_off_topic_turns = 1
+    initial_state.turn_count = initial_state.max_turns - 1
+
+    updated = apply_turn_analysis(
+        initial_state,
+        scenario,
+        "xyz xyz",
+        TurnAnalysis(off_topic=True, unsafe_or_abusive=unsafe, advisor_requested_finish=finish),
+    )
+
+    assert updated.termination_status is expected
+    assert updated.conversation_stage is ConversationStage.FINISHED
+    assert updated.consecutive_off_topic_turns == 2
+    assert initial_state.consecutive_off_topic_turns == 1
+    if expected is TerminationStatus.DROPPED_OUT:
+        assert updated.termination_reason == "Customer left after repeated off-topic advisor messages."

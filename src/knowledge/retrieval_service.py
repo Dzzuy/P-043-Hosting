@@ -7,6 +7,7 @@ from src.knowledge.embedding import KnowledgeEmbeddingService
 from src.knowledge.schemas import DocumentType, KnowledgeChunk
 from src.knowledge.validity import is_document_retrievable
 from src.knowledge.vector_store import BaseVectorStore, get_vector_store
+from src.observability import span
 
 
 class RetrievalService:
@@ -51,11 +52,17 @@ class RetrievalService:
         # Grow the candidate window if date filtering consumed the closest hits.
         total = self.vector_store.count()
         fetch_k = min(total, max(top_k * 2, top_k + 2))
+        iterations = 0
         while True:
-            candidates = self.vector_store.similarity_search_with_scores(query_vector, fetch_k, where or None)
-            valid = [
-                (chunk, score) for chunk, score in candidates if is_document_retrievable(chunk.metadata, target_date)
-            ]
+            iterations += 1
+            with span("retrieval.candidates", fetch_k=fetch_k, top_k=top_k, iterations=iterations) as metadata:
+                candidates = self.vector_store.similarity_search_with_scores(query_vector, fetch_k, where or None)
+                valid = [
+                    (chunk, score)
+                    for chunk, score in candidates
+                    if is_document_retrievable(chunk.metadata, target_date)
+                ]
+                metadata.update(candidate_count=len(candidates), result_count=min(len(valid), top_k))
             if len(valid) >= top_k or fetch_k >= total or len(candidates) < fetch_k:
                 return valid[:top_k]
             fetch_k = min(total, fetch_k * 2)

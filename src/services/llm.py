@@ -55,6 +55,10 @@ def get_llm(
     provider: str | None = None,
     model: str | None = None,
     temperature: float | None = None,
+    max_retries: int = 2,
+    max_tokens: int | None = None,
+    openrouter_reasoning_effort: str | None = None,
+    copilot_provider_errors: bool = False,
 ) -> BaseChatModel:
     """Factory creating LLM clients for multi-provider environments.
 
@@ -84,6 +88,8 @@ def get_llm(
         raise ValueError(f"API key for LLM provider {prov} is not configured")
 
     if prov == "openrouter":
+        from src.services.provider_response import CopilotChatOpenAI
+
         api_key = settings.openrouter_api_key
         target_model = model or settings.model_name
         if "/" not in target_model:
@@ -93,13 +99,15 @@ def get_llm(
                 model_name = f"openai/{target_model}"
         else:
             model_name = target_model
-        return ChatOpenAI(
+        return (CopilotChatOpenAI if copilot_provider_errors else ChatOpenAI)(
             model=model_name,
             api_key=api_key,
             base_url="https://openrouter.ai/api/v1",
+            extra_body={"reasoning": {"effort": openrouter_reasoning_effort}} if openrouter_reasoning_effort else None,
             temperature=temp,
             timeout=settings.llm_timeout_seconds,
-            max_retries=2,
+            max_retries=max_retries,
+            max_tokens=max_tokens,
         )
 
     if prov == "gemini":
@@ -111,7 +119,8 @@ def get_llm(
             base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
             temperature=temp,
             timeout=settings.llm_timeout_seconds,
-            max_retries=2,
+            max_retries=max_retries,
+            max_tokens=max_tokens,
         )
 
     if prov == "grok":
@@ -123,7 +132,8 @@ def get_llm(
             base_url="https://api.x.ai/v1",
             temperature=temp,
             timeout=settings.llm_timeout_seconds,
-            max_retries=2,
+            max_retries=max_retries,
+            max_tokens=max_tokens,
         )
 
     if prov == "deepseek":
@@ -135,7 +145,8 @@ def get_llm(
             base_url="https://api.deepseek.com/v1",
             temperature=temp,
             timeout=settings.llm_timeout_seconds,
-            max_retries=2,
+            max_retries=max_retries,
+            max_tokens=max_tokens,
         )
 
     # Default: openai
@@ -146,7 +157,8 @@ def get_llm(
         api_key=api_key,
         temperature=temp,
         timeout=settings.llm_timeout_seconds,
-        max_retries=2,
+        max_retries=max_retries,
+        max_tokens=max_tokens,
     )
 
 

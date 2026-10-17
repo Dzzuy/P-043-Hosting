@@ -5,9 +5,13 @@ import { EvaluationScorecard } from './EvaluationScorecard';
 import { HistoryModal } from './HistoryModal';
 import { AdvisorAssignmentsView } from './AdvisorAssignmentsView';
 import { practiceApi } from '../../api/practiceApi';
+import { apiErrorNotice } from '../../utils/practiceNotices';
+import { NoticeDialog } from '../common/NoticeDialog';
+import { authApi } from '../../api/authApi';
 import { ErrorState } from '../common/ErrorState';
 
 export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
+  const [notice, setNotice] = useState(null);
   const [viewMode, setViewMode] = useState('catalog');
   const [activeScenario, setActiveScenario] = useState(null);
   const [activeSession, setActiveSession] = useState(null);
@@ -15,7 +19,6 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
   const [attemptDetail, setAttemptDetail] = useState(null);
   const [detailStatus, setDetailStatus] = useState('idle');
   const [retryingEvaluation, setRetryingEvaluation] = useState(false);
-  const [retryEvaluationError, setRetryEvaluationError] = useState('');
   const [selectedSessionId, setSelectedSessionId] = useState(null);
   const [history, setHistory] = useState([]);
   const [historyStatus, setHistoryStatus] = useState('loading');
@@ -23,7 +26,6 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
   const [historyScenarioId, setHistoryScenarioId] = useState(null);
   const [startError, setStartError] = useState('');
   const [starting, setStarting] = useState(false);
-  const [lastMaxTurns, setLastMaxTurns] = useState(10);
   const [assignmentReloadToken, setAssignmentReloadToken] = useState(0);
 
   const loadHistory = useCallback(async () => {
@@ -33,7 +35,8 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
       setHistory(await practiceApi.getHistory());
       setHistoryStatus('ready');
     } catch (error) {
-      setHistoryError(error.message || 'Vui lòng thử lại.');
+      setHistoryError(apiErrorNotice(error)?.message || apiErrorNotice(error)?.title || 'Vui lòng thử lại.');
+      setNotice(apiErrorNotice(error));
       setHistoryStatus('error');
     }
   }, []);
@@ -47,7 +50,8 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
       }
     }).catch((error) => {
       if (mounted) {
-        setHistoryError(error.message || 'Vui lòng thử lại.');
+        setHistoryError(apiErrorNotice(error)?.message || apiErrorNotice(error)?.title || 'Vui lòng thử lại.');
+        setNotice(apiErrorNotice(error));
         setHistoryStatus('error');
       }
     });
@@ -62,19 +66,19 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
     return latest;
   }, [history]);
 
-  const handleStartScenario = async (scenarioId, maxTurns = 10, assignmentId = null) => {
+  const handleStartScenario = async (scenarioId, assignmentId = null) => {
     const scen = scenarios.find((s) => s.scenario_id === scenarioId);
     if (!scen || starting) return;
     setActiveScenario(scen);
     setStartError('');
     setStarting(true);
-    setLastMaxTurns(maxTurns);
     try {
-      const sessionView = await practiceApi.startSession(scen.scenario_id, maxTurns, assignmentId);
+      const sessionView = await practiceApi.startSession(scen.scenario_id, assignmentId);
       setActiveSession(sessionView);
       setViewMode('room');
     } catch (error) {
-      setStartError(error.message || 'Không thể bắt đầu phiên. Vui lòng thử lại.');
+      setStartError(apiErrorNotice(error)?.message || apiErrorNotice(error)?.title || 'Vui lòng thử lại.');
+      setNotice(apiErrorNotice(error));
     } finally {
       setStarting(false);
     }
@@ -98,7 +102,6 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
   };
 
   const openAttempt = async (sessionId) => {
-    setRetryEvaluationError('');
     setHistoryScenarioId(null);
     setSelectedSessionId(sessionId);
     setDetailStatus('loading');
@@ -109,7 +112,8 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
       setActiveScenario(scenarios.find((s) => s.scenario_id === detail.attempt.scenario_id) || null);
       setDetailStatus('ready');
     } catch (error) {
-      setStartError(error.message || 'Không tải được phiên luyện tập.');
+      setStartError(apiErrorNotice(error)?.message || apiErrorNotice(error)?.title || 'Vui lòng thử lại.');
+      setNotice(apiErrorNotice(error));
       setDetailStatus('error');
     }
   };
@@ -117,13 +121,13 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
   const retryFailedEvaluation = async () => {
     if (!attemptDetail || retryingEvaluation) return;
     setRetryingEvaluation(true);
-    setRetryEvaluationError('');
     try {
       await practiceApi.finishSession(attemptDetail.attempt.session_id);
       setAttemptDetail(await practiceApi.getAttempt(attemptDetail.attempt.session_id));
       await loadHistory();
     } catch (error) {
-      setRetryEvaluationError(error.message || 'Chưa thể chấm điểm lại. Hãy thử lại sau.');
+      console.debug('Practice evaluation failed', { code: error.code, status: error.status });
+      setNotice(apiErrorNotice(error));
     } finally {
       setRetryingEvaluation(false);
     }
@@ -133,15 +137,20 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
 
   return (
     <div>
+      <NoticeDialog notice={notice} onClose={() => setNotice(null)} onAction={async (id) => {
+        setNotice(null);
+        if (id === 'retry_finish') await retryFailedEvaluation();
+        if (id === 'login') { try { await authApi.logout(); } finally { window.location.reload(); } }
+      }} />
       {scenarioStatus === 'loading' && <p>Đang tải tình huống từ backend...</p>}
       {scenarioStatus === 'error' && <ErrorState message="Không tải được tình huống từ backend." onRetry={onRetryScenarios} />}
-      {viewMode === 'catalog' && startError && <ErrorState message={startError} onRetry={() => handleStartScenario(activeScenario?.scenario_id, lastMaxTurns)} />}
+      {viewMode === 'catalog' && startError && <ErrorState message={startError} onRetry={() => handleStartScenario(activeScenario?.scenario_id)} />}
       {viewMode === 'catalog' && (
         <>
           <AdvisorAssignmentsView
             scenarios={scenarios}
             reloadToken={assignmentReloadToken}
-            onStart={(assignment) => handleStartScenario(assignment.scenario_id, 10, assignment.assignment_id)}
+            onStart={(assignment) => handleStartScenario(assignment.scenario_id, assignment.assignment_id)}
             onOpenAttempt={openAttempt}
           />
           {historyStatus === 'loading' && <p>Đang tải kết quả gần nhất...</p>}
@@ -156,10 +165,10 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
         </>
       )}
       {viewMode === 'room' && (
-        <PracticeRoom scenario={activeScenario} session={activeSession} onFinish={handleFinishSession} onExit={handleBackToCatalog} />
+        <PracticeRoom scenario={activeScenario} session={activeSession} onFinish={handleFinishSession} onSavedAttempt={openAttempt} onExit={handleBackToCatalog} />
       )}
       {viewMode === 'evaluation' && (
-        <EvaluationScorecard result={evaluationResult} scenario={activeScenario} onRetry={() => handleStartScenario(activeScenario?.scenario_id, lastMaxTurns)} onBackToCatalog={handleBackToCatalog} />
+        <EvaluationScorecard result={evaluationResult} scenario={activeScenario} onRetry={() => handleStartScenario(activeScenario?.scenario_id)} onBackToCatalog={handleBackToCatalog} />
       )}
       {viewMode === 'attempt' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -176,19 +185,20 @@ export function RoleplayView({ scenarios, scenarioStatus, onRetryScenarios }) {
                   </p>
                 ))}
               </section>
-              {attemptDetail.attempt.evaluation_status === 'failed' ? (
+              {!attemptDetail.ai_evaluation.result && attemptDetail.session.termination_status !== 'active' ? (
                 <div role="alert" className="card-white">
-                  <p>Phiên này đã lưu nhưng chấm điểm thất bại.</p>
+                  <p>{attemptDetail.attempt.evaluation_status === 'pending'
+                    ? 'Hội thoại đã lưu. Nếu việc chấm điểm bị gián đoạn, bạn có thể thử lại.'
+                    : 'Phiên này đã lưu nhưng chấm điểm thất bại.'}</p>
                   <button className="btn-primary" onClick={retryFailedEvaluation} disabled={retryingEvaluation}>
                     {retryingEvaluation ? 'Đang chấm điểm lại...' : 'Thử chấm điểm lại'}
                   </button>
-                  {retryEvaluationError && <p role="alert">{retryEvaluationError}</p>}
                 </div>
               ) : (
                 <EvaluationScorecard
                   result={{ ...attemptDetail.ai_evaluation, result: attemptDetail.manager_review?.approved_result || attemptDetail.ai_evaluation.result }}
                   scenario={activeScenario}
-                  onRetry={() => handleStartScenario(attemptDetail.attempt.scenario_id, lastMaxTurns)}
+                  onRetry={() => handleStartScenario(attemptDetail.attempt.scenario_id)}
                   onBackToCatalog={handleBackToCatalog}
                 />
               )}

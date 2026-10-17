@@ -1,5 +1,11 @@
 # Local Docker and Vercel + Render + Neon deployment
 
+## Repository workflow
+
+[P-043](https://github.com/AI20K-Build-Phase-Cohort-4/P-043) is the team source repository. Develop feature branches there and merge reviewed PRs into `develop`, including committed AI logs and evaluation evidence. [AI-Sale](https://github.com/AnCoder1310/AI-Sale) is the repository connected to the hosted Vercel and Render services; its `main` branch is the deployment target. Keep both as Git remotes in one local checkout (`origin` for P-043, `hosting` for AI-Sale).
+
+To release, create a branch from `hosting/main`, merge the tested P-043 `develop` history into it, resolve integration conflicts, and open a PR to AI-Sale `main`. Merge commits preserve the original P-043 commits and authorship. Do not copy files between unrelated checkouts or push directly to either repository's `main`. Verify the hosting PR's CI, deployment and live product flow before considering the release complete.
+
 ## Local full app
 
 From the repository root:
@@ -30,6 +36,8 @@ Create a Neon PostgreSQL project and database. Copy its **pooled** connection st
 
 The application currently uses SQLAlchemy `create_all` for user/practice tables and direct DDL for the vector table. There is no schema migration framework. Back up production data and review schema changes before deploying future revisions. Neon connection and extension creation have not yet been verified against an actual Neon project.
 
+Production startup fails visibly if the database or knowledge initialization fails, so `/health` cannot report a ready process with an empty required index. Investigate the provider/database failure and restart after fixing it; ingestion into an empty index is idempotent.
+
 ## 2. Render backend
 
 Create a **Free Docker web service** from the repository root `Dockerfile`. Set health check path `/health`; the container listens on Render's `PORT`. Add the variables in [`.env.render.example`](../.env.render.example) to Render's Environment tab, replacing every placeholder. Use the final Vercel HTTPS origin in `CORS_ORIGINS`. Do not set `CHROMA_PERSIST_DIR` or attach a disk for this layout. Keep keys and passwords out of Git and chat.
@@ -43,6 +51,14 @@ The manager signs in and uses **Tài khoản** in the manager UI to create an Ad
 Import the same Git repository as a separate Vercel project. Set Root Directory `frontend`, Framework Preset `Vite`, Build Command `npm run build`, Output Directory `dist`. Set `RENDER_BACKEND_URL` in Vercel to the Render service's public HTTPS **origin**, such as `https://<backend-name>.onrender.com`, with no path. Redeploy when it changes. `frontend/vercel.mjs` generates rewrites for `/api/*` and `/health` and fails the build if the URL is missing or invalid. No database URL or API key belongs in Vercel.
 
 The browser calls `/api/v1` on the Vercel domain; the rewrite forwards to Render and keeps the auth cookie on the frontend origin. Preview deployments need deliberate `CORS_ORIGINS` and environment settings.
+
+## Practice Room voice mode
+
+The optional voice endpoints run in the same Render backend and use the same Neon `DATABASE_URL` as Practice sessions. The backend creates the additional `practice_voice_usage` table on first voice use; no recording or transcript text is stored in it. Back up Neon before the first deployment because this project does not have a schema migration framework.
+
+For speech recognition, set `GROQ_API_KEY` in Render. For customer speech, set `GOOGLE_TTS_SERVICE_ACCOUNT_JSON` in Render to a single-line JSON service account credential, or configure Google Application Default Credentials for the backend. Enable Google Cloud Text-to-Speech and billing for that identity. Never set these keys in Vercel or commit them. Set the optional cost estimate variables from [`.env.render.example`](../.env.render.example) if the default rates need changing. See [Voice Mode](voice-mode.md) for provider and user-flow details.
+
+After both the Render backend and Vercel frontend deploy, sign in as an Advisor on the Vercel site. Start a Practice session, record a short Vietnamese message, confirm the editable transcript, and play a customer reply. Then check the manager review's voice usage summary. A healthy `/health` response alone does not verify either provider.
 
 ## Verify the live deployment
 

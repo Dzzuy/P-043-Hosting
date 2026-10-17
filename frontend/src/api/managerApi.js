@@ -23,6 +23,10 @@ export const managerApi = {
     return request(`/manager/reviews/${encodeURIComponent(sessionId)}`);
   },
 
+  getVoiceUsage(sessionId) {
+    return request(`/manager/reviews/${encodeURIComponent(sessionId)}/voice/usage`);
+  },
+
   approveReview(sessionId, decision) {
     return request(`/manager/reviews/${encodeURIComponent(sessionId)}`, {
       method: "PATCH",

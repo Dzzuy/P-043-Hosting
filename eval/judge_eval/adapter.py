@@ -10,7 +10,7 @@ import argparse
 import asyncio
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -21,8 +21,15 @@ from src.config import get_settings
 from src.integrations.practice_runtime import SharedLLMEvaluationModel
 from src.services.llm import get_llm
 
-from .run import CORPUS, DEFAULT_DATASET, compare, read_json, validate_dataset, validate_prediction
-
+from .run import (
+    DEFAULT_DATASET,
+    compare,
+    evaluator_prompt_version,
+    load_knowledge_sources,
+    read_json,
+    validate_dataset,
+    validate_prediction,
+)
 
 PROVENANCE = (
     "curated_synthetic JC1-JC5 transcripts; evaluation-only RoleplayState from scenario defaults; "
@@ -34,36 +41,42 @@ def evaluation_inputs(
     dataset: dict[str, Any],
     scenarios: ScenarioRepository,
     corpus: dict[str, dict[str, Any]],
+    *,
+    case_id: str | None = None,
 ) -> list[tuple[dict[str, Any], Any, RoleplayState, list[KnowledgeEvidence]]]:
     """Map existing fixture data to evaluator inputs without replaying graph events."""
     validate_dataset(dataset)
     prepared = []
     for case in dataset["cases"]:
+        if case_id is not None and case["case_id"] != case_id:
+            continue
         scenario = scenarios.get(case["scenario_id"])
         if scenario.scenario_version != case["scenario_version"]:
             raise ValueError(f"{case['case_id']} scenario version mismatch")
         state = RoleplayState.from_scenario(f"judge-calibration-{case['case_id']}", scenario)
         # COMPLETED denotes the end of the curated transcript only. No finish
         # event, graph transition, checkpoint, or runtime observation is claimed.
-        state = RoleplayState.model_validate({
-            **state.model_dump(mode="json"),
-            "messages": [RoleplayMessage.model_validate(item).model_dump(mode="json") for item in case["messages"]],
-            "factual_claims": [
-                AdvisorFactualClaim(
-                    message_id=item["message_id"], text=item["text"], category=item["category"]
-                ).model_dump(mode="json")
-                for item in case["annotated_claims"]
-            ],
-            "termination_status": TerminationStatus.COMPLETED.value,
-        })
+        state = RoleplayState.model_validate(
+            {
+                **state.model_dump(mode="json"),
+                "messages": [RoleplayMessage.model_validate(item).model_dump(mode="json") for item in case["messages"]],
+                "factual_claims": [
+                    AdvisorFactualClaim(
+                        message_id=item["message_id"], text=item["text"], category=item["category"]
+                    ).model_dump(mode="json")
+                    for item in case["annotated_claims"]
+                ],
+                "termination_status": TerminationStatus.COMPLETED.value,
+            }
+        )
         evidence = []
         for source in case["knowledge_sources"]:
             record = corpus[source["document_id"]]
             if record["version"] != source["version"] or source["quote"] not in record["content"]:
                 raise ValueError(f"{case['case_id']} source mismatch: {source['document_id']}")
-            evidence.append(KnowledgeEvidence(
-                source_id=record["document_id"], version=record["version"], content=record["content"]
-            ))
+            evidence.append(
+                KnowledgeEvidence(source_id=record["document_id"], version=record["version"], content=record["content"])
+            )
         prepared.append((case, scenario, state, evidence))
     return prepared
 
@@ -78,8 +91,12 @@ def select_inputs(prepared: list[tuple], case_id: str | None) -> list[tuple]:
 
 
 def make_artifact(
-    dataset: dict[str, Any], predictions: list[dict[str, Any]], failures: list[dict[str, str]],
-    *, provider: str, model: str,
+    dataset: dict[str, Any],
+    predictions: list[dict[str, Any]],
+    failures: list[dict[str, str]],
+    *,
+    provider: str,
+    model: str,
 ) -> dict[str, Any]:
     cases = {case["case_id"]: case for case in dataset["cases"]}
     seen: set[str] = set()
@@ -96,7 +113,7 @@ def make_artifact(
     missing = sorted(cases.keys() - seen)
     return {
         "provenance": PROVENANCE,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "provider": provider,
         "model": model,
         "status": "COMPLETE" if not missing else "INCOMPLETE",
@@ -115,7 +132,10 @@ def merge_artifacts(dataset: dict[str, Any], artifacts: list[dict[str, Any]]) ->
     predictions: list[dict[str, Any]] = []
     failures: dict[str, dict[str, str]] = {}
     for artifact in artifacts:
-        if artifact.get("provenance") != PROVENANCE or (artifact.get("provider"), artifact.get("model")) != (provider, model):
+        if artifact.get("provenance") != PROVENANCE or (artifact.get("provider"), artifact.get("model")) != (
+            provider,
+            model,
+        ):
             raise ValueError("artifact provenance, provider, or model mismatch")
         predictions.extend(artifact["predictions"])
         for failure in artifact.get("failures", []):
@@ -173,42 +193,91 @@ def main(argv: list[str] | None = None) -> int:
                 compare(dataset, artifact)
             assert args.output is not None
             save_artifact(args.output, artifact)
-            print(json.dumps({key: artifact[key] for key in (
-                "status", "successful_case_count", "failed_case_count", "missing_case_ids", "failures"
-            )}, ensure_ascii=False))
+            print(
+                json.dumps(
+                    {
+                        key: artifact[key]
+                        for key in (
+                            "status",
+                            "successful_case_count",
+                            "failed_case_count",
+                            "missing_case_ids",
+                            "failures",
+                        )
+                    },
+                    ensure_ascii=False,
+                )
+            )
             return 0 if artifact["status"] == "COMPLETE" else 1
-        corpus = {item["document_id"]: item for item in read_json(CORPUS)}
-        prepared = select_inputs(evaluation_inputs(dataset, ScenarioRepository(), corpus), args.case_id)
+        corpus = load_knowledge_sources()
+        prepared = select_inputs(
+            evaluation_inputs(dataset, ScenarioRepository(), corpus, case_id=args.case_id), args.case_id
+        )
         if args.preflight:
-            print(json.dumps({
-                "status": "READY_FOR_LIVE_APPROVAL",
-                "case_ids": [item[0]["case_id"] for item in prepared],
-                "annotated_claims": sum(len(item[2].factual_claims) for item in prepared),
-                "knowledge_sources": sum(len(item[3]) for item in prepared),
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "status": (
+                            "READY_FOR_LIVE_APPROVAL"
+                            if dataset["rubric_version"] == evaluator_prompt_version()
+                            else "OFFLINE_VALIDATED_RUBRIC_MISMATCH"
+                        ),
+                        "pending_expert_review_case_ids": [
+                            item[0]["case_id"]
+                            for item in prepared
+                            if any(
+                                label["review_status"] == "PENDING_EXPERT_REVIEW"
+                                for label in item[0]["expert_labels"].values()
+                            )
+                        ],
+                        "case_ids": [item[0]["case_id"] for item in prepared],
+                        "annotated_claims": sum(len(item[2].factual_claims) for item in prepared),
+                        "knowledge_sources": sum(len(item[3]) for item in prepared),
+                    },
+                    indent=2,
+                )
+            )
             return 0
         assert args.output is not None
+        if dataset["rubric_version"] != evaluator_prompt_version():
+            raise ValueError(
+                "live evaluation requires the current rubric; historical expert labels must not be relabelled"
+            )
         settings = get_settings()
         client = get_llm()
         provider = settings.llm_provider
         if provider == "openai" and not settings.openai_api_key and settings.openrouter_api_key:
             provider = "openrouter"
-        artifact = asyncio.run(collect_predictions(
-            dataset,
-            prepared,
-            RoleplayEvaluator(SharedLLMEvaluationModel(lambda: client)),
-            provider=provider,
-            model=getattr(client, "model_name", settings.model_name),
-        ))
+        artifact = asyncio.run(
+            collect_predictions(
+                dataset,
+                prepared,
+                RoleplayEvaluator(SharedLLMEvaluationModel(lambda: client)),
+                provider=provider,
+                model=getattr(client, "model_name", settings.model_name),
+            )
+        )
         if artifact["status"] == "COMPLETE":
             compare(dataset, artifact)
         save_artifact(args.output, artifact)
-        print(json.dumps({
-            "prediction_artifact": str(args.output),
-            **{key: artifact[key] for key in (
-                "status", "successful_case_count", "failed_case_count", "missing_case_ids", "failures"
-            )},
-        }, ensure_ascii=False))
+        print(
+            json.dumps(
+                {
+                    "prediction_artifact": str(args.output),
+                    **{
+                        key: artifact[key]
+                        for key in (
+                            "status",
+                            "successful_case_count",
+                            "failed_case_count",
+                            "missing_case_ids",
+                            "failures",
+                        )
+                    },
+                },
+                ensure_ascii=False,
+            )
+        )
         return 0 if not artifact["failures"] else 1
     except (OSError, ValueError, KeyError) as exc:
         print(f"judge adapter error: {exc}", file=sys.stderr)

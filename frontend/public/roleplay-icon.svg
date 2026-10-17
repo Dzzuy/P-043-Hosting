@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Two people silhouette">
+  <g fill="currentColor" transform="translate(-35.5 -17.5) scale(0.88)">
+    <circle cx="149.5" cy="113.5" r="45.5"/>
+    <circle cx="246" cy="129" r="34"/>
+    <path d="M248 173C280 173 306 198.5 306 230.5V232.5C306 237 302.5 240 298.5 240H248C244 216 232 196 216 181C225.8 175.8 237 173 248 173Z"/>
+    <path d="M149.5 172C195.5 172 233 209.5 233 255C233 259.5 229.5 263 225 263H74C69.5 263 66 259.5 66 255C66 209.5 103.5 172 149.5 172Z"/>
+  </g>
+</svg>

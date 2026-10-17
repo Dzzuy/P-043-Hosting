@@ -10,6 +10,7 @@ from src.agents.roleplay.graph import (
 )
 from src.agents.roleplay.scenario_loader import ScenarioRepository
 from src.api.practice import create_practice_router
+from src.api.practice_errors import PracticeAPIError, practice_exception_handler
 from src.services.practice import (
     PracticeEvaluationUnavailableError,
     PracticeResultView,
@@ -84,6 +85,7 @@ def service():
 @pytest_asyncio.fixture
 async def client(service):
     app = FastAPI()
+    app.add_exception_handler(PracticeAPIError, practice_exception_handler)
     app.include_router(create_practice_router(service), prefix="/api/v1")
     async with httpx.AsyncClient(
         transport=httpx.ASGITransport(app=app),
@@ -97,7 +99,7 @@ async def test_list_scenarios_does_not_expose_private_fields(client):
     response = await client.get("/api/v1/practice/scenarios")
 
     assert response.status_code == 200
-    assert len(response.json()) == 3
+    assert len(response.json()) == 4
     assert "hidden_facts" not in response.json()[0]
 
 
@@ -142,7 +144,7 @@ async def test_start_unknown_scenario_returns_404(client, service):
     )
 
     assert response.status_code == 404
-    assert response.json() == {"detail": "Practice scenario was not found."}
+    assert response.json() == {"detail": "Không tìm thấy phiên luyện tập.", "code": "session_not_found"}
 
 
 @pytest.mark.asyncio
@@ -166,11 +168,11 @@ async def test_missing_session_returns_404(client, service):
     )
 
     assert response.status_code == 404
-    assert response.json() == {"detail": "Practice session was not found."}
+    assert response.json() == {"detail": "Không tìm thấy phiên luyện tập.", "code": "session_not_found"}
 
 
 @pytest.mark.asyncio
-async def test_invalid_ai_output_returns_retryable_502_without_internal_detail(
+async def test_invalid_ai_output_returns_retryable_503_without_internal_detail(
     client,
     service,
 ):
@@ -181,8 +183,11 @@ async def test_invalid_ai_output_returns_retryable_502_without_internal_detail(
         json={"message": "Xin chào"},
     )
 
-    assert response.status_code == 502
-    assert "saved" in response.json()["detail"]
+    assert response.status_code == 503
+    assert response.json() == {
+        "code": "provider_unavailable",
+        "detail": "Hệ thống AI tạm thời gián đoạn. Tin nhắn của bạn đã được lưu, hãy thử lại.",
+    }
     assert "secret detail" not in response.text
 
 
@@ -209,7 +214,10 @@ async def test_finish_provider_failure_is_retryable_without_internal_detail(clie
     response = await client.post("/api/v1/practice/session-1/finish")
 
     assert response.status_code == 503
-    assert "retried" in response.json()["detail"]
+    assert response.json() == {
+        "code": "evaluation_failed",
+        "detail": "Chưa thể chấm điểm lúc này. Vui lòng thử lại.",
+    }
     assert "secret provider response" not in response.text
 
 
@@ -228,3 +236,39 @@ async def test_get_missing_session_returns_404(client):
     response = await client.get("/api/v1/practice/missing")
 
     assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("reason", "code", "detail"),
+    [
+        (
+            "cannot continue a finished practice session",
+            "session_finished",
+            "Phiên luyện tập đã kết thúc và không nhận thêm tin nhắn.",
+        ),
+        (
+            "customer reply is pending; retry it before sending another message",
+            "session_busy",
+            "Khách hàng đang trả lời, vui lòng đợi giây lát.",
+        ),
+    ],
+)
+async def test_message_conflicts_have_distinct_localized_codes(client, service, reason, code, detail):
+    from src.agents.roleplay.graph import RoleplaySessionConflictError
+
+    service.message_error = RoleplaySessionConflictError(reason, code=code)
+    response = await client.post("/api/v1/practice/session-1/message", json={"message": "Xin chào"})
+    assert response.status_code == 409
+    assert response.json() == {"code": code, "detail": detail}
+
+
+@pytest.mark.asyncio
+async def test_result_evaluation_failure_is_localized(client, service):
+    service.finish_error = PracticeEvaluationUnavailableError("private evaluation details")
+    response = await client.get("/api/v1/practice/session-1/result")
+    assert response.status_code == 503
+    assert response.json() == {
+        "code": "evaluation_failed",
+        "detail": "Chưa thể chấm điểm lúc này. Vui lòng thử lại.",
+    }

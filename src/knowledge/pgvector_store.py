@@ -10,6 +10,7 @@ from psycopg.types.json import Jsonb
 
 from src.knowledge.schemas import ChunkMetadata, KnowledgeChunk
 from src.knowledge.vector_store import BaseVectorStore
+from src.observability import db_connection, span
 
 
 class PgVectorStore(BaseVectorStore):
@@ -26,7 +27,7 @@ class PgVectorStore(BaseVectorStore):
         return psycopg.connect(self.database_url, connect_timeout=10)
 
     def _ensure_schema(self) -> None:
-        with self._connect() as connection:
+        with db_connection(self._connect, backend="pgvector") as connection:
             connection.execute("CREATE EXTENSION IF NOT EXISTS vector")
             connection.execute(
                 """CREATE TABLE IF NOT EXISTS knowledge_vectors (
@@ -73,7 +74,7 @@ class PgVectorStore(BaseVectorStore):
             )
             for chunk, embedding in zip(chunks, embeddings)
         ]
-        with self._connect() as connection:
+        with db_connection(self._connect, backend="pgvector") as connection:
             connection.cursor().executemany(
                 """INSERT INTO knowledge_vectors (collection_name, chunk_id, content, metadata, embedding)
                 VALUES (%s, %s, %s, %s, %s::vector)
@@ -111,9 +112,10 @@ class PgVectorStore(BaseVectorStore):
             "SELECT chunk_id, content, metadata, 1 - (embedding <=> %s::vector) AS score "
             "FROM knowledge_vectors WHERE " + " AND ".join(filters) + " ORDER BY embedding <=> %s::vector LIMIT %s"
         )
-        with self._connect() as connection:
+        with db_connection(self._connect, backend="pgvector") as connection:
             rows = connection.execute(statement, parameters).fetchall()
-        return [(self._chunk(row[0], row[1], row[2]), float(row[3])) for row in rows]
+        with span("db.deserialize", backend="pgvector", result_count=len(rows)):
+            return [(self._chunk(row[0], row[1], row[2]), float(row[3])) for row in rows]
 
     def similarity_search(
         self,
@@ -124,7 +126,7 @@ class PgVectorStore(BaseVectorStore):
         return [chunk for chunk, _ in self.similarity_search_with_scores(query_embedding, top_k, where)]
 
     def get_by_id(self, chunk_id: str) -> KnowledgeChunk | None:
-        with self._connect() as connection:
+        with db_connection(self._connect, backend="pgvector") as connection:
             row = connection.execute(
                 "SELECT chunk_id, content, metadata FROM knowledge_vectors WHERE collection_name = %s AND chunk_id = %s",
                 (self.collection_name, chunk_id),
@@ -132,15 +134,30 @@ class PgVectorStore(BaseVectorStore):
         return self._chunk(*row) if row else None
 
     def count(self) -> int:
-        with self._connect() as connection:
+        with db_connection(self._connect, backend="pgvector") as connection:
             row = connection.execute(
                 "SELECT count(*) FROM knowledge_vectors WHERE collection_name = %s",
                 (self.collection_name,),
             ).fetchone()
         return int(row[0])
 
+    def read_records(self):
+        with db_connection(self._connect, backend="pgvector") as connection:
+            rows = connection.execute(
+                "SELECT chunk_id, content, metadata, embedding::text FROM knowledge_vectors WHERE collection_name = %s ORDER BY chunk_id",
+                (self.collection_name,),
+            ).fetchall()
+        import json
+
+        records = []
+        for cid, content, metadata, vector in rows:
+            if set(metadata) - set(ChunkMetadata.model_fields):
+                raise ValueError("Unexpected stored metadata")
+            records.append((self._chunk(cid, content, metadata), [float(value) for value in json.loads(vector)]))
+        return records
+
     def reset(self) -> None:
-        with self._connect() as connection:
+        with db_connection(self._connect, backend="pgvector") as connection:
             connection.execute(
                 "DELETE FROM knowledge_vectors WHERE collection_name = %s",
                 (self.collection_name,),

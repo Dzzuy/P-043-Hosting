@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { RefreshIcon } from "../common/Icons";
 import { managerApi } from "../../api/managerApi";
 import { ManagerTopNav } from "../layout/ManagerTopNav";
 import { ManagerReviewModal } from "./ManagerReviewModal";
@@ -78,41 +79,134 @@ export function ManagerReviewView({ currentUser, onLogout }) {
 
   return (
     <div className="manager-app-layout">
-      <ManagerTopNav activeTab={activeTab} onTabChange={setActiveTab} currentUser={currentUser}
-        pendingCount={queue.length} onLogout={onLogout} />
+      <ManagerTopNav
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        currentUser={currentUser}
+        pendingCount={queue.length}
+        onLogout={onLogout}
+      />
       <main className="manager-app-content">
-        {activeTab === "assignments" && <ManagerAssignmentsView />}
-        {activeTab === "performance" && <TeamPerformanceView />}
+        {activeTab === "assignments" && <ManagerAssignmentsView onNavigateTab={setActiveTab} />}
+        {activeTab === "performance" && <TeamPerformanceView onNavigateTab={setActiveTab} />}
         {activeTab === "accounts" && <ManagerAccountsView />}
-        {(activeTab === "dashboard" || activeTab === "reports") && <>
-        <h1>{activeTab === "reports" ? "Lịch sử luyện tập" : "Tổng quan đội ngũ"}</h1>
-        {error && <div className="manager-error-alert" role="alert">{error} <button type="button" onClick={load}>Thử lại</button></div>}
-        {activeTab === "dashboard" && overview && (
-          <div className="console-stats-grid" aria-label="Số liệu từ phiên luyện tập">
-            <div className="console-stat-box"><span className="cs-label">Tư vấn viên hoạt động</span><strong className="cs-val">{overview.active_advisors}</strong></div>
-            <div className="console-stat-box"><span className="cs-label">Phiên hoàn thành</span><strong className="cs-val">{overview.completed_attempts}</strong></div>
-            <div className="console-stat-box"><span className="cs-label">Đã duyệt</span><strong className="cs-val">{overview.approved_attempts}</strong></div>
-            <div className="console-stat-box"><span className="cs-label">Chờ duyệt</span><strong className="cs-val">{overview.pending_attempts}</strong></div>
-          </div>
-        )}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "24px 0" }}>
-          <h2>{activeTab === "reports" ? "Các phiên đã ghi nhận" : "Hàng đợi duyệt"}</h2>
-          <button type="button" className="btn-outline" onClick={load} disabled={loading}>Làm mới</button>
-        </div>
-        {loading ? <p role="status">Đang tải dữ liệu…</p> : attempts.length === 0 ?
-          <p>Chưa có phiên luyện tập nào trong mục này.</p> :
-          <div className="card-white" style={{ padding: 20 }}>
-            {attempts.map((attempt) => (
-              <div key={attempt.session_id} style={{ display: "flex", justifyContent: "space-between", gap: 16, padding: "12px 0", borderBottom: "1px solid #e5e5e5" }}>
-                <div><strong>{attempt.advisor_id}</strong> · {attempt.scenario_id}<br />
-                  <small>{formatDate(attempt.completed_at)} · {attempt.review_status} · Điểm AI: {attempt.ai_score ?? "—"}</small></div>
-                <button type="button" className="btn-outline" onClick={() => openReview(attempt.session_id)}>Xem đánh giá</button>
+
+        {(activeTab === "dashboard" || activeTab === "reports") && (
+          <>
+            {activeTab === "dashboard" && overview && (
+              <div className="manager-console-hero">
+                <div className="console-hero-header">
+                  <div>
+                    <div className="console-tag-badge">VinFast AI Sales Enablement • Trung tâm Quản trị</div>
+                    <h1 className="console-hero-title">Tổng quan Năng lực & Đào tạo</h1>
+                    <p className="console-hero-desc">
+                      Theo dõi thời gian thực kết quả luyện tập của đội ngũ tư vấn viên, phê duyệt đánh giá và phân tích kỹ năng bán xe điện.
+                    </p>
+                  </div>
+                  <div className="console-hero-actions">
+                    <button type="button" className="btn-console-sync" onClick={load} disabled={loading}>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><RefreshIcon style={{ width: 13, height: 13 }} /> {loading ? "Đang đồng bộ..." : "Đồng bộ số liệu"}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="console-stats-grid" aria-label="Số liệu từ phiên luyện tập">
+                  <div className="console-stat-box">
+                    <span className="cs-label">Tư vấn viên hoạt động</span>
+                    <strong className="cs-val">{overview.active_advisors}</strong>
+                    <span className="cs-sub">Đang trong hệ thống</span>
+                  </div>
+                  <div className="console-stat-box">
+                    <span className="cs-label">Phiên hoàn thành</span>
+                    <strong className="cs-val">{overview.completed_attempts}</strong>
+                    <span className="cs-sub">Tổng số lượt thực chiến</span>
+                  </div>
+                  <div className="console-stat-box">
+                    <span className="cs-label">Đã duyệt đánh giá</span>
+                    <strong className="cs-val">{overview.approved_attempts}</strong>
+                    <span className="cs-sub">Đạt chuẩn & ghi nhận điểm</span>
+                  </div>
+                  <div className="console-stat-box">
+                    <span className="cs-label">Hàng đợi chờ duyệt</span>
+                    <strong className="cs-val" style={{ color: overview.pending_attempts > 0 ? "#FBBF24" : "#FFFFFF" }}>
+                      {overview.pending_attempts}
+                    </strong>
+                    <span className="cs-sub">Cần quản lý phản hồi</span>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>}
-        </>}
+            )}
+
+            <section className="card-white" style={{ padding: 28, marginTop: activeTab === "reports" ? 0 : 8 }}>
+              <div className="section-title-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                <h2 className="section-heading" style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--primary)" }}>
+                  {activeTab === "reports" ? "Lịch sử luyện tập toàn đội ngũ" : "Hàng đợi duyệt đánh giá"}
+                </h2>
+                <button type="button" className="btn-outline" onClick={load} disabled={loading}>
+                  Làm mới
+                </button>
+              </div>
+
+              {error && (
+                <div className="manager-error-alert" role="alert" style={{ color: "#dc2626", marginBottom: 16 }}>
+                  {error} <button type="button" className="btn-outline" style={{ marginLeft: 8 }} onClick={load}>Thử lại</button>
+                </div>
+              )}
+
+              {loading ? (
+                <p role="status" style={{ padding: "24px 0", color: "var(--muted)" }}>Đang tải dữ liệu…</p>
+              ) : attempts.length === 0 ? (
+                <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--muted)", border: "1px dashed var(--border)", borderRadius: "var(--radius-md)" }}>
+                  {activeTab === "reports"
+                    ? "Chưa có phiên luyện tập nào được hoàn thành."
+                    : "Hiện tại không có bài luyện tập nào đang chờ duyệt."}
+                </div>
+              ) : (
+                <div style={{ display: "grid", gap: 12 }}>
+                  {attempts.map((attempt) => (
+                    <div
+                      key={attempt.session_id}
+                      className="manager-assignment-card-item"
+                    >
+                      <div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                          <strong style={{ fontSize: "1rem", color: "var(--primary)" }}>
+                            {attempt.advisor_id}
+                          </strong>
+                          <span style={{ fontSize: "0.82rem", color: "var(--muted)" }}>·</span>
+                          <span style={{ fontSize: "0.9rem", color: "var(--secondary)" }}>
+                            {attempt.scenario_id}
+                          </span>
+                        </div>
+                        <small style={{ color: "var(--muted)", fontSize: "0.8rem" }}>
+                          {formatDate(attempt.completed_at)} · Trạng thái: <strong>{attempt.review_status}</strong>
+                          {attempt.ai_score != null && ` · Điểm AI: ${attempt.ai_score}/3`}
+                        </small>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn-outline"
+                        style={{ padding: "8px 16px", fontSize: "0.85rem", fontWeight: 600 }}
+                        onClick={() => openReview(attempt.session_id)}
+                      >
+                        Xem đánh giá & Duyệt →
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          </>
+        )}
       </main>
-      {selectedReview && <ManagerReviewModal detail={selectedReview} onClose={() => setSelectedReview(null)} onApprove={approve} />}
+
+      {selectedReview && (
+        <ManagerReviewModal
+          detail={selectedReview}
+          onClose={() => setSelectedReview(null)}
+          onApprove={approve}
+        />
+      )}
     </div>
   );
 }

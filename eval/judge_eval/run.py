@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET = ROOT / "eval" / "datasets" / "judge_calibration.json"
 SCENARIOS = ROOT / "data" / "scenarios" / "scenarios.json"
 CORPUS = ROOT / "data" / "knowledge" / "corpus.json"
+FAQ = ROOT / "data" / "knowledge" / "faq.json"
 ROLEPLAY_BENCHMARK = ROOT / "eval" / "datasets" / "roleplay_benchmark.json"
 EVALUATOR_PROMPT = ROOT / "src" / "agents" / "roleplay" / "prompts" / "evaluator.py"
 CRITERIA = tuple(item.value for item in CriterionType)
@@ -35,8 +36,7 @@ def evaluator_prompt_version() -> str:
     tree = ast.parse(EVALUATOR_PROMPT.read_text(encoding="utf-8"))
     for node in tree.body:
         if isinstance(node, ast.Assign) and any(
-            isinstance(target, ast.Name) and target.id == "EVALUATOR_PROMPT_VERSION"
-            for target in node.targets
+            isinstance(target, ast.Name) and target.id == "EVALUATOR_PROMPT_VERSION" for target in node.targets
         ):
             return ast.literal_eval(node.value)
     raise ValueError("production evaluator prompt version not found")
@@ -61,6 +61,11 @@ def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def load_knowledge_sources() -> dict[str, dict[str, Any]]:
+    """Load both checked-in knowledge collections used by calibration sources."""
+    return {item["document_id"]: item for path in (CORPUS, FAQ) for item in read_json(path)}
+
+
 def check_evidence(items: Any, messages: dict[str, dict[str, str]], name: str) -> None:
     require(isinstance(items, list), f"{name} must be a list")
     for index, raw in enumerate(items):
@@ -74,19 +79,19 @@ def check_evidence(items: Any, messages: dict[str, dict[str, str]], name: str) -
 def validate_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
     dataset = obj(dataset, "dataset")
     nonempty(dataset.get("dataset_version"), "dataset_version")
-    require(dataset.get("rubric_version") == evaluator_prompt_version(), "rubric_version differs from production evaluator")
+    require(
+        dataset.get("rubric_version") in {"sales-rubric-v3", evaluator_prompt_version()}, "unsupported rubric_version"
+    )
     require(dataset.get("set_role") == "calibration_only_not_held_out", "dataset must declare calibration-only role")
     require(dataset.get("transcript_origin") == "curated_synthetic", "transcript provenance is unsupported")
     nonempty(dataset.get("transcript_note"), "transcript_note")
     cases = dataset.get("cases")
-    require(isinstance(cases, list) and len(cases) == 5, "dataset must contain exactly five cases")
+    require(isinstance(cases, list) and len(cases) >= 5, "dataset must contain at least five cases")
     scenarios = {item["scenario_id"]: item for item in read_json(SCENARIOS)}
-    corpus = {item["document_id"]: item for item in read_json(CORPUS)}
+    corpus = load_knowledge_sources()
     benchmark = read_json(ROLEPLAY_BENCHMARK)
     benchmark_advisor_sequences = [
-        tuple(item.get("advisor_messages", []))
-        for item in benchmark.get("cases", [])
-        if isinstance(item, dict)
+        tuple(item.get("advisor_messages", [])) for item in benchmark.get("cases", []) if isinstance(item, dict)
     ]
     seen_cases: set[str] = set()
     seen_messages: set[str] = set()
@@ -95,38 +100,53 @@ def validate_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
     approved_count = 0
     pending_count = 0
     label_statuses: dict[str, dict[str, str]] = {}
+    version_diagnostics = []
+    if dataset["rubric_version"] != evaluator_prompt_version():
+        version_diagnostics.append(
+            "Historical rubric differs from production evaluator; offline comparison uses stored rubric only."
+        )
     for case in cases:
         case = obj(case, "case")
         case_id = nonempty(case.get("case_id"), "case_id")
         require(case_id not in seen_cases, f"duplicate case_id: {case_id}")
         seen_cases.add(case_id)
         purpose = nonempty(case.get("purpose"), f"{case_id}.purpose")
-        require(purpose in PURPOSES and purpose not in purposes, f"{case_id} has duplicate/unknown purpose")
+        require(purpose in PURPOSES, f"{case_id} has unknown purpose")
         purposes.add(purpose)
         scenario_id = nonempty(case.get("scenario_id"), f"{case_id}.scenario_id")
         require(scenario_id in scenarios, f"{case_id} references unknown scenario")
-        require(case.get("scenario_version") == scenarios[scenario_id]["scenario_version"], f"{case_id} scenario version mismatch")
+        nonempty(case.get("scenario_version"), f"{case_id}.scenario_version")
+        if case["scenario_version"] != scenarios[scenario_id]["scenario_version"]:
+            version_diagnostics.append(
+                f"{case_id}: historical scenario version differs from current scenario; runtime replay requires matching versions."
+            )
         require(case.get("rubric_version") == dataset["rubric_version"], f"{case_id} rubric version mismatch")
-        require(case.get("completion_context") == "curated_conversation_ended_no_runtime_state",
-                f"{case_id} must not claim a production RoleplayState")
+        require(
+            case.get("completion_context") == "curated_conversation_ended_no_runtime_state",
+            f"{case_id} must not claim a production RoleplayState",
+        )
         messages = case.get("messages")
         require(isinstance(messages, list) and len(messages) >= 2, f"{case_id} transcript needs customer and advisor")
+        first_role = obj(messages[0], f"{case_id}.messages[0]").get("role")
+        require(first_role in {"customer", "advisor"}, f"{case_id} invalid opening role")
+        other_role = "advisor" if first_role == "customer" else "customer"
         lookup: dict[str, dict[str, str]] = {}
         for index, raw in enumerate(messages):
             msg = obj(raw, f"{case_id}.messages[{index}]")
             message_id = nonempty(msg.get("message_id"), "message_id")
             require(message_id not in seen_messages, f"duplicate message_id: {message_id}")
             seen_messages.add(message_id)
-            require(msg.get("role") == ("customer" if index % 2 == 0 else "advisor"),
-                    f"{case_id} message roles must alternate from customer")
+            require(
+                msg.get("role") == (first_role if index % 2 == 0 else other_role),
+                f"{case_id} message roles must alternate",
+            )
             nonempty(msg.get("content"), f"{message_id}.content")
             lookup[message_id] = msg
         fingerprint = tuple((msg["role"], msg["content"]) for msg in messages)
         require(fingerprint not in seen_transcripts, f"{case_id} duplicates a calibration transcript")
         seen_transcripts.add(fingerprint)
         advisor_sequence = tuple(msg["content"] for msg in messages if msg["role"] == "advisor")
-        require(advisor_sequence not in benchmark_advisor_sequences,
-                f"{case_id} copies a T1-T6 advisor trajectory")
+        require(advisor_sequence not in benchmark_advisor_sequences, f"{case_id} copies a T1-T6 advisor trajectory")
         sources = case.get("knowledge_sources")
         require(isinstance(sources, list), f"{case_id}.knowledge_sources must be a list")
         source_ids: set[str] = set()
@@ -136,20 +156,28 @@ def validate_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
             require(document_id not in source_ids, f"{case_id} duplicate knowledge source")
             source_ids.add(document_id)
             record = corpus.get(document_id)
-            require(record is not None and record.get("status") == "active",
-                    f"{case_id} source is absent or inactive: {document_id}")
+            require(
+                record is not None and record.get("status") == "active",
+                f"{case_id} source is absent or inactive: {document_id}",
+            )
             require(source.get("version") == record["version"], f"{case_id} source version mismatch")
-            require(nonempty(source.get("quote"), "source.quote") in record["content"],
-                    f"{case_id} source quote is not exact")
+            require(
+                nonempty(source.get("quote"), "source.quote") in record["content"],
+                f"{case_id} source quote is not exact",
+            )
         claims = case.get("annotated_claims")
         require(isinstance(claims, list), f"{case_id}.annotated_claims must be a list")
         for claim in claims:
             claim = obj(claim, f"{case_id}.claim")
             message_id = nonempty(claim.get("message_id"), "claim.message_id")
-            require(message_id in lookup and lookup[message_id]["role"] == "advisor",
-                    f"{case_id} claim must reference advisor message")
-            require(nonempty(claim.get("text"), "claim.text").casefold() in lookup[message_id]["content"].casefold(),
-                    f"{case_id} claim text is not exact")
+            require(
+                message_id in lookup and lookup[message_id]["role"] == "advisor",
+                f"{case_id} claim must reference advisor message",
+            )
+            require(
+                nonempty(claim.get("text"), "claim.text").casefold() in lookup[message_id]["content"].casefold(),
+                f"{case_id} claim text is not exact",
+            )
             require(claim.get("source_document_id") in source_ids, f"{case_id} claim source not declared")
         labels = obj(case.get("expert_labels"), f"{case_id}.expert_labels")
         require(set(labels) == set(CRITERIA), f"{case_id} must provide exactly five criterion labels")
@@ -164,11 +192,17 @@ def validate_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
             label_statuses[case_id][criterion] = review
             if review == PENDING:
                 require(adjudication == "PENDING", f"{name} pending adjudication mismatch")
-                require(label.get("status") is None and label.get("score") is None and label.get("evidence") == [],
-                        f"{name} pending label contains a judgement")
-                require(all(label.get(key) is None for key in
-                            ("rationale", "expected_weakness", "reviewer_id", "reviewed_at", "provenance")),
-                        f"{name} pending label contains review provenance")
+                require(
+                    label.get("status") is None and label.get("score") is None and label.get("evidence") == [],
+                    f"{name} pending label contains a judgement",
+                )
+                require(
+                    all(
+                        label.get(key) is None
+                        for key in ("rationale", "expected_weakness", "reviewer_id", "reviewed_at", "provenance")
+                    ),
+                    f"{name} pending label contains review provenance",
+                )
                 pending_count += 1
                 continue
             require(adjudication == APPROVED, f"{name} needs approved adjudication")
@@ -190,8 +224,10 @@ def validate_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
             except ValueError as exc:
                 raise ValueError(f"{name}.reviewed_at must be ISO datetime") from exc
             weakness = label.get("expected_weakness")
-            require(weakness is None or (isinstance(weakness, str) and bool(weakness.strip())),
-                    f"{name}.expected_weakness invalid")
+            require(
+                weakness is None or (isinstance(weakness, str) and bool(weakness.strip())),
+                f"{name}.expected_weakness invalid",
+            )
             if score in {2, 3}:
                 roles = {lookup[item["message_id"]]["role"] for item in label["evidence"]}
                 require("advisor" in roles, f"{name} score 2-3 needs advisor evidence")
@@ -213,7 +249,9 @@ def validate_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
         "evaluated_transcript_count": 0,
         "comparable_criterion_pair_count": 0,
         "metrics": None,
-        "diagnostics": ["Fixed transcript live import is not supported by the public graph contract."],
+        "diagnostics": ["Fixed transcript live import is not supported by the public graph contract."]
+        + (["Pending expert review: unreviewed labels are excluded from agreement metrics."] if pending_count else [])
+        + version_diagnostics,
         "provenance": {"transcripts": dataset["transcript_origin"], "expert_labels": "per-criterion review records"},
     }
 
@@ -224,8 +262,10 @@ def validate_prediction(raw: Any, case: dict[str, Any]) -> SessionEvaluationResu
     require(isinstance(evaluations, list), f"{case['case_id']} prediction evaluations must be a list")
     for item in evaluations:
         item = obj(item, f"{case['case_id']} prediction criterion")
-        require(type(item.get("score")) is int or item.get("score") is None,
-                f"{case['case_id']} prediction score has invalid type")
+        require(
+            type(item.get("score")) is int or item.get("score") is None,
+            f"{case['case_id']} prediction score has invalid type",
+        )
     try:
         result = SessionEvaluationResult.model_validate(raw)
     except ValidationError as exc:
@@ -234,15 +274,23 @@ def validate_prediction(raw: Any, case: dict[str, Any]) -> SessionEvaluationResu
     require(result.rubric_version == case["rubric_version"], f"{case['case_id']} prediction rubric mismatch")
     require(result.review_status is ReviewStatus.AI_DRAFT, f"{case['case_id']} prediction must be AI draft")
     require(result.passed is None, f"{case['case_id']} prediction passed must be null")
-    require({item.criterion.value for item in result.evaluations} == set(CRITERIA),
-            f"{case['case_id']} prediction criteria incomplete")
+    require(
+        {item.criterion.value for item in result.evaluations} == set(CRITERIA),
+        f"{case['case_id']} prediction criteria incomplete",
+    )
     lookup = {msg["message_id"]: msg for msg in case["messages"]}
     for evaluation in result.evaluations:
-        check_evidence([item.model_dump() for item in evaluation.evidence], lookup,
-                       f"{case['case_id']}.{evaluation.criterion}.evidence")
+        check_evidence(
+            [item.model_dump() for item in evaluation.evidence],
+            lookup,
+            f"{case['case_id']}.{evaluation.criterion}.evidence",
+        )
         for check in evaluation.checks:
-            check_evidence([item.model_dump() for item in check.evidence], lookup,
-                           f"{case['case_id']}.{evaluation.criterion}.checks")
+            check_evidence(
+                [item.model_dump() for item in check.evidence],
+                lookup,
+                f"{case['case_id']}.{evaluation.criterion}.checks",
+            )
         if evaluation.status is CriterionStatus.ASSESSED and evaluation.score in {2, 3}:
             roles = {lookup[item.message_id]["role"] for item in evaluation.evidence}
             require("advisor" in roles, "prediction score 2-3 needs advisor evidence")
@@ -250,13 +298,19 @@ def validate_prediction(raw: Any, case: dict[str, Any]) -> SessionEvaluationResu
                 require("customer" in roles, "prediction score 3 needs customer evidence")
     for finding in result.factual_findings:
         message = lookup.get(finding.message_id)
-        require(message is not None and message["role"] == "advisor",
-                f"{case['case_id']} factual finding references non-advisor message")
-        require(finding.claim.casefold() in message["content"].casefold(),
-                f"{case['case_id']} factual finding claim is not exact")
+        require(
+            message is not None and message["role"] == "advisor",
+            f"{case['case_id']} factual finding references non-advisor message",
+        )
+        require(
+            finding.claim.casefold() in message["content"].casefold(),
+            f"{case['case_id']} factual finding claim is not exact",
+        )
         if finding.status.value in {"supported", "contradicted"}:
-            require(bool(finding.source_references),
-                    f"{case['case_id']} supported/contradicted finding needs source references")
+            require(
+                bool(finding.source_references),
+                f"{case['case_id']} supported/contradicted finding needs source references",
+            )
     return result
 
 
@@ -314,28 +368,33 @@ def compare(dataset: dict[str, Any], prediction_file: dict[str, Any]) -> dict[st
             "applicability_matches": status_matches,
             "applicability_agreement_rate": status_matches / status_pairs if status_pairs else None,
         }
-    report.update({
-        "mode": "compare",
-        "status": "EVALUATED" if scored_total and not missing_predictions and not report["missing_expert_label_count"]
-                  else "NOT_EVALUATED" if not scored_total else "INCOMPLETE",
-        "prediction_provenance": prediction_file.get("provenance"),
-        "prediction_count": len(parsed),
-        "missing_prediction_case_ids": missing_predictions,
-        "evaluated_transcript_count": len(parsed),
-        "comparable_criterion_pair_count": scored_total,
-        "metrics": {
-            "mae": absolute_error_sum / scored_total if scored_total else None,
-            "absolute_error_sum": absolute_error_sum,
-            "mae_denominator": scored_total,
-            "pooled_exact_matches": exact_total,
-            "pooled_exact_agreement_rate": exact_total / scored_total if scored_total else None,
-            "pooled_agreement_denominator": scored_total,
-            "applicability_matches": status_match_total,
-            "applicability_pairs": status_total,
-            "applicability_agreement_rate": status_match_total / status_total if status_total else None,
-            "per_criterion": per_criterion,
-        },
-    })
+    report.update(
+        {
+            "mode": "compare",
+            "status": "EVALUATED"
+            if scored_total and not missing_predictions and not report["missing_expert_label_count"]
+            else "NOT_EVALUATED"
+            if not scored_total
+            else "INCOMPLETE",
+            "prediction_provenance": prediction_file.get("provenance"),
+            "prediction_count": len(parsed),
+            "missing_prediction_case_ids": missing_predictions,
+            "evaluated_transcript_count": len(parsed),
+            "comparable_criterion_pair_count": scored_total,
+            "metrics": {
+                "mae": absolute_error_sum / scored_total if scored_total else None,
+                "absolute_error_sum": absolute_error_sum,
+                "mae_denominator": scored_total,
+                "pooled_exact_matches": exact_total,
+                "pooled_exact_agreement_rate": exact_total / scored_total if scored_total else None,
+                "pooled_agreement_denominator": scored_total,
+                "applicability_matches": status_match_total,
+                "applicability_pairs": status_total,
+                "applicability_agreement_rate": status_match_total / status_total if status_total else None,
+                "per_criterion": per_criterion,
+            },
+        }
+    )
     if missing_predictions:
         report["diagnostics"].append(f"Missing predictions: {', '.join(missing_predictions)}")
     if report["missing_expert_label_count"]:

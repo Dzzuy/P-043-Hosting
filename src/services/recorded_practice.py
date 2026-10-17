@@ -137,10 +137,18 @@ class RecordedPracticeService:
         await self._records.owned_attempt(session_id, advisor_id)
         return await self._practice.send_message(session_id, message)
 
-    async def finish_session(self, session_id: str, advisor_id: str) -> PracticeResultView:
+    async def retry_customer_reply(self, session_id: str, advisor_id: str) -> PracticeSessionView:
         await self._records.owned_attempt(session_id, advisor_id)
+        return await self._practice.retry_customer_reply(session_id)
+
+    async def finish_session(self, session_id: str, advisor_id: str) -> PracticeResultView:
+        attempt = await self._records.owned_attempt(session_id, advisor_id)
         try:
-            evaluation = await self._practice.finish_session(session_id)
+            evaluation = await self._practice.finish_session(
+                session_id,
+                started_at=attempt.started_at,
+                on_saved=lambda: self._records.mark_evaluation_pending(session_id),
+            )
         except PracticeEvaluationUnavailableError:
             await self._records.mark_evaluation_failed(session_id)
             raise
@@ -178,6 +186,9 @@ class RecordedPracticeService:
         self, advisor_id: str | None = None, scenario_id: str | None = None, limit: int = 50, offset: int = 0
     ) -> list[AttemptSummary]:
         return await self._records.manager_history(advisor_id, scenario_id, limit, offset)
+
+    async def manager_attempt(self, session_id: str) -> AttemptSummary:
+        return await self._records.manager_attempt(session_id)
 
     async def team_overview(self) -> TeamOverview:
         return await self._records.team_overview()

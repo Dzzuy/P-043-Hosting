@@ -240,6 +240,23 @@ class SQLPracticeRecordsRepository:
             )
         return results
 
+    async def mark_evaluation_pending(self, session_id: str) -> None:
+        """Expose the saved transcript in history before the evaluator runs."""
+        self._ensure_schema()
+        with self._engine.begin() as connection:
+            changed = connection.execute(
+                update(self._attempts)
+                .where(self._attempts.c.session_id == session_id)
+                .where(self._attempts.c.ai_draft_json.is_(None))
+                .values(completed_at=datetime.now(UTC), evaluation_status=EvaluationStatus.PENDING.value)
+            )
+            if changed.rowcount == 0:
+                exists = connection.execute(
+                    select(self._attempts.c.session_id).where(self._attempts.c.session_id == session_id)
+                ).scalar_one_or_none()
+                if exists is None:
+                    raise AttemptNotFoundError(session_id)
+
     async def mark_evaluation_failed(self, session_id: str) -> None:
         """Keep a finished attempt visible when the evaluator needs retry."""
         self._ensure_schema()

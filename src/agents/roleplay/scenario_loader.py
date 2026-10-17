@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Literal
 
 from pydantic import BaseModel, Field, ValidationError
 
@@ -32,6 +33,8 @@ class ScenarioSummary(BaseModel):
     scenario_version: str
     visible_context: str
     max_turns: int = Field(gt=0)
+    voice_gender: Literal["male", "female"] | None = None
+    outcome_labels: list[str] = Field(default_factory=list)
 
     @classmethod
     def from_scenario(cls, scenario: ScenarioContract) -> ScenarioSummary:
@@ -45,7 +48,19 @@ class ScenarioSummary(BaseModel):
             scenario_version=scenario.scenario_version,
             visible_context=scenario.visible_context,
             max_turns=scenario.termination_conditions.max_turns,
+            voice_gender=_voice_gender_from_name(scenario.persona.get("name", "")),
+            outcome_labels=[outcome.label for outcome in scenario.acceptable_outcomes],
         )
+
+
+def _voice_gender_from_name(name: str) -> Literal["male", "female"] | None:
+    """Expose only the voice choice implied by a public Vietnamese title."""
+    title = name.strip().split(" ", 1)[0].casefold()
+    if title in {"anh", "ông", "chú"}:
+        return "male"
+    if title in {"chị", "cô", "bà"}:
+        return "female"
+    return None
 
 
 class ScenarioRepository:

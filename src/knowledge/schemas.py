@@ -56,6 +56,12 @@ class ChunkMetadata(BaseModel):
     source: str
     version: str = "1.0"
     chunk_index: int = 0
+    section_id: str | None = None
+    section_title: str | None = None
+    start_char: int | None = Field(default=None, ge=0)
+    end_char: int | None = Field(default=None, ge=0)
+    context_prefix: str | None = None
+    requires_context: bool = False
 
 
 class KnowledgeChunk(BaseModel):

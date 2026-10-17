@@ -1,0 +1,107 @@
+.practice-room-voice-controls {
+  --voice-switch-on: #0a84ff;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Push-to-talk sits in the exact centre; the switch is centred in the right half. */
+.practice-room-voice-controls > .practice-room-voice-bubble {
+  grid-column: 2;
+}
+
+.practice-room-voice-controls > .practice-room-auto-send-group {
+  grid-column: 3;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+}
+
+.practice-room-auto-send-hint {
+  max-width: 180px;
+  color: var(--muted, #6b7280);
+  font-size: .72rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
+@media (max-width: 360px) {
+  .practice-room-voice-controls {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .practice-room-voice-controls > .practice-room-voice-bubble,
+  .practice-room-voice-controls > .practice-room-auto-send-group {
+    grid-column: 1;
+  }
+}
+
+.practice-room-auto-send {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--primary);
+  font: inherit;
+  font-size: .78rem;
+  cursor: pointer;
+}
+
+.practice-room-auto-send-track {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  width: 44px;
+  height: 26px;
+  padding: 3px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--muted-light);
+  transition: background-color 200ms ease;
+}
+
+.practice-room-auto-send-knob {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+  transition: transform 200ms ease;
+}
+
+.practice-room-auto-send[aria-checked="true"] .practice-room-auto-send-track {
+  background: var(--voice-switch-on);
+}
+
+.practice-room-auto-send[aria-checked="true"] .practice-room-auto-send-knob {
+  transform: translateX(18px);
+}
+
+.practice-room-auto-send:focus-visible {
+  outline: 2px solid var(--voice-switch-on);
+  outline-offset: 3px;
+}
+
+.practice-room-auto-send:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .practice-room-auto-send-track,
+  .practice-room-auto-send-knob {
+    transition: none;
+  }
+}

@@ -23,6 +23,7 @@ export function App() {
   const [notifications, setNotifications] = useState([]);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [copilotQuery, setCopilotQuery] = useState('');
+  const [copilotOpened, setCopilotOpened] = useState(false);
 
   useEffect(() => {
     async function restoreSession() {
@@ -78,6 +79,8 @@ export function App() {
       setCurrentTab('home');
       setScenarios([]);
       setScenarioStatus('loading');
+      setCopilotOpened(false);
+      setCopilotQuery('');
     }
   };
 
@@ -99,15 +102,13 @@ export function App() {
     );
     if (item.link) {
       setCurrentTab(item.link);
+      if (item.link === 'copilot') setCopilotOpened(true);
     }
-  };
-
-  const handleStartScenarioFromHome = () => {
-    setCurrentTab('roleplay');
   };
 
   const handleConsultCopilot = (query) => {
     setCopilotQuery(query);
+    setCopilotOpened(true);
     setCurrentTab('copilot');
   };
 
@@ -139,12 +140,13 @@ export function App() {
   };
 
   return (
-    <div className="app-container">
+    <div className={`app-container${currentTab === 'home' ? ' home-app-container' : ''}${currentTab === 'copilot' ? ' copilot-app-container' : ''}${currentTab === 'knowledge' ? ' knowledge-app-container' : ''}`}>
       {/* GLOBAL TOP HEADER */}
       <Header
         currentTab={currentTab}
         onTabChange={(tab) => {
           setCurrentTab(tab);
+          if (tab === 'copilot') setCopilotOpened(true);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         unreadCount={unreadCount}
@@ -154,24 +156,34 @@ export function App() {
       />
 
       {/* MAIN CONTENT AREA */}
-      <main className="main-content">
+      <main className={`main-content${currentTab === 'home' ? ' home-main-content' : ''}${currentTab === 'copilot' ? ' copilot-main-content' : ''}${currentTab === 'knowledge' ? ' knowledge-main-content' : ''}`}>
         {currentTab === 'home' && (
           <HomeView
-            advisorProfile={advisorProfile}
             scenarios={scenarios}
-            onNavigate={(tab) => setCurrentTab(tab)}
-            onStartScenario={handleStartScenarioFromHome}
+            scenarioStatus={scenarioStatus}
+            onRetryScenarios={() => {
+              setScenarioStatus('loading');
+              setScenarioReloadToken((value) => value + 1);
+            }}
+            onNavigate={(tab) => {
+              setCurrentTab(tab);
+              if (tab === 'copilot') setCopilotOpened(true);
+            }}
+            onStartScenario={() => setCurrentTab('roleplay')}
           />
         )}
 
-        {currentTab === 'copilot' && (
+        {(currentTab === 'copilot' || copilotOpened) && (
+          <div style={{ display: currentTab === 'copilot' ? 'flex' : 'none', flex: 1, minHeight: 0, height: '100%', flexDirection: 'column' }}>
           <CopilotView
+            currentUser={currentUser}
             initialQuery={copilotQuery}
             onOpenDocument={(documentId) => {
               setSourceDocumentId(documentId);
               setCurrentTab('knowledge');
             }}
           />
+          </div>
         )}
 
         {currentTab === 'roleplay' && (

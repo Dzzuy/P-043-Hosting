@@ -1,15 +1,23 @@
+# =================================================================
+# Docker Compose — Local Development
+# Usage:
+#   docker compose up --build -d
+# Seed demo accounts:
+#   docker compose exec backend python -m scripts.seed_demo_users
+# =================================================================
+
 services:
   postgres:
     image: pgvector/pgvector:0.8.7-pg16-bookworm
     environment:
-      POSTGRES_USER: p043
-      POSTGRES_PASSWORD: p043_local_only
-      POSTGRES_DB: p043
+      POSTGRES_USER: ${POSTGRES_USER:-p043}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-p043_local_only}
+      POSTGRES_DB: ${POSTGRES_DB:-p043}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U p043 -d p043"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-p043} -d ${POSTGRES_DB:-p043}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -19,15 +27,32 @@ services:
     environment:
       APP_ENV: development
       PORT: 8000
-      DATABASE_URL: postgresql://p043:p043_local_only@postgres:5432/p043
+      DATABASE_URL: postgresql://${POSTGRES_USER:-p043}:${POSTGRES_PASSWORD:-p043_local_only}@postgres:5432/${POSTGRES_DB:-p043}
       VECTOR_STORE_TYPE: pgvector
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
-      OPENROUTER_MODEL_NAME: ${OPENROUTER_MODEL_NAME:-openai/gpt-6-luna}
+      OPENROUTER_BASE_URL: ${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      OPENROUTER_MODEL_NAME: ${OPENROUTER_MODEL_NAME:-google/gemini-2.0-flash-001}
       EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-openrouter}
       EMBEDDING_MODEL_NAME: ${EMBEDDING_MODEL_NAME:-openai/text-embedding-3-small}
       AUTH_COOKIE_SECURE: "false"
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:5173}
       DEMO_ADVISOR_PASSWORD: ${DEMO_ADVISOR_PASSWORD:-}
       DEMO_MANAGER_PASSWORD: ${DEMO_MANAGER_PASSWORD:-}
+      KNOWLEDGE_MANIFEST_DIR: /app/data/index_manifests
+      LANGSMITH_TRACING: ${LANGSMITH_TRACING:-false}
+      LANGSMITH_API_KEY: ${LANGSMITH_API_KEY:-}
+      LANGSMITH_ENDPOINT: ${LANGSMITH_ENDPOINT:-https://api.smith.langchain.com}
+      LANGSMITH_PROJECT: ${LANGSMITH_PROJECT:-p043-copilot-dev}
+      LANGSMITH_CAPTURE_CONTENT: ${LANGSMITH_CAPTURE_CONTENT:-false}
+      LANGSMITH_SAMPLING_RATE: ${LANGSMITH_SAMPLING_RATE:-1.0}
+      AI_LOG_SERVER: ${AI_LOG_SERVER:-}
+      AI_LOG_API_KEY: ${AI_LOG_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GOOGLE_TTS_SERVICE_ACCOUNT_JSON: ${GOOGLE_TTS_SERVICE_ACCOUNT_JSON:-}
+      VOICE_STT_USD_PER_HOUR: ${VOICE_STT_USD_PER_HOUR:-0.04}
+      VOICE_TTS_USD_PER_MILLION_CHARACTERS: ${VOICE_TTS_USD_PER_MILLION_CHARACTERS:-16}
+    volumes:
+      - index_manifests:/app/data/index_manifests
     depends_on:
       postgres:
         condition: service_healthy
@@ -58,3 +83,4 @@ services:
 
 volumes:
   postgres_data:
+  index_manifests:

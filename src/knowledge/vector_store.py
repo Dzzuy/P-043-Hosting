@@ -5,6 +5,7 @@ from typing import Any
 
 from src.config import get_settings
 from src.knowledge.schemas import ChunkMetadata, KnowledgeChunk
+from src.observability import span
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +52,10 @@ class BaseVectorStore(ABC):
     def reset(self) -> None:
         """Clear all stored vectors."""
         pass
+
+    def read_records(self) -> list[tuple[KnowledgeChunk, list[float]]]:
+        """Read the entire collection from storage, never through the chunk cache."""
+        raise NotImplementedError("This store cannot verify index integrity")
 
 
 class InMemoryVectorStore(BaseVectorStore):
@@ -129,6 +134,9 @@ class InMemoryVectorStore(BaseVectorStore):
     def count(self) -> int:
         return len(self._chunks)
 
+    def read_records(self):
+        return [(chunk.model_copy(deep=True), list(self._embeddings[cid])) for cid, chunk in self._chunks.items()]
+
     def reset(self) -> None:
         self._chunks.clear()
         self._embeddings.clear()
@@ -144,11 +152,12 @@ class ChromaVectorStore(BaseVectorStore):
         self.persist_dir = persist_dir or settings.chroma_persist_dir
         self.collection_name = collection_name or settings.chroma_collection_name
 
-        self.client = chromadb.PersistentClient(path=self.persist_dir)
-        self.collection = self.client.get_or_create_collection(
-            name=self.collection_name,
-            metadata={"hnsw:space": "cosine"},
-        )
+        with span("db.connect", backend="chroma"):
+            self.client = chromadb.PersistentClient(path=self.persist_dir)
+            self.collection = self.client.get_or_create_collection(
+                name=self.collection_name,
+                metadata={"hnsw:space": "cosine"},
+            )
         self._cache: dict[str, KnowledgeChunk] = {}
 
     def _serialize_metadata(self, meta: ChunkMetadata) -> dict[str, Any]:
@@ -209,12 +218,13 @@ class ChromaVectorStore(BaseVectorStore):
             elif len(clean_where) > 1:
                 chroma_where = {"$and": [{k: v} for k, v in clean_where.items()]}
 
-        results = self.collection.query(
-            query_embeddings=[query_embedding],
-            n_results=top_k,
-            where=chroma_where,
-            include=["metadatas", "documents", "distances"],
-        )
+        with span("db.execute", backend="chroma", operation="search", top_k=top_k):
+            results = self.collection.query(
+                query_embeddings=[query_embedding],
+                n_results=top_k,
+                where=chroma_where,
+                include=["metadatas", "documents", "distances"],
+            )
 
         matched: list[tuple[KnowledgeChunk, float]] = []
         if results and results.get("ids") and len(results["ids"]) > 0:
@@ -241,7 +251,8 @@ class ChromaVectorStore(BaseVectorStore):
         if chunk_id in self._cache:
             return self._cache[chunk_id]
 
-        res = self.collection.get(ids=[chunk_id], include=["metadatas", "documents"])
+        with span("db.execute", backend="chroma", operation="get_by_id"):
+            res = self.collection.get(ids=[chunk_id], include=["metadatas", "documents"])
         if res and res.get("ids") and len(res["ids"]) > 0:
             content = res["documents"][0] if res.get("documents") else ""
             meta_dict = res["metadatas"][0] if res.get("metadatas") else {}
@@ -257,7 +268,28 @@ class ChromaVectorStore(BaseVectorStore):
         return None
 
     def count(self) -> int:
-        return self.collection.count()
+        with span("db.execute", backend="chroma", operation="count"):
+            return self.collection.count()
+
+    def read_records(self):
+        records, offset = [], 0
+        while True:
+            with span("db.execute", backend="chroma", operation="read_records"):
+                batch = self.collection.get(limit=256, offset=offset, include=["metadatas", "documents", "embeddings"])
+            ids = batch.get("ids") or []
+            if not ids:
+                break
+            for index, cid in enumerate(ids):
+                raw = batch["metadatas"][index]
+                if set(raw) - set(ChunkMetadata.model_fields):
+                    raise ValueError("Unexpected stored metadata")
+                metadata = ChunkMetadata.model_validate(raw)
+                chunk = KnowledgeChunk(
+                    chunk_id=cid, document_id=metadata.document_id, content=batch["documents"][index], metadata=metadata
+                )
+                records.append((chunk, [float(x) for x in batch["embeddings"][index]]))
+            offset += len(ids)
+        return records
 
     def reset(self) -> None:
         self.client.delete_collection(self.collection_name)

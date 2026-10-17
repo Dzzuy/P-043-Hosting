@@ -19,7 +19,7 @@ export const SCENARIO_PRESETS = [
       traits: 'Tính toán chi tiết từng km di chuyển, e ngại mất thời gian chờ trạm sạc ảnh hưởng doanh thu.',
     },
     visible_context: "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
-    budget: 'Ngân sách: 150 triệu trả trước, vay trả góp phần còn lại',
+    budget: 'Ngân sách: khoảng 300 triệu trả trước, cân nhắc vay phần còn lại',
     is_backend: true,
   },
   {

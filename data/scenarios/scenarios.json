@@ -5,7 +5,57 @@
     "difficulty": "Medium",
     "sales_channel": "Fanpage",
     "training_objective": "Khai thác nhu cầu chạy dịch vụ, trao đổi chi phí sử dụng một cách trung thực và chốt bước kiểm chứng phù hợp.",
-    "scenario_version": "2.2",
+    "scenario_version": "2.5",
+    "policy_expectations": [
+      {
+        "policy_id": "vtlx2",
+        "level": "expected",
+        "topic": "Ưu đãi Vì Tương Lai Xanh 2 và điều kiện chuyển đổi sang xe điện cho VF 5",
+        "lookup": {
+          "query": "Vì Tương Lai Xanh 2",
+          "document_type": "promotion",
+          "policy_type": "general",
+          "product_model": "VF 5"
+        },
+        "requires_eligibility_check": true
+      },
+      {
+        "policy_id": "charging",
+        "level": "expected",
+        "topic": "Chính sách ưu đãi sạc pin và điều kiện sử dụng",
+        "lookup": {
+          "query": "Chính sách ưu đãi sạc pin",
+          "document_type": "policy",
+          "policy_type": "charging",
+          "product_model": "ALL"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "warranty",
+        "level": "bonus",
+        "topic": "Chính sách bảo hành xe và pin VF 5",
+        "lookup": {
+          "query": "VF 5 bảo hành",
+          "document_type": "faq",
+          "policy_type": null,
+          "product_model": "VF 5"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "zero_down",
+        "level": "bonus",
+        "topic": "Chương trình mua xe không cần vốn đối ứng và điều kiện vay",
+        "lookup": {
+          "query": "Mua xe 0 Đồng",
+          "document_type": "promotion",
+          "policy_type": "general",
+          "product_model": "VF 5"
+        },
+        "requires_eligibility_check": false
+      }
+    ],
     "target_skills": ["need_discovery", "objection_handling", "closing_next_step"],
     "persona": {
       "name": "Anh Nam",
@@ -17,7 +67,7 @@
     "customer_goals": "So chi phí sử dụng theo quãng đường thực tế với Vios, kiểm tra điều kiện sạc cho xe biển vàng và chọn bước xác minh trước khi đổi xe",
     "visible_context": "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
     "hidden_facts": {
-      "budget": "Có sẵn 150 triệu, muốn vay trả góp phần còn lại",
+      "budget": "Có sẵn khoảng 300 triệu để trả trước, cân nhắc vay phần còn lại",
       "daily_distance": "Chạy trung bình 180 km/ngày (khoảng 5.000 km/tháng)",
       "fuel_cost_month": "Theo ghi chép chi tiêu ba tháng gần đây, tiền xăng Vios khoảng 8,5 triệu đồng mỗi tháng; đây là dữ kiện giả lập của khách, không phải thông số Toyota",
       "registration_location": "Anh dự định đăng ký xe tại Hà Nội và chạy biển vàng",
@@ -35,7 +85,7 @@
         "fact_key": "budget",
         "trigger_intent": "ask_budget_or_financing",
         "trigger_keywords": ["tài chính", "ngân sách", "trả trước", "vay vốn", "góp"],
-        "revealed_statement": "Anh dồn hết vốn liếng trong tay chỉ có tầm 150 triệu thôi, còn lại phải vay ngân hàng thì mới kham nổi."
+        "revealed_statement": "Anh có khoảng 300 triệu để trả trước. Nếu đổi xe thì phần còn lại chắc vẫn phải vay, nhưng anh muốn xem chi phí chạy hằng tháng có hợp lý không đã."
       },
       {
         "fact_key": "fuel_cost_month",
@@ -75,7 +125,7 @@
     "expected_discovery": "Ưu tiên hỏi quãng đường, tiền xăng Vios thực tế, địa phương/biển số và lịch chạy để so chi phí năng lượng và điều kiện sạc; chỉ hỏi số tiền trả trước khi khách muốn tính phương án vay.",
     "success_conditions": "Tư vấn viên trả lời giá niêm yết nhưng không gọi đó là giá lăn bánh, khai thác quãng đường và tiền xăng thực tế, phân biệt mua xe kèm pin với thuê pin cũ, giải thích đơn giá và điều kiện ưu đãi sạc từ nguồn, không hứa tiết kiệm hoặc tiền trả góp khi thiếu giả định, xử lý lo ngại mất cuốc và thống nhất bước kiểm chứng phù hợp.",
     "termination_conditions": {
-      "max_turns": 10,
+      "max_turns": 15,
       "drop_out_trigger": "Nếu báo giá thiếu căn cứ hoặc sau hai lần khách hỏi cùng một băn khoăn mà tư vấn viên vẫn không giải quyết được, khách tạm hoãn quyết định thay vì hỏi đi hỏi lại."
     }
   },
@@ -85,7 +135,57 @@
     "difficulty": "Hard",
     "sales_channel": "Tin nhắn tư vấn",
     "training_objective": "Khám phá nhu cầu gia đình và người cùng ra quyết định, sau đó so sánh giá trị mà không hạ thấp đối thủ hoặc đưa ra cam kết khấu hao thiếu căn cứ.",
-    "scenario_version": "2.0",
+    "scenario_version": "2.2",
+    "policy_expectations": [
+      {
+        "policy_id": "vtlx2",
+        "level": "expected",
+        "topic": "Ưu đãi Vì Tương Lai Xanh 2 và điều kiện chuyển đổi sang xe điện cho VF 7",
+        "lookup": {
+          "query": "Vì Tương Lai Xanh 2",
+          "document_type": "promotion",
+          "policy_type": "general",
+          "product_model": "VF 7"
+        },
+        "requires_eligibility_check": true
+      },
+      {
+        "policy_id": "warranty",
+        "level": "expected",
+        "topic": "Chính sách bảo hành xe và pin VF 7",
+        "lookup": {
+          "query": "VF 7 bảo hành",
+          "document_type": "faq",
+          "policy_type": null,
+          "product_model": "VF 7"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "charging",
+        "level": "bonus",
+        "topic": "Chính sách ưu đãi sạc pin và điều kiện sử dụng",
+        "lookup": {
+          "query": "Chính sách ưu đãi sạc pin",
+          "document_type": "policy",
+          "policy_type": "charging",
+          "product_model": "ALL"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "zero_down",
+        "level": "bonus",
+        "topic": "Chương trình mua xe không cần vốn đối ứng và điều kiện vay",
+        "lookup": {
+          "query": "Mua xe 0 Đồng",
+          "document_type": "promotion",
+          "policy_type": "general",
+          "product_model": "VF 7"
+        },
+        "requires_eligibility_check": false
+      }
+    ],
     "target_skills": ["product_knowledge", "objection_handling", "closing_next_step"],
     "persona": {
       "name": "Chị Thanh",
@@ -94,8 +194,8 @@
       "communication_style": "Hiện đại, kỹ tính, thích xe đẹp nhưng phân vân chênh lệch giá"
     },
     "buyer_intent": "Mua xe cho gia đình đi làm và cuối tuần về quê, thích công nghệ nhưng ngại xe điện mới ra",
-    "customer_goals": "Muốn biết lý do tại sao phải bỏ thêm 50 triệu mua VF 7 thay vì chọn CX-5 đã quen thuộc",
-    "visible_context": "Khách nhắn tin: 'Chị thấy VF 7 với CX-5 cũng như nhau, CX-5 nhìn quen mắt hơn mà sao VF 7 đắt hơn 50 triệu vậy em?'",
+    "customer_goals": "Muốn biết lý do tại sao phải bỏ thêm tiền mua VF 7 thay vì chọn CX-5 đã quen thuộc",
+    "visible_context": "Khách nhắn tin: 'Chị thấy VF 7 với CX-5 cũng như nhau, CX-5 nhìn quen mắt hơn mà sao VF 7 đắt hơn khá nhiều vậy em?'",
     "hidden_facts": {
       "family_status": "2 vợ chồng và 2 con nhỏ, cuối tuần về quê 120 km",
       "decision_maker": "Chị Thanh thích công nghệ nhưng chồng chị đang nghiêng về CX-5 vì sợ xe điện mất giá sau 3 năm",
@@ -134,7 +234,7 @@
     "expected_discovery": "Nhân viên phải khai thác được thành phần gia đình sử dụng xe và ai là người có tiếng nói quyết định cuối cùng trong gia đình.",
     "success_conditions": "Tư vấn viên khám phá nhu cầu sử dụng và người cùng ra quyết định, so sánh trung lập bằng bằng chứng, không cam kết khấu hao và đề xuất một bước tiếp theo phù hợp cho cả hai vợ chồng.",
     "termination_conditions": {
-      "max_turns": 10,
+      "max_turns": 12,
       "drop_out_trigger": "Nếu tư vấn viên chê bai dìm hàng CX-5 thô thiển hoặc không chứng minh được giá trị xe."
     }
   },
@@ -144,7 +244,57 @@
     "difficulty": "Easy",
     "sales_channel": "Chat trực tuyến",
     "training_objective": "Khai thác quãng đường và khả năng tiếp cận điểm sạc để xử lý lo ngại sạc tại chung cư bằng phương án có thể kiểm chứng.",
-    "scenario_version": "2.0",
+    "scenario_version": "2.2",
+    "policy_expectations": [
+      {
+        "policy_id": "vtlx2",
+        "level": "expected",
+        "topic": "Ưu đãi Vì Tương Lai Xanh 2 và điều kiện chuyển đổi sang xe điện cho VF 6",
+        "lookup": {
+          "query": "Vì Tương Lai Xanh 2",
+          "document_type": "promotion",
+          "policy_type": "general",
+          "product_model": "VF 6"
+        },
+        "requires_eligibility_check": true
+      },
+      {
+        "policy_id": "charging",
+        "level": "expected",
+        "topic": "Chính sách ưu đãi sạc pin và điều kiện sử dụng",
+        "lookup": {
+          "query": "Chính sách ưu đãi sạc pin",
+          "document_type": "policy",
+          "policy_type": "charging",
+          "product_model": "ALL"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "warranty",
+        "level": "bonus",
+        "topic": "Chính sách bảo hành xe và pin VF 6",
+        "lookup": {
+          "query": "VF 6 bảo hành",
+          "document_type": "faq",
+          "policy_type": null,
+          "product_model": "VF 6"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "home_charger",
+        "level": "bonus",
+        "topic": "Giá bộ sạc tại nhà theo bảng giá hiện hành",
+        "lookup": {
+          "query": "Giá bộ sạc tại nhà",
+          "document_type": "price_list",
+          "policy_type": null,
+          "product_model": "ALL"
+        },
+        "requires_eligibility_check": false
+      }
+    ],
     "target_skills": ["need_discovery", "objection_handling"],
     "persona": {
       "name": "Anh Tuấn",
@@ -186,8 +336,302 @@
     "expected_discovery": "Nhân viên phải hỏi về khoảng cách đi lại trung bình và vị trí sinh sống để chỉ ra điểm sạc công cộng tiện lợi gần nhà.",
     "success_conditions": "Tư vấn viên khai thác quãng đường và khu vực, giải thích phương án sạc bằng dữ liệu có nguồn, không hứa thời gian hay tần suất cố định và giúp khách xác minh điểm sạc phù hợp.",
     "termination_conditions": {
-      "max_turns": 6,
+      "max_turns": 8,
       "drop_out_trigger": "Nếu tư vấn viên bỏ qua câu hỏi sạc mà chuyển sang ép chốt cọc."
+    }
+  },
+  {
+    "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+    "title": "Chị Hà — VF 6 Eco hay nâng lên Plus?",
+    "difficulty": "Medium",
+    "sales_channel": "Showroom",
+    "scenario_version": "1.4",
+    "target_skills": [
+      "need_discovery",
+      "product_knowledge",
+      "objection_handling",
+      "policy_accuracy",
+      "closing_next_step"
+    ],
+    "persona": {
+      "name": "Chị Hà",
+      "age": 36,
+      "occupation": "nhân viên văn phòng",
+      "communication_style": "Thân thiện, thực tế; không hỏi sâu thông số kỹ thuật; chỉ trả lời đúng điều được hỏi, ngắn gọn."
+    },
+    "training_objective": "Khám phá nhu cầu, xác nhận điều kiện ưu đãi, chốt được VF 6 Eco hoặc upsell VF 6 Plus bằng lợi ích gắn với nhu cầu thật — cả hai đều là thành công.",
+    "buyer_intent": "Mua VF 6 Eco đang có ưu đãi.",
+    "visible_context": "Khách đến showroom xem VF 6 Eco vì thấy giá đang ưu đãi tốt.",
+    "customer_goals": "Tư vấn viên chào trước; chị chỉ mở lời: “Chào em, chị đang tìm hiểu chiếc VF 6 Eco. Chị thấy giá đang có ưu đãi khá tốt nên muốn đến xem xe thực tế.” Nếu tư vấn viên nhắc đến ưu đãi, chị hỏi thêm về ưu đãi đó. Chị KHÔNG tự kể nhu cầu sử dụng, gia đình, ngân sách, kinh nghiệm lái, chỗ đỗ hoặc các ưu tiên; chị chỉ chia sẻ từng thông tin khi tư vấn viên hỏi câu hỏi liên quan.",
+    "hidden_facts": {
+      "current_vehicle": "chị đang đi xe máy xăng đứng tên chị",
+      "driving_experience": "chị mới có bằng lái hơn 1 năm, đỗ xe chưa quen",
+      "parking": "nhà chị trong ngõ nhỏ, chỗ làm phải đỗ hầm khá chật",
+      "budget": "Chị chuẩn bị khoảng 600 triệu, nếu thật sự đáng thì thêm được tầm 50 triệu.",
+      "charging_access": "nhà chị có sân, cắm sạc ở nhà được",
+      "real_concern": "sợ bỏ thêm tiền cho những thứ không dùng tới",
+      "family_usage": "Chị đi làm hằng ngày và đưa đón 2 con đi học.",
+      "weekend_trips": "Cuối tuần thỉnh thoảng chị chở cả nhà về quê.",
+      "priorities": "Chị muốn xe dùng lâu dài, an toàn mà cũng phải hợp lý về tiền."
+    },
+    "disclosure_rules": [
+      {
+        "fact_key": "current_vehicle",
+        "trigger_intent": "ask_current_vehicle_or_promo",
+        "trigger_keywords": [
+          "đang đi xe gì",
+          "xe hiện tại",
+          "chuyển đổi",
+          "Vì Tương Lai Xanh",
+          "xe xăng",
+          "ưu đãi chuyển đổi"
+        ],
+        "revealed_statement": "Chị đang đi xe máy xăng, xe đứng tên chị em nhé."
+      },
+      {
+        "fact_key": "driving_experience",
+        "trigger_intent": "ask_driving_experience",
+        "trigger_keywords": [
+          "bằng lái",
+          "lái xe lâu chưa",
+          "kinh nghiệm lái",
+          "quen lái chưa"
+        ],
+        "revealed_statement": "Chị mới có bằng lái hơn một năm thôi, đỗ xe vẫn chưa quen lắm."
+      },
+      {
+        "fact_key": "parking",
+        "trigger_intent": "ask_parking_conditions",
+        "trigger_keywords": [
+          "chỗ đỗ",
+          "ngõ",
+          "hầm xe",
+          "đỗ ở đâu"
+        ],
+        "revealed_statement": "Nhà chị trong ngõ nhỏ, còn chỗ làm phải đỗ hầm khá chật."
+      },
+      {
+        "fact_key": "budget",
+        "trigger_intent": "ask_budget_or_financing",
+        "trigger_keywords": [
+          "ngân sách",
+          "tài chính",
+          "dự tính bao nhiêu",
+          "thêm tiền"
+        ],
+        "revealed_statement": "Chị chuẩn bị khoảng 600 triệu, nếu thật sự đáng thì thêm được tầm 50 triệu."
+      },
+      {
+        "fact_key": "charging_access",
+        "trigger_intent": "ask_home_charging_access",
+        "trigger_keywords": [
+          "sạc tại nhà",
+          "chỗ sạc",
+          "sân nhà",
+          "lắp sạc"
+        ],
+        "revealed_statement": "Nhà chị có sân, cắm sạc ở nhà được em ạ."
+      },
+      {
+        "fact_key": "family_usage",
+        "trigger_intent": "ask_daily_usage",
+        "trigger_keywords": [
+          "đi làm",
+          "đưa đón",
+          "chở ai",
+          "gia đình",
+          "mấy người",
+          "nhu cầu sử dụng",
+          "sử dụng xe",
+          "dùng xe vào việc gì",
+          "hằng ngày"
+        ],
+        "revealed_statement": "Chị đi làm hằng ngày và đưa đón 2 con đi học."
+      },
+      {
+        "fact_key": "weekend_trips",
+        "trigger_intent": "ask_long_trips",
+        "trigger_keywords": [
+          "đi xa",
+          "đường dài",
+          "về quê",
+          "cuối tuần",
+          "đi tỉnh",
+          "đi chơi xa"
+        ],
+        "revealed_statement": "Cuối tuần thỉnh thoảng chị chở cả nhà về quê."
+      },
+      {
+        "fact_key": "priorities",
+        "trigger_intent": "ask_priorities",
+        "trigger_keywords": [
+          "ưu tiên",
+          "quan trọng nhất",
+          "tiêu chí",
+          "quan tâm nhất",
+          "điều gì quan trọng"
+        ],
+        "revealed_statement": "Chị muốn xe dùng lâu dài, an toàn mà cũng phải hợp lý về tiền."
+      }
+    ],
+    "objections": [
+      {
+        "objection_id": "OBJ_VF6_PROMO_ELIGIBILITY",
+        "requires_revealed_facts": ["current_vehicle"],
+        "trigger_stage": "presentation",
+        "objection_text": "Giá vẫn hơi cao so với dự tính của chị. Ưu đãi đó chị có được áp dụng không em?",
+        "resolve_condition": "Sale xác nhận rõ ràng chị đủ điều kiện nhận ưu đãi (kể cả câu trả lời ngắn như “Dạ được ạ” hay “Chị đủ điều kiện” khi đang trả lời đúng câu hỏi về xe máy xăng đứng tên chị). Giá sau ưu đãi và các chính sách khác là điểm cộng cho policy_accuracy, KHÔNG bắt buộc để giải tỏa băn khoăn này.",
+        "ideal_sales_response": "Dạ, em sẽ đối chiếu xe máy xăng đứng tên chị với điều kiện Vì Tương Lai Xanh 2 và báo giá theo bảng giá, chính sách khuyến mãi hiện hành."
+      },
+      {
+        "objection_id": "OBJ_VF6_PLUS_WORTH",
+        "trigger_keywords": [
+          "Plus",
+          "bản cao hơn",
+          "nâng cấp lên"
+        ],
+        "objection_text": "Chị thấy bản Plus đắt hơn khá nhiều. Cùng là VF 6, cùng pin, cùng kích thước thì chị nghĩ bản Eco đã đủ dùng rồi. Em thử giải thích giúp chị xem tại sao chị nên bỏ thêm tiền để mua bản Plus nhé.",
+        "resolve_condition": "Tư vấn viên gắn ít nhất hai lợi ích Plus, trong đó ít nhất một về an toàn, với nhu cầu chị đã chia sẻ khi được hỏi; nêu đúng giá và chênh lệch sau ưu đãi theo bảng giá và chính sách khuyến mãi hiện hành.",
+        "ideal_sales_response": "Túi khí hỗ trợ bảo vệ gia đình và camera quan sát toàn cảnh giúp quan sát khi đỗ hầm chật; em sẽ đối chiếu giá và chênh lệch theo bảng giá, chính sách khuyến mãi hiện hành. Mình có thể trải nghiệm trước, còn Eco vẫn là lựa chọn hợp lý nếu đáp ứng đủ nhu cầu chị."
+      }
+    ],
+    "upsell_benefits": [
+      {
+        "benefit_id": "airbags_7",
+        "description": "7 túi khí so với 4 túi khí trên Eco",
+        "safety": true,
+        "linked_need_fact_keys": [
+          "family_usage"
+        ]
+      },
+      {
+        "benefit_id": "adas",
+        "description": "ADAS: kiểm soát hành trình thích ứng, hỗ trợ giữ làn, phanh khẩn cấp tự động — người lái vẫn phải chủ động",
+        "safety": true,
+        "linked_need_fact_keys": [
+          "weekend_trips",
+          "driving_experience"
+        ]
+      },
+      {
+        "benefit_id": "motor_150kw",
+        "description": "Động cơ 150 kW/310 Nm so với 130 kW/250 Nm, tăng tốc 0–100 km/h 8,89 giây",
+        "safety": false,
+        "linked_need_fact_keys": [
+          "weekend_trips"
+        ]
+      },
+      {
+        "benefit_id": "camera_360",
+        "description": "Camera 360° thay vì camera lùi",
+        "safety": false,
+        "linked_need_fact_keys": [
+          "parking",
+          "driving_experience"
+        ]
+      }
+    ],
+    "upsell_rule": {
+      "objection_id": "OBJ_VF6_PLUS_WORTH",
+      "min_linked": 2,
+      "min_safety": 1
+    },
+    "acceptable_outcomes": [
+      {
+        "outcome_id": "close_eco",
+        "label": "Chốt VF 6 Eco",
+        "product": "VF 6 Eco Tiêu chuẩn 1",
+        "requires_resolved_objections": []
+      },
+      {
+        "outcome_id": "upsell_plus",
+        "label": "Upsell VF 6 Plus",
+        "product": "VF 6 Plus Tiêu chuẩn 1",
+        "requires_resolved_objections": [
+          "OBJ_VF6_PLUS_WORTH"
+        ],
+        "preferred": true
+      }
+    ],
+    "policy_expectations": [
+      {
+        "policy_id": "vtlx2",
+        "level": "expected",
+        "topic": "Ưu đãi Vì Tương Lai Xanh 2 và điều kiện chuyển đổi sang xe điện cho VF 6",
+        "lookup": {
+          "query": "Vì Tương Lai Xanh 2",
+          "document_type": "promotion",
+          "policy_type": "general",
+          "product_model": "VF 6"
+        },
+        "requires_eligibility_check": true
+      },
+      {
+        "policy_id": "vf6_price",
+        "level": "expected",
+        "topic": "Giá niêm yết VF 6 Eco và Plus theo bảng giá hiện hành",
+        "lookup": {
+          "query": "VF 6",
+          "document_type": "price_list",
+          "policy_type": null,
+          "product_model": "VF 6"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "charging",
+        "level": "bonus",
+        "topic": "Chính sách ưu đãi sạc pin và điều kiện sử dụng",
+        "lookup": {
+          "query": "Chính sách ưu đãi sạc pin",
+          "document_type": "policy",
+          "policy_type": "charging",
+          "product_model": "ALL"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "warranty",
+        "level": "bonus",
+        "topic": "Chính sách bảo hành xe và pin VF 6",
+        "lookup": {
+          "query": "VF 6 bảo hành",
+          "document_type": "faq",
+          "policy_type": null,
+          "product_model": "VF 6"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "zero_down",
+        "level": "bonus",
+        "topic": "Chương trình mua xe không cần vốn đối ứng và điều kiện vay",
+        "lookup": {
+          "query": "Mua xe 0 Đồng",
+          "document_type": "promotion",
+          "policy_type": "general",
+          "product_model": "VF 6"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "deposit",
+        "level": "bonus",
+        "topic": "Điều khoản đặt cọc mua xe và ký hợp đồng",
+        "lookup": {
+          "query": "Điều khoản đặt cọc mua xe VinFast",
+          "document_type": "policy",
+          "policy_type": "general",
+          "product_model": "ALL"
+        },
+        "requires_eligibility_check": false
+      }
+    ],
+    "expected_discovery": "Tư vấn viên phải hỏi để khám phá từng dữ kiện: xe hiện tại (current_vehicle) để xác nhận điều kiện ưu đãi, nhu cầu đi làm và đưa đón con (family_usage), chuyến đi xa cuối tuần (weekend_trips), ưu tiên khi mua xe (priorities), kinh nghiệm lái (driving_experience), chỗ đỗ/ngõ (parking), ngân sách (budget) và sạc tại nhà (charging_access). Chỉ gắn lợi ích Plus với nhu cầu chị đã chia sẻ khi được hỏi; không coi nhu cầu sử dụng là thông tin đã biết từ mục tiêu khách hàng.",
+    "success_conditions": "Chốt VF 6 Eco hoặc upsell VF 6 Plus đều thành công nếu tư vấn viên khám phá nhu cầu, xác nhận điều kiện và báo đúng giá/ưu đãi, thống nhất bước tiếp theo phù hợp mà không gây sức ép. Upsell Plus chỉ đạt khi giải quyết phản đối về giá trị bằng ít nhất hai lợi ích gắn với nhu cầu đã chia sẻ, có ít nhất một lợi ích an toàn và báo đúng chênh lệch sau ưu đãi; không ép khách nâng bản hoặc hứa miễn phí bảo dưỡng.",
+    "termination_conditions": {
+      "max_turns": 15,
+      "drop_out_trigger": "Khách bị ép mua Plus khi chưa thấy lợi ích phù hợp nhu cầu hoặc tư vấn viên nói sai giá/ưu đãi."
     }
   }
 ]

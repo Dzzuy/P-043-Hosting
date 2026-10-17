@@ -14,8 +14,11 @@ def test_vf5_demo_has_discoverable_customer_cost_inputs():
     scenario = ScenarioRepository().get("SCENARIO_01_VF5_TAXI")
     disclosure_keys = {rule.fact_key for rule in scenario.disclosure_rules}
 
-    assert scenario.scenario_version == "2.2"
+    assert scenario.scenario_version == "2.5"
     assert {"daily_distance", "fuel_cost_month", "registration_location", "work_schedule"} <= disclosure_keys
+    assert "300 triệu" in scenario.hidden_facts["budget"]
+    budget_disclosure = next(rule for rule in scenario.disclosure_rules if rule.fact_key == "budget")
+    assert "300 triệu" in budget_disclosure.revealed_statement
     assert "tiền thuê pin" not in scenario.hidden_facts["real_concern"]
     assert "8,5 triệu" not in scenario.visible_context
 

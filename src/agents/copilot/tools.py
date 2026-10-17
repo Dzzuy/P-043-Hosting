@@ -5,12 +5,12 @@ import re
 import unicodedata
 from datetime import date
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from rank_bm25 import BM25Okapi
 
 from src.agents.copilot.state import Citation, FusedHit, RetrievalHit
-from src.knowledge.chunking import load_and_chunk_corpus
+from src.knowledge.chunking import chunk_embedding_text, load_and_chunk_corpus
 from src.knowledge.retrieval_service import get_retrieval_service
 from src.knowledge.schemas import KnowledgeChunk
 from src.knowledge.validity import is_document_retrievable
@@ -68,7 +68,9 @@ def _make_hit(chunk: KnowledgeChunk, score: float, rank: int, method: Literal["d
         "document_id": chunk.document_id,
         "content": chunk.content,
         "title": meta.title,
-        "section": None,
+        "section": meta.section_title,
+        "context_prefix": meta.context_prefix,
+        "requires_context": meta.requires_context,
         "page": None,
         "source_uri": meta.source,
         "effective_from": str(meta.effective_date),
@@ -76,6 +78,9 @@ def _make_hit(chunk: KnowledgeChunk, score: float, rank: int, method: Literal["d
         "status": meta.status,
         "version": meta.version,
         "product_model": meta.product_model,
+        "document_type": meta.document_type,
+        "policy_type": meta.policy_type,
+        "competitor_model": meta.competitor_model,
         "retrieval_method": method,
         "native_score": float(score),
         "rank": rank,
@@ -93,17 +98,20 @@ class BM25SearchEngine:
         """Build in local variables so a failed reload preserves the previous index."""
         path = Path(corpus_path) if corpus_path is not None else self.corpus_path
         chunks = load_and_chunk_corpus(path)
-        tokenized = [
-            tokenize_text(
-                f"{chunk.metadata.title}\n{chunk.metadata.product_model}\n{chunk.document_id}\n{chunk.content}"
-            )
-            for chunk in chunks
-        ]
+        tokenized = [tokenize_text(f"{chunk_embedding_text(chunk)}\n{chunk.document_id}") for chunk in chunks]
         bm25 = BM25Okapi(tokenized) if tokenized and any(tokenized) else None
         self.corpus_path, self._chunks, self._bm25 = path, chunks, bm25
         logger.info("BM25 indexed %d chunks", len(chunks))
 
-    def search(self, query: str, top_k: int = 10, target_date: date | None = None) -> list[RetrievalHit]:
+    def search(
+        self,
+        query: str,
+        top_k: int = 10,
+        target_date: date | None = None,
+        product_model: str | None = None,
+        document_type: str | None = None,
+        policy_type: str | None = None,
+    ) -> list[RetrievalHit]:
         if self._bm25 is None or top_k <= 0:
             return []
         tokens = [token for token in tokenize_text(query) if token not in STOP_WORDS]
@@ -112,19 +120,76 @@ class BM25SearchEngine:
         scored = sorted(zip(self._bm25.get_scores(tokens), self._chunks), key=lambda pair: pair[0], reverse=True)
         hits = []
         for score, chunk in scored:
-            if score > 0 and is_document_retrievable(chunk.metadata, target_date):
+            if (
+                score > 0
+                and matches_filters(chunk, product_model, document_type, policy_type)
+                and is_document_retrievable(chunk.metadata, target_date)
+            ):
                 hits.append(_make_hit(chunk, score, len(hits) + 1, "bm25"))
                 if len(hits) >= top_k:
                     break
         return hits
+
+    def read_context(
+        self, chunk_id: str, target_date: date | None = None, *, include_header=False
+    ) -> list[RetrievalHit]:
+        """Verified section headers/conditions and neighbors, never arbitrary URLs."""
+        anchor = next((c for c in self._chunks if c.chunk_id == chunk_id), None)
+        if anchor is None:
+            return []
+        chunks = [
+            c
+            for c in self._chunks
+            if c.document_id == anchor.document_id
+            and c.metadata.version == anchor.metadata.version
+            and is_document_retrievable(c.metadata, target_date)
+        ]
+        section = anchor.metadata.section_title or ""
+        parent = section.split(" > ")[0]
+        chosen = {anchor.chunk_id: anchor}
+        if include_header and chunks and anchor.metadata.document_type in {"price_list", "policy"}:
+            chosen[chunks[0].chunk_id] = chunks[0]  # Document-level effective date / applicability header.
+        same = [c for c in chunks if c.metadata.section_id == anchor.metadata.section_id]
+        if same and (anchor.metadata.context_prefix or anchor.metadata.requires_context):
+            chosen[same[0].chunk_id] = same[0]
+        for c in chunks:
+            title = c.metadata.section_title or ""
+            scope = re.search(r"đối tượng áp dụng|phạm vi áp dụng", title, re.I)
+            if scope and anchor.metadata.document_type == "policy":
+                # A dated audience subsection is local, not global scope for every audience.
+                scope = c.metadata.section_id == anchor.metadata.section_id or " > " not in title
+            condition = (
+                title.startswith(parent) and parent and re.search(r"lưu ý|ghi chú|điều kiện|ngoại lệ", title, re.I)
+            )
+            neighbor = (
+                anchor.metadata.requires_context and abs(c.metadata.chunk_index - anchor.metadata.chunk_index) <= 1
+            )
+            if scope or condition or neighbor:
+                chosen[c.chunk_id] = c
+        return [_make_hit(c, 0, i + 1, "bm25") for i, c in enumerate(chosen.values())]
 
 
 class DenseSearchEngine:
     def __init__(self):
         self.retrieval_service = get_retrieval_service()
 
-    def search(self, query: str, top_k: int = 10, target_date: date | None = None) -> list[RetrievalHit]:
-        results = self.retrieval_service.retrieve_with_scores(query=query, top_k=top_k, target_date=target_date)
+    def search(
+        self,
+        query: str,
+        top_k: int = 10,
+        target_date: date | None = None,
+        product_model: str | None = None,
+        document_type: str | None = None,
+        policy_type: str | None = None,
+    ) -> list[RetrievalHit]:
+        results = self.retrieval_service.retrieve_with_scores(
+            query=query,
+            top_k=top_k,
+            target_date=target_date,
+            product_model=product_model,
+            document_type=document_type,
+            policy_type=policy_type,
+        )
         return [_make_hit(chunk, score, rank, "dense") for rank, (chunk, score) in enumerate(results, start=1)]
 
 
@@ -161,17 +226,13 @@ def reciprocal_rank_fusion(
 def build_evidence_context(hits: list[RetrievalHit]) -> tuple[str, list[Citation]]:
     blocks, citations = [], []
     for idx, hit in enumerate(hits, start=1):
-        cid = f"C{idx}"
+        cid = hit.get("citation_id") or f"C{idx}"
         blocks.append(
-            f"[{cid}]\n"
-            f"document_id: {hit['document_id']}\n"
-            f"title: {hit['title']}\n"
-            f"product_model: {hit['product_model']}\n"
-            f"status: {hit['status']}\n"
-            f"version: {hit['version']}\n"
-            f"effective_from: {hit['effective_from'] or 'Chưa xác định'}\n"
-            f"effective_to: {hit['effective_to'] or 'Chưa xác định'}\n"
-            f"source: {hit['source_uri'] or hit['document_id']}\n"
+            f"[{cid}] {hit['document_id']} | {hit['title']}\n"
+            f"model: {hit['product_model']} | type: {hit.get('document_type')} | version: {hit['version']}\n"
+            f"validity: {hit['status']} {hit['effective_from']} .. {hit.get('effective_to') or 'open'}\n"
+            f"section: {hit.get('section') or 'unknown'}\n"
+            f"headers: {hit.get('context_prefix') or 'none'}\n"
             f"content:\n{hit['content']}"
         )
         citations.append(
@@ -185,9 +246,59 @@ def build_evidence_context(hits: list[RetrievalHit]) -> tuple[str, list[Citation
                 effective_from=hit["effective_from"],
                 effective_to=hit["effective_to"],
                 source_uri=hit["source_uri"],
+                product_model=hit["product_model"],
+                document_type=hit.get("document_type"),
+                version=hit.get("version"),
+                excerpt=hit.get("content"),
             )
         )
     return "\n\n---\n\n".join(blocks), citations
+
+
+def parse_answer_citations(text: str, allowed_cids: set[str] | None = None) -> dict[str, Any]:
+    """Shared citation parser detecting valid markers, unknown IDs, and malformed markers.
+
+    Never silently invents or drops citation IDs.
+    """
+    if not text:
+        return {"cited_ids": [], "unknown_ids": [], "malformed": []}
+
+    # Valid markers [C1], [C2], etc. (1-indexed)
+    cited_ids = list(dict.fromkeys(re.findall(r"\[(C[1-9]\d*)\]", text)))
+
+    # Malformed markers inside brackets like [C], [C0], [Cabc]
+    potential_markers = re.findall(r"\[(C[^\]]*)\]", text)
+    malformed = [m for m in potential_markers if not re.match(r"^C[1-9]\d*$", m)]
+
+    unknown_ids = []
+    if allowed_cids is not None:
+        unknown_ids = [cid for cid in cited_ids if cid not in allowed_cids]
+
+    return {
+        "cited_ids": cited_ids,
+        "unknown_ids": unknown_ids,
+        "malformed": list(dict.fromkeys(malformed)),
+    }
+
+
+
+def matches_filters(
+    chunk: KnowledgeChunk, product_model: str | None, document_type: str | None, policy_type: str | None
+) -> bool:
+    meta = chunk.metadata
+    if product_model and product_model.upper() != "ALL":
+
+        def normalize(value):
+            return re.sub(r"[\s-]", "", value).casefold()
+
+        allowed = {normalize(product_model)}
+        if document_type != "product_specs":
+            allowed.add("all")
+        if normalize(meta.product_model) not in allowed:
+            return False
+    return (not document_type or meta.document_type == document_type) and (
+        not policy_type or meta.policy_type == policy_type
+    )
 
 
 _bm25_instance: BM25SearchEngine | None = None

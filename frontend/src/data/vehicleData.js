@@ -4,27 +4,49 @@
  */
 
 // Danh sách xe thương mại chính thức để trống chờ dữ liệu thực tế được nạp vào
-export const VEHICLES = [];
+// VEHICLES defined below from SHOWROOM_VEHICLES
+
+export function resolveVehicleImage(path) {
+  if (!path) return '';
+  if (path.startsWith('data:') || path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:')) {
+    return path;
+  }
+  const base = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL)
+    ? import.meta.env.BASE_URL
+    : './';
+  let cleanPath = path;
+  if (cleanPath.startsWith('./')) {
+    cleanPath = cleanPath.slice(2);
+  }
+  if (cleanPath.startsWith('/')) {
+    cleanPath = cleanPath.slice(1);
+  }
+  if (base === './' || base === '.') {
+    return `./${cleanPath}`;
+  }
+  return `${base.endsWith('/') ? base : base + '/'}${cleanPath}`;
+}
 
 export const MODEL_IMAGE_MAP = {
-  vf3: '/vehicles/vf-3.jpg',
-  vf5: '/vehicles/vf-5.jpg',
-  vf6: '/vehicles/vf-6.jpg',
-  vf7: '/vehicles/vf-7.jpg',
-  vf8: '/vehicles/vf-8.jpg',
-  vf9: '/vehicles/vf-9.jpg',
-  vfwild: '/vehicles/vf-wild.jpg',
+  vf3: resolveVehicleImage('/vehicles/vf-3.jpg'),
+  vf5: resolveVehicleImage('/vehicles/vf-5.jpg'),
+  vf6: resolveVehicleImage('/vehicles/vf-6.jpg'),
+  vf7: resolveVehicleImage('/vehicles/vf-7.jpg'),
+  vf8: resolveVehicleImage('/vehicles/vf-8.jpg'),
+  vf9: resolveVehicleImage('/vehicles/vf-9.jpg'),
+  vfwild: resolveVehicleImage('/vehicles/vf-wild.jpg'),
 };
 
 export const MODEL_SVG_MAP = {
-  vf3: '/vehicles/vf-3.svg',
-  vf5: '/vehicles/vf-5.svg',
-  vf6: '/vehicles/vf-6.svg',
-  vf7: '/vehicles/vf-7.svg',
-  vf8: '/vehicles/vf-8.svg',
-  vf9: '/vehicles/vf-9.svg',
-  vfwild: '/vehicles/vf-wild.svg',
+  vf3: resolveVehicleImage('/vehicles/vf-3.svg'),
+  vf5: resolveVehicleImage('/vehicles/vf-5.svg'),
+  vf6: resolveVehicleImage('/vehicles/vf-6.svg'),
+  vf7: resolveVehicleImage('/vehicles/vf-7.svg'),
+  vf8: resolveVehicleImage('/vehicles/vf-8.svg'),
+  vf9: resolveVehicleImage('/vehicles/vf-9.svg'),
+  vfwild: resolveVehicleImage('/vehicles/vf-wild.svg'),
 };
+
 
 /**
  * Danh mục tệp PDF Thông số xe cần chuẩn bị và nạp vào hệ thống
@@ -38,10 +60,10 @@ export const REQUIRED_VEHICLE_PDFS = [
     document_id: 'PRODUCT_VF3_20260922',
     document_type: 'product_specs',
     title: 'VinFast VF 3: Thông số kỹ thuật, Trang bị & Khả năng vận hành',
-    status: 'Chờ nạp file PDF',
+    status: 'Đã nạp (corpus.json)',
     target_format: 'PDF chuẩn (.pdf, text-searchable, OCR vector)',
     recommended_pages: '4 - 8 trang',
-    image: '/vehicles/vf-3.jpg',
+    image: resolveVehicleImage('/vehicles/vf-3-transparent.png'),
     required_contents: [
       'Kích thước tổng thể (D x R x C: 3.190 x 1.679 x 1.652 mm), chiều dài cơ sở, khoảng sáng gầm xe 175 mm',
       'Động cơ điện: Công suất tối đa 30 kW (40.2 HP), mô-men xoắn cực đại 110 Nm, hệ dẫn động cầu sau (RWD)',
@@ -58,10 +80,10 @@ export const REQUIRED_VEHICLE_PDFS = [
     document_id: 'SPECS_VF5_PLUS_2026',
     document_type: 'product_specs',
     title: 'Thông số kỹ thuật & Trang bị VinFast VF 5 Plus',
-    status: 'Chờ nạp file PDF',
+    status: 'Đã nạp (corpus.json)',
     target_format: 'PDF chuẩn (.pdf, text-searchable, OCR vector)',
     recommended_pages: '6 - 12 trang',
-    image: '/vehicles/vf-5.jpg',
+    image: resolveVehicleImage('/vehicles/vf-5-transparent.png'),
     required_contents: [
       'Kích thước: 3.967 x 1.723 x 1.578 mm, chiều dài cơ sở 2.514 mm, khoảng sáng gầm 168 mm',
       'Động cơ điện: 100 kW (134 HP), mô-men xoắn 135 Nm, hệ dẫn động cầu trước (FWD)',
@@ -78,10 +100,10 @@ export const REQUIRED_VEHICLE_PDFS = [
     document_id: 'PRODUCT_VF6_20260922',
     document_type: 'product_specs',
     title: 'VinFast VF 6: Thông số kỹ thuật, Giá bán & Trang bị chi tiết',
-    status: 'Chờ nạp file PDF',
+    status: 'Đã nạp (corpus.json)',
     target_format: 'PDF chuẩn (.pdf, text-searchable, OCR vector)',
     recommended_pages: '8 - 14 trang',
-    image: '/vehicles/vf-6.jpg',
+    image: resolveVehicleImage('/vehicles/vf-6-transparent.png'),
     required_contents: [
       'Kích thước: 4.238 x 1.820 x 1.594 mm, chiều dài cơ sở 2.730 mm, la-zăng hợp kim 17/19 inch',
       'Động cơ: Bản Base 130 kW (174 HP) / Bản Plus 150 kW (201 HP), mô-men xoắn 250 - 310 Nm',
@@ -97,10 +119,10 @@ export const REQUIRED_VEHICLE_PDFS = [
     document_id: 'PRODUCT_VF7_20260922',
     document_type: 'product_specs',
     title: 'VinFast VF 7 Chính hãng: Thông số kỹ thuật & Trang bị Thể thao',
-    status: 'Chờ nạp file PDF',
+    status: 'Đã nạp (corpus.json)',
     target_format: 'PDF chuẩn (.pdf, text-searchable, OCR vector)',
     recommended_pages: '10 - 16 trang',
-    image: '/vehicles/vf-7.jpg',
+    image: resolveVehicleImage('/vehicles/vinfast-vf-7-250529-03cb.png'),
     required_contents: [
       'Bản Plus 2 Mô-tơ AWD: Công suất cực đại 260 kW (349 HP), mô-men xoắn 500 Nm, tăng tốc 0-100 km/h trong 5.8 giây',
       'Pin dung lượng 75.3 kWh, quãng đường di chuyển 431 km (WLTP)',
@@ -116,10 +138,10 @@ export const REQUIRED_VEHICLE_PDFS = [
     document_id: 'PRODUCT_VF8_20260922',
     document_type: 'product_specs',
     title: 'VinFast VF 8 Thế Hệ Mới: Thông số, Pin CATL & Công nghệ ADAS',
-    status: 'Chờ nạp file PDF',
+    status: 'Đã nạp (corpus.json)',
     target_format: 'PDF chuẩn (.pdf, text-searchable, OCR vector)',
     recommended_pages: '12 - 20 trang',
-    image: '/vehicles/vf-8.jpg',
+    image: resolveVehicleImage('/vehicles/vf-8-transparent.png'),
     required_contents: [
       'Động cơ 2 mô-tơ AWD điện tử: Công suất 300 kW (402 HP), mô-men xoắn 620 Nm (Plus)',
       'Pin CATL cao cấp 87.7 kWh, phạm vi di chuyển 471 km (Eco) / 457 km (Plus) (WLTP)',
@@ -135,10 +157,10 @@ export const REQUIRED_VEHICLE_PDFS = [
     document_id: 'PRODUCT_VF9_20260922',
     document_type: 'product_specs',
     title: 'VinFast VF 9: Thông số Đẳng cấp Chủ tịch, Pin CATL 123 kWh',
-    status: 'Chờ nạp file PDF',
+    status: 'Đã nạp (corpus.json)',
     target_format: 'PDF chuẩn (.pdf, text-searchable, OCR vector)',
     recommended_pages: '14 - 24 trang',
-    image: '/vehicles/vf-9.jpg',
+    image: resolveVehicleImage('/vehicles/vf-9-transparent.png'),
     required_contents: [
       'Pin khủng CATL 123 kWh, tầm hoạt động vượt trội lên đến 626 km (WLTP)',
       'Kích thước Full-size: 5.118 x 2.254 x 1.696 mm, chiều dài cơ sở 3.150 mm',
@@ -154,10 +176,10 @@ export const REQUIRED_VEHICLE_PDFS = [
     document_id: 'PRODUCT_VFWILD_20260922',
     document_type: 'product_specs',
     title: 'VinFast VF Wild: Bản thiết kế Ý tưởng Bán tải Điện Đột phá',
-    status: 'Chờ nạp file PDF',
+    status: 'Đã nạp (corpus.json)',
     target_format: 'PDF chuẩn (.pdf, text-searchable, OCR vector)',
     recommended_pages: '4 - 10 trang',
-    image: '/vehicles/vf-wild.jpg',
+    image: resolveVehicleImage('/vehicles/vf-wild-transparent.png'),
     required_contents: [
       'Thiết kế kích thước bán tải cỡ trung: Dài 5.324 mm, rộng 1.997 mm, thùng hàng mở rộng linh hoạt đến 2.44 m',
       'Hệ dẫn động 4 bánh toàn thời gian AWD 2 mô-tơ, tầm hoạt động dự kiến 450+ km',
@@ -166,29 +188,539 @@ export const REQUIRED_VEHICLE_PDFS = [
   },
 ];
 
+export const SHOWROOM_VEHICLES = [
+  {
+    id: "vf8",
+    model: "VF 8",
+    name: "VinFast VF 8 Plus",
+    title: "VinFast VF 8",
+    segment: "D-SUV (5 Chỗ)",
+    segment_full: "D-SUV Toàn Cầu Thông Minh (5 chỗ)",
+    category: "flagship",
+    tagline: "Đỉnh cao công nghệ & Trải nghiệm lái phấn khích chuẩn toàn cầu",
+    description: "D-SUV điện toàn cầu chuẩn 5 sao an toàn quốc tế, dẫn động 4 bánh toàn thời gian AWD, tăng tốc 0-100 km/h trong 5.5 giây và trang bị trợ lý ảo Vivi tiếng Việt.",
+    price: "1.099.000.000 VNĐ",
+    price_number: 1099000000,
+    price_battery_rental: "1.099.000.000 VNĐ",
+    price_battery_included: "1.290.000.000 VNĐ",
+    battery_subscription_fee: "1.900.000 VNĐ / tháng (< 3.000 km)",
+    image: resolveVehicleImage("/vehicles/vf-8-transparent.png"),
+    defaultTrim: "plus",
+    trims: {
+      plus: {
+        id: "plus",
+        name: "Plus",
+        fullName: "VinFast VF 8 Plus",
+        price: "1.270.000.000 VNĐ",
+        price_number: 1270000000,
+        power: "300 kW / 402 PS (HP)",
+        power_short: "402 HP",
+        torque: "620 Nm",
+        acceleration: "5.5 s",
+        acceleration_label: "5.5 giây (0-100 km/h)",
+        top_speed: "200 km/h",
+        range: "457 km",
+        range_label: "471 (Eco) / 457 km (Plus)",
+        battery: "87.7 kWh (CATL)",
+        drivetrain: "AWD 2 cầu điện tử thông minh",
+        charging: "10% - 70% trong 24 phút (DC 250kW)",
+      },
+      eco: {
+        id: "eco",
+        name: "Eco",
+        fullName: "VinFast VF 8 Eco",
+        price: "1.099.000.000 VNĐ",
+        price_number: 1099000000,
+        power: "260 kW / 349 HP",
+        power_short: "349 HP",
+        torque: "500 Nm",
+        acceleration: "5.9 s",
+        acceleration_label: "5.9 giây (0-100 km/h)",
+        top_speed: "200 km/h",
+        range: "471 km",
+        range_label: "471 (Eco) / 457 km (Plus)",
+        battery: "87.7 kWh (CATL)",
+        drivetrain: "AWD 2 cầu điện tử thông minh",
+        charging: "10% - 70% trong 24 phút (DC 250kW)",
+      },
+    },
+    specs: {
+      acceleration: "5.5 s",
+      acceleration_full: "5.5 giây (0-100 km/h)",
+      power: "300 kW / 402 PS (HP)",
+      top_speed: "200 km/h",
+      range: "471 (Eco) / 457 km (Plus)",
+      range_full: "471 (Eco) / 457 km (Plus) (WLTP Testing Standard)",
+      battery_capacity: "87.7 kWh (Pin CATL siêu mật độ)",
+      charging_dc: "10% - 70% trong 24 phút (DC 250kW)",
+      charging_ac: "11 kW (AC 3 pha tại nhà)",
+      dimensions: "4.750 × 1.934 × 1.667 mm",
+      wheelbase: "2.950 mm",
+      ground_clearance: "185 mm",
+      drivetrain: "AWD 2 cầu điện tử thông minh",
+      torque: "620 Nm",
+      seats: "5 chỗ ngồi da cao cấp chỉnh điện 12 hướng",
+      airbags: "11 túi khí bảo vệ toàn diện",
+      warranty_car: "10 năm hoặc 200.000 km",
+      warranty_battery: "10 năm không giới hạn km (mua) / Đổi khi SOH < 70% (thuê)",
+      adas: "Level 2: Hỗ trợ lái cao tốc, giữ làn, phanh tự động AEB, nhận diện biển báo",
+    },
+    suggestedScenarioId: "SCENARIO_02_VF7_VS_CX5",
+    suggestedCopilotQuery: "So sánh chi phí thuê pin VF 8 Plus và phương án mua kèm pin cho khách hàng gia đình di chuyển 2.000 km/tháng",
+  },
+  {
+    id: "vf3",
+    model: "VF 3",
+    name: "VinFast VF 3",
+    title: "VinFast VF 3",
+    segment: "Mini e-SUV (4 Chỗ)",
+    segment_full: "Mini Electric SUV Đô Thị Năng Động",
+    category: "urban",
+    tagline: "Chiếc xe điện quốc dân — Cá tính, kinh tế & bứt phá phong cách",
+    description: "Mẫu mini SUV thuần điện năng động dẫn đầu xu hướng di chuyển xanh tại Việt Nam, bán kính quay đầu 4.5m và khả năng lội nước vượt trội 300mm.",
+    price: "240.000.000 VNĐ",
+    price_number: 240000000,
+    price_battery_rental: "240.000.000 VNĐ",
+    price_battery_included: "322.000.000 VNĐ",
+    battery_subscription_fee: "900.000 VNĐ / tháng (< 1.500 km) hoặc 1.200.000 VNĐ / tháng",
+    image: resolveVehicleImage("/vehicles/vf-3-transparent.png"),
+    defaultTrim: "standard",
+    trims: {
+      standard: {
+        id: "standard",
+        name: "Tiêu chuẩn",
+        fullName: "VinFast VF 3",
+        price: "240.000.000 VNĐ",
+        price_number: 240000000,
+        power: "32 kW / 43 HP",
+        power_short: "43 HP",
+        torque: "110 Nm",
+        acceleration: "19.3 s",
+        acceleration_label: "19.3 giây (0-100 km/h) • Lội nước 300mm",
+        top_speed: "100 km/h",
+        range: "215 km",
+        range_label: "215 km (NEDC)",
+        battery: "18.64 kWh (LFP)",
+        drivetrain: "Cầu sau (RWD)",
+        charging: "10% - 70% trong 36 phút (DC)",
+      },
+    },
+    specs: {
+      acceleration: "19.3 s",
+      acceleration_full: "19.3 giây (0-100 km/h) • Lội nước 300mm",
+      power: "32 kW / 43 HP (Công suất cực đại)",
+      top_speed: "100 km/h",
+      range: "215 km (NEDC)",
+      range_full: "215 km (Chu trình NEDC)",
+      battery_capacity: "18.64 kWh (Pin LFP chống cháy nổ)",
+      charging_dc: "10% - 70% trong 36 phút (DC 24kW)",
+      charging_ac: "3.5 kW tại nhà (~5 giờ đầy)",
+      dimensions: "3.190 × 1.679 × 1.652 mm",
+      wheelbase: "2.075 mm",
+      ground_clearance: "175 mm (Lội nước 300mm)",
+      drivetrain: "Cầu sau RWD linh hoạt",
+      torque: "110 Nm",
+      seats: "4 chỗ ngồi thông minh gập linh hoạt",
+      airbags: "Túi khí bảo vệ người lái",
+      warranty_car: "7 năm hoặc 160.000 km",
+      warranty_battery: "8 năm không giới hạn km (mua) / Đổi khi SOH < 70% (thuê)",
+      adas: "Cảm biến lùi, hỗ trợ phanh khẩn cấp BA, phanh tái sinh tiết kiệm năng lượng",
+    },
+    suggestedScenarioId: "SCENARIO_01_VF5_TAXI",
+    suggestedCopilotQuery: "Tư vấn thông số kích thước, khả năng sạc tại nhà 220V và chi phí lăn bánh của VinFast VF 3",
+  },
+  {
+    id: "vfwild",
+    model: "VF Wild",
+    name: "VinFast VF Wild (Bán Tải)",
+    title: "VinFast VF Wild",
+    segment: "BÁN TẢI ĐIỆN THỂ THAO (MID-SIZE PICKUP)",
+    segment_full: "Bán Tải Điện Thể Thao Đột Phá Toàn Cầu",
+    category: "truck",
+    tagline: "Mãnh hổ xuất hiện tại CES Mỹ — Thiết kế đột phá, thùng hàng mở rộng linh hoạt",
+    description: "Mẫu bán tải điện ý tưởng gây sốt toàn cầu tại CES Las Vegas, trang bị động cơ kép AWD 300 mã lực cùng cửa gió thông hàng mở rộng chiều dài thùng chở đồ lên tới 2.44 mét.",
+    price: "Dự kiến 800.000.000 VNĐ",
+    price_number: 800000000,
+    price_battery_rental: "Dự kiến 800.000.000 VNĐ",
+    price_battery_included: "Dự kiến 1.050.000.000 VNĐ",
+    battery_subscription_fee: "Dự kiến áp dụng gói linh hoạt từ 2.200.000 VNĐ / tháng",
+    image: resolveVehicleImage("/vehicles/vf-wild-transparent.png"),
+    defaultTrim: "awd",
+    trims: {
+      awd: {
+        id: "awd",
+        name: "AWD Đột phá",
+        fullName: "VinFast VF Wild AWD",
+        price: "Dự kiến 800.000.000 VNĐ",
+        price_number: 800000000,
+        power: "220 kW / 300 HP",
+        power_short: "300 HP",
+        torque: "500 Nm",
+        acceleration: "6.8 s",
+        acceleration_label: "6.8 giây (0-100 km/h) • Dẫn động 2 cầu AWD",
+        top_speed: "180 km/h",
+        range: "400+ km",
+        range_label: "400+ km (WLTP)",
+        battery: "~90 kWh",
+        drivetrain: "Dẫn động 2 cầu toàn thời gian AWD",
+        charging: "10% - 70% trong 25 phút (DC)",
+      },
+    },
+    specs: {
+      acceleration: "6.8 s",
+      acceleration_full: "6.8 giây (0-100 km/h) • Dẫn động 2 cầu AWD",
+      power: "220 kW / 300 HP",
+      top_speed: "180 km/h",
+      range: "400+ km (WLTP)",
+      range_full: "400+ km (Chu trình thử nghiệm WLTP)",
+      battery_capacity: "~90 kWh mật độ cao",
+      charging_dc: "10% - 70% trong 25 phút (DC siêu nhanh)",
+      charging_ac: "11 kW AC 3 pha",
+      dimensions: "5.324 × 1.997 × 1.780 mm",
+      wheelbase: "3.250 mm",
+      ground_clearance: "220 mm (Off-road chuyên dụng)",
+      drivetrain: "AWD 2 mô tơ điện độc lập",
+      torque: "500 Nm tức thời",
+      seats: "5 chỗ ngồi phong cách thể thao phiêu lưu",
+      airbags: "8 túi khí đa hướng",
+      warranty_car: "10 năm hoặc 200.000 km",
+      warranty_battery: "10 năm không giới hạn km",
+      adas: "Hệ thống hỗ trợ vượt địa hình, camera 360 độ góc nhìn xuyên gầm xe",
+    },
+    suggestedScenarioId: "SCENARIO_02_VF7_VS_CX5",
+    suggestedCopilotQuery: "Thông tin thiết kế đột phá, kích thước thùng hàng mở rộng và trang bị AWD của bán tải VinFast VF Wild",
+  },
+  {
+    id: "vf5",
+    model: "VF 5 Plus",
+    name: "VinFast VF 5 Plus",
+    title: "VinFast VF 5 Plus",
+    segment: "A-SUV (5 Chỗ)",
+    segment_full: "A-SUV Đô Thị Thông Minh & Kinh Tế",
+    category: "urban",
+    tagline: "Sự lựa chọn thông minh cho gia đình trẻ & di chuyển đô thị",
+    description: "Mẫu xe dẫn đầu phân khúc A với công suất 134 mã lực vượt trội toàn diện xe xăng, chi phí sạc chỉ ~400đ/km, hỗ trợ gói an toàn cảnh báo điểm mù BSD và cảnh báo mở cửa DOW.",
+    price: "468.000.000 VNĐ",
+    price_number: 468000000,
+    price_battery_rental: "468.000.000 VNĐ",
+    price_battery_included: "548.000.000 VNĐ",
+    battery_subscription_fee: "1.200.000 VNĐ / tháng (< 1.500 km) hoặc 1.600.000 VNĐ / tháng (1.500 - 3.000 km)",
+    image: resolveVehicleImage("/vehicles/vf-5-transparent.png"),
+    defaultTrim: "plus",
+    trims: {
+      plus: {
+        id: "plus",
+        name: "Plus",
+        fullName: "VinFast VF 5 Plus",
+        price: "468.000.000 VNĐ",
+        price_number: 468000000,
+        power: "100 kW / 134 HP",
+        power_short: "134 HP",
+        torque: "135 Nm",
+        acceleration: "10.9 s",
+        acceleration_label: "10.9 giây (0-100 km/h)",
+        top_speed: "130 km/h",
+        range: "326 km",
+        range_label: "326 km (NEDC)",
+        battery: "37.23 kWh (LFP)",
+        drivetrain: "Cầu trước (FWD)",
+        charging: "10% - 70% trong 30 phút (DC 60kW)",
+      },
+    },
+    specs: {
+      acceleration: "10.9 s",
+      acceleration_full: "10.9 giây (0-100 km/h)",
+      power: "100 kW / 134 HP (Số 1 phân khúc A)",
+      top_speed: "130 km/h",
+      range: "326 km (NEDC)",
+      range_full: "326 km (Chu trình NEDC chuẩn hóa)",
+      battery_capacity: "37.23 kWh (Pin LFP bền bỉ)",
+      charging_dc: "10% - 70% trong 30 phút (DC 60kW)",
+      charging_ac: "7.4 kW tại nhà (~6 giờ đầy)",
+      dimensions: "3.967 × 1.723 × 1.578 mm",
+      wheelbase: "2.514 mm",
+      ground_clearance: "168 mm",
+      drivetrain: "Cầu trước (FWD)",
+      torque: "135 Nm",
+      seats: "5 chỗ ngồi rộng rãi êm ái",
+      airbags: "6 túi khí hàng đầu phân khúc",
+      warranty_car: "7 năm hoặc 160.000 km",
+      warranty_battery: "8 năm không giới hạn km (mua) / Đổi khi SOH < 70% (thuê)",
+      adas: "Cảnh báo điểm mù BSD, cảnh báo luồng giao thông mở cửa DOW, cảm biến lùi",
+    },
+    suggestedScenarioId: "SCENARIO_01_VF5_TAXI",
+    suggestedCopilotQuery: "So sánh chi phí vận hành VF 5 Plus với Hyundai Grand i10 và Toyota Vios khi chạy dịch vụ 3.000 km/tháng",
+  },
+  {
+    id: "vf6",
+    model: "VF 6",
+    name: "VinFast VF 6 (Eco / Plus)",
+    title: "VinFast VF 6",
+    segment: "B-SUV (5 Chỗ)",
+    segment_full: "B-SUV Gia Đình Hiện Đại Thiết Kế Ý",
+    category: "midsize",
+    tagline: "Kiệt tác thiết kế Ý — Định nghĩa lại chuẩn mực B-SUV",
+    description: "Thiết kế hiện đại từ studio Torino Design nước Ý, không gian nội thất khoáng đạt tương đương xe phân khúc C nhờ trục cơ sở 2.730mm, trang bị trợ lái thông minh ADAS Cấp độ 2.",
+    price: "675.000.000 VNĐ",
+    price_number: 675000000,
+    price_battery_rental: "675.000.000 VNĐ (Eco) / 765.000.000 VNĐ (Plus)",
+    price_battery_included: "765.000.000 VNĐ (Eco) / 855.000.000 VNĐ (Plus)",
+    battery_subscription_fee: "1.400.000 VNĐ / tháng (< 1.500 km) hoặc 1.800.000 VNĐ / tháng",
+    image: resolveVehicleImage("/vehicles/vf-6-transparent.png"),
+    defaultTrim: "plus",
+    trims: {
+      plus: {
+        id: "plus",
+        name: "Plus",
+        fullName: "VinFast VF 6 Plus",
+        price: "765.000.000 VNĐ",
+        price_number: 765000000,
+        power: "150 kW / 201 HP",
+        power_short: "201 HP",
+        torque: "310 Nm",
+        acceleration: "8.9 s",
+        acceleration_label: "8.9 giây (0-100 km/h)",
+        top_speed: "152 km/h",
+        range: "381 km",
+        range_label: "399 (Eco) / 381 km (Plus) (WLTP)",
+        battery: "59.6 kWh (LFP)",
+        drivetrain: "Cầu trước (FWD)",
+        charging: "10% - 70% trong 24.6 phút (DC 100kW)",
+      },
+      eco: {
+        id: "eco",
+        name: "Eco",
+        fullName: "VinFast VF 6 Eco",
+        price: "675.000.000 VNĐ",
+        price_number: 675000000,
+        power: "130 kW / 174 HP",
+        power_short: "174 HP",
+        torque: "250 Nm",
+        acceleration: "10.2 s",
+        acceleration_label: "10.2 giây (0-100 km/h)",
+        top_speed: "150 km/h",
+        range: "399 km",
+        range_label: "399 (Eco) / 381 km (Plus) (WLTP)",
+        battery: "59.6 kWh (LFP)",
+        drivetrain: "Cầu trước (FWD)",
+        charging: "10% - 70% trong 24.6 phút (DC 100kW)",
+      },
+    },
+    specs: {
+      acceleration: "8.9 s",
+      acceleration_full: "8.9 giây (0-100 km/h - Bản Plus)",
+      power: "130 kW (Eco) / 150 kW (Plus - 201 HP)",
+      top_speed: "152 km/h",
+      range: "399 km (Eco) / 381 km (Plus) (WLTP)",
+      range_full: "399 km (Eco) / 381 km (Plus) (WLTP)",
+      battery_capacity: "59.6 kWh (Pin LFP tuổi thọ cao)",
+      charging_dc: "10% - 70% trong 24.6 phút (DC 100kW)",
+      charging_ac: "7.4 kW AC",
+      dimensions: "4.238 × 1.820 × 1.594 mm",
+      wheelbase: "2.730 mm (Dài nhất phân khúc B-SUV)",
+      ground_clearance: "170 mm",
+      drivetrain: "Cầu trước (FWD)",
+      torque: "250 - 310 Nm",
+      seats: "5 chỗ ngồi bọc da cao cấp",
+      airbags: "6 - 8 túi khí",
+      warranty_car: "7 năm hoặc 160.000 km",
+      warranty_battery: "8 năm không giới hạn km (mua) / Đổi khi SOH < 70% (thuê)",
+      adas: "Hỗ trợ di chuyển khi ùn tắc, giữ làn khẩn cấp, phanh tự động AEB, camera 360",
+    },
+    suggestedScenarioId: "SCENARIO_03_VF6_APARTMENT",
+    suggestedCopilotQuery: "Tư vấn phương án sạc pin xe điện VF 6 cho gia đình ở chung cư không có chỗ sạc cố định",
+  },
+  {
+    id: "vf7",
+    model: "VF 7",
+    name: "VinFast VF 7 (Base / Plus AWD)",
+    title: "VinFast VF 7",
+    segment: "C-SUV (5 Chỗ)",
+    segment_full: "C-SUV Thể Thao Tương Lai Mạnh Nhất Phân Khúc",
+    category: "midsize",
+    tagline: "Phi thuyền vũ trụ Torino Design — Sức mạnh vượt tầm phân khúc",
+    description: "Kiểu dáng phi thuyền vũ trụ siêu thực, công suất cực đại 349 mã lực và 500 Nm mô-men xoắn, hệ dẫn động 2 cầu AWD điện tử và trần kính toàn cảnh Panorama.",
+    price: "850.000.000 VNĐ",
+    price_number: 850000000,
+    price_battery_rental: "850.000.000 VNĐ (Base) / 999.000.000 VNĐ (Plus)",
+    price_battery_included: "999.000.000 VNĐ (Base) / 1.199.000.000 VNĐ (Plus)",
+    battery_subscription_fee: "1.700.000 VNĐ / tháng (< 3.000 km) hoặc 2.900.000 VNĐ / tháng (không giới hạn)",
+    image: "/vehicles/vinfast-vf-7-250529-03cb.png",
+    defaultTrim: "plus",
+    trims: {
+      plus: {
+        id: "plus",
+        name: "Plus AWD",
+        fullName: "VinFast VF 7 Plus AWD",
+        price: "999.000.000 VNĐ",
+        price_number: 999000000,
+        power: "260 kW / 349 HP",
+        power_short: "349 HP",
+        torque: "500 Nm",
+        acceleration: "5.8 s",
+        acceleration_label: "5.8 giây (0-100 km/h) • Dẫn động 2 cầu AWD",
+        top_speed: "175 km/h",
+        range: "431 km",
+        range_label: "496 (Base) / 431 km (Plus AWD) (WLTP)",
+        battery: "75.3 kWh",
+        drivetrain: "AWD 2 mô tơ điện độc lập",
+        charging: "10% - 70% trong 24 phút (DC 150kW)",
+      },
+      base: {
+        id: "base",
+        name: "Base FWD",
+        fullName: "VinFast VF 7 Base",
+        price: "850.000.000 VNĐ",
+        price_number: 850000000,
+        power: "130 kW / 174 HP",
+        power_short: "174 HP",
+        torque: "250 Nm",
+        acceleration: "8.5 s",
+        acceleration_label: "8.5 giây (0-100 km/h)",
+        top_speed: "150 km/h",
+        range: "496 km",
+        range_label: "496 (Base) / 431 km (Plus AWD) (WLTP)",
+        battery: "75.3 kWh",
+        drivetrain: "FWD cầu trước",
+        charging: "10% - 70% trong 24 phút (DC 150kW)",
+      },
+    },
+    specs: {
+      acceleration: "5.8 s",
+      acceleration_full: "5.8 giây (0-100 km/h - Plus AWD)",
+      power: "130 kW (Base) / 260 kW (Plus - 349 HP)",
+      top_speed: "175 km/h",
+      range: "496 km (Base) / 431 km (Plus AWD) (WLTP)",
+      range_full: "496 km (Base) / 431 km (Plus AWD) (WLTP)",
+      battery_capacity: "75.3 kWh",
+      charging_dc: "10% - 70% trong 24 phút (DC 150kW)",
+      charging_ac: "11 kW AC 3 pha",
+      dimensions: "4.545 × 1.890 × 1.635 mm",
+      wheelbase: "2.840 mm (Vượt trội Honda CR-V & Mazda CX-5)",
+      ground_clearance: "190 mm",
+      drivetrain: "FWD (Base) / AWD 2 mô tơ điện (Plus)",
+      torque: "250 - 500 Nm",
+      seats: "5 chỗ ngồi thể thao cao cấp",
+      airbags: "8 túi khí",
+      warranty_car: "10 năm hoặc 200.000 km",
+      warranty_battery: "10 năm không giới hạn km (mua) / Đổi khi SOH < 70% (thuê)",
+      adas: "Trợ lái khi tắc đường, chuyển làn tự động, nhận diện biển báo, đỗ xe thông minh",
+    },
+    suggestedScenarioId: "SCENARIO_02_VF7_VS_CX5",
+    suggestedCopilotQuery: "Điểm vượt trội của VinFast VF 7 Plus so với Mazda CX-5 và Hyundai Tucson về công suất 349 mã lực và chi phí bảo dưỡng",
+  },
+  {
+    id: "vf9",
+    model: "VF 9",
+    name: "VinFast VF 9 (6 chỗ VIP / 7 chỗ)",
+    title: "VinFast VF 9",
+    segment: "E-SUV (6/7 Chỗ)",
+    segment_full: "E-SUV Full-size Hạng Sang Đẳng Cấp Chủ Tịch",
+    category: "flagship",
+    tagline: "Đẳng cấp chủ tịch, tiện nghi thương gia vượt bậc — Pin CATL 123 kWh",
+    description: "Mẫu E-SUV full-size đỉnh cao của VinFast với pin CATL 123 kWh cung cấp tầm hoạt động 626 km, tùy chọn hàng ghế cơ trưởng VIP thương gia có massage, sưởi và thông gió đa điểm.",
+    price: "1.589.000.000 VNĐ",
+    price_number: 1589000000,
+    price_battery_rental: "1.589.000.000 VNĐ (Eco) / 1.789.000.000 VNĐ (Plus)",
+    price_battery_included: "2.114.000.000 VNĐ (Eco) / 2.314.000.000 VNĐ (Plus)",
+    battery_subscription_fee: "2.500.000 VNĐ / tháng (< 3.000 km) hoặc 4.500.000 VNĐ / tháng",
+    image: resolveVehicleImage("/vehicles/vf-9-transparent.png"),
+    defaultTrim: "plus",
+    trims: {
+      plus: {
+        id: "plus",
+        name: "Plus VIP",
+        fullName: "VinFast VF 9 Plus (Ghế Captain VIP)",
+        price: "1.789.000.000 VNĐ",
+        price_number: 1789000000,
+        power: "300 kW / 402 PS (HP)",
+        power_short: "402 HP",
+        torque: "620 Nm",
+        acceleration: "6.5 s",
+        acceleration_label: "6.5 giây (0-100 km/h)",
+        top_speed: "200 km/h",
+        range: "602 km",
+        range_label: "626 (Eco) / 602 km (Plus) (WLTP)",
+        battery: "123 kWh (Pin CATL siêu dung lượng)",
+        drivetrain: "AWD 2 cầu điện tử độc lập",
+        charging: "10% - 70% trong 26 phút (DC 250kW)",
+      },
+      eco: {
+        id: "eco",
+        name: "Eco",
+        fullName: "VinFast VF 9 Eco",
+        price: "1.589.000.000 VNĐ",
+        price_number: 1589000000,
+        power: "300 kW / 402 PS (HP)",
+        power_short: "402 HP",
+        torque: "620 Nm",
+        acceleration: "6.5 s",
+        acceleration_label: "6.5 giây (0-100 km/h)",
+        top_speed: "200 km/h",
+        range: "626 km",
+        range_label: "626 (Eco) / 602 km (Plus) (WLTP)",
+        battery: "123 kWh (Pin CATL siêu dung lượng)",
+        drivetrain: "AWD 2 cầu điện tử độc lập",
+        charging: "10% - 70% trong 26 phút (DC 250kW)",
+      },
+    },
+    specs: {
+      acceleration: "6.5 s",
+      acceleration_full: "6.5 giây (0-100 km/h)",
+      power: "300 kW / 402 PS (HP)",
+      top_speed: "200 km/h",
+      range: "626 km (Eco) / 602 km (Plus) (WLTP)",
+      range_full: "626 km (Eco) / 602 km (Plus) (WLTP - Pin CATL 123 kWh)",
+      battery_capacity: "123 kWh (Pin CATL mật độ năng lượng đỉnh cao)",
+      charging_dc: "10% - 70% trong 26 phút (DC 250kW)",
+      charging_ac: "11 kW AC 3 pha",
+      dimensions: "5.118 × 2.070 × 1.696 mm",
+      wheelbase: "3.150 mm (Không gian thương gia)",
+      ground_clearance: "197 mm (Hệ thống treo khí nén tự động)",
+      drivetrain: "AWD 2 cầu điện tử thông minh",
+      torque: "620 Nm",
+      seats: "6 chỗ ngồi VIP Captain Seat hoặc 7 chỗ tùy chọn",
+      airbags: "11 túi khí bảo vệ toàn diện",
+      warranty_car: "10 năm hoặc 200.000 km",
+      warranty_battery: "10 năm không giới hạn km (mua) / Đổi khi SOH < 70% (thuê)",
+      adas: "Trợ lái cao tốc mở rộng, tự động đỗ xe từ xa, triệu hồi xe, trần kính toàn cảnh UV",
+    },
+    suggestedScenarioId: "SCENARIO_02_VF7_VS_CX5",
+    suggestedCopilotQuery: "Chính sách ưu đãi sạc pin miễn phí V-GREEN cho VF 9 và tiện nghi hàng ghế cơ trưởng thương gia",
+  },
+];
+
 export function getVehicleById(id) {
   if (!id) return null;
-  return VEHICLES.find((v) => v.id.toLowerCase() === id.toLowerCase()) || null;
+  const targetId = id.toLowerCase();
+  return (
+    SHOWROOM_VEHICLES.find((v) => v.id.toLowerCase() === targetId) ||
+    VEHICLES.find((v) => v.id.toLowerCase() === targetId) ||
+    null
+  );
 }
 
 export function getVehicleByModel(modelName) {
   if (!modelName) return null;
-  const normalized = modelName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const normalized = modelName.toLowerCase().replace(/[^a-z0-9]/g, "");
   return (
+    SHOWROOM_VEHICLES.find((v) => {
+      const vId = v.id.toLowerCase();
+      const vModel = (v.model || v.name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+      return normalized.includes(vId) || normalized.includes(vModel) || vId.includes(normalized);
+    }) ||
     VEHICLES.find((v) => {
       const vId = v.id.toLowerCase();
-      const vModel = v.model.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const vModel = (v.model || v.name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
       return normalized.includes(vId) || normalized.includes(vModel) || vId.includes(normalized);
-    }) || null
+    }) ||
+    null
   );
 }
 
 export function getVehicleImage(modelOrId, fallback = '/vehicles/vf-7.jpg') {
-  if (!modelOrId) return fallback;
-  const v = getVehicleById(modelOrId) || getVehicleByModel(modelOrId);
-  if (v?.image) return v.image;
-
-  // Fallback to static synchronized image map
+  const resolvedFallback = resolveVehicleImage(fallback);
+  if (!modelOrId) return resolvedFallback;
   const normalized = String(modelOrId).toLowerCase().replace(/[^a-z0-9]/g, '');
   if (normalized.includes('wild')) return MODEL_IMAGE_MAP.vfwild;
   if (normalized.includes('9')) return MODEL_IMAGE_MAP.vf9;
@@ -198,5 +730,9 @@ export function getVehicleImage(modelOrId, fallback = '/vehicles/vf-7.jpg') {
   if (normalized.includes('5')) return MODEL_IMAGE_MAP.vf5;
   if (normalized.includes('3')) return MODEL_IMAGE_MAP.vf3;
 
-  return fallback;
+  const v = getVehicleById(modelOrId) || getVehicleByModel(modelOrId);
+  if (v?.image) return resolveVehicleImage(v.image);
+  return resolvedFallback;
 }
+
+export const VEHICLES = SHOWROOM_VEHICLES;

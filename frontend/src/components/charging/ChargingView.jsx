@@ -4,6 +4,8 @@ import {
   SearchIcon,
   CheckCircleIcon,
   ClockIcon,
+  LocationIcon,
+  LightbulbIcon,
   SparkleIcon,
   AlertCircleIcon,
   FileTextIcon,
@@ -176,7 +178,7 @@ export function ChargingView({ onConsultCopilot }) {
                       <FileTextIcon style={{ width: 14, height: 14, color: '#52525B' }} />
                       <strong style={{ fontSize: '0.9rem', color: '#111827' }}>{pdf.title}</strong>
                     </div>
-                    <Badge variant="highlight">⏳ {pdf.status}</Badge>
+                    <Badge variant="highlight"><ClockIcon style={{ width: 11, height: 11, display: "inline", verticalAlign: "-1px", marginRight: 3 }} />{pdf.status}</Badge>
                   </div>
 
                   <div style={{ marginTop: 8, fontSize: '0.8rem', color: '#4B5563' }}>
@@ -235,7 +237,7 @@ export function ChargingView({ onConsultCopilot }) {
                 </div>
 
                 <p style={{ fontSize: '0.85rem', color: '#555555' }}>
-                  📍 {st.address}
+                  <LocationIcon style={{ width: 12, height: 12, display: "inline", verticalAlign: "-1px", marginRight: 3 }} />{st.address}
                 </p>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
@@ -254,7 +256,7 @@ export function ChargingView({ onConsultCopilot }) {
                         fontWeight: 600,
                       }}
                     >
-                      ⚡ {p}
+                      <BoltIcon style={{ width: 11, height: 11, display: "inline", verticalAlign: "-1px", marginRight: 3 }} />{p}
                     </span>
                   ))}
                 </div>
@@ -276,7 +278,7 @@ export function ChargingView({ onConsultCopilot }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="card-white" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#111111', borderBottom: '1px solid #F0F0EE', paddingBottom: 10 }}>
-              💡 BÍ QUYẾT TƯ VẤN SẠC PIN CHO KHÁCH
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><LightbulbIcon style={{ width: 14, height: 14 }} /> BÍ QUYẾT TƯ VẤN SẠC PIN</span>
             </h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

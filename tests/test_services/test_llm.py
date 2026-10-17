@@ -25,3 +25,13 @@ def test_openrouter_fails_before_network_call_when_key_is_missing(monkeypatch):
 
     with pytest.raises(ValueError, match="openrouter is not configured"):
         llm_service.get_llm()
+
+
+def test_openrouter_accepts_separate_practice_judge_model(monkeypatch):
+    settings = Settings(openrouter_api_key="test-only")
+    monkeypatch.setattr(llm_service, "get_settings", lambda: settings)
+    model = llm_service.get_llm(
+        provider=settings.practice_judge_provider, model=settings.practice_judge_model, temperature=0
+    )
+    assert model.model_name == "google/gemini-3.8-flash"
+    assert model.temperature == 0

@@ -1,151 +1,78 @@
-"""Optional sales suggestions must not change the grounded answer contract."""
-
-import json
-from types import SimpleNamespace
+"""Suggestions remain subordinate to checked facts and the public response contract."""
 
 import pytest
 from pydantic import ValidationError
 
 from src.agents.copilot import nodes
-from src.agents.copilot.prompts import COPILOT_SYSTEM_PROMPT, format_user_prompt
-from src.agents.copilot.state import ABSTAIN_ANSWER, CopilotResponse, GeneratedAnswer
+from src.agents.copilot.state import ABSTAIN_ANSWER, CopilotResponse, GeneratedAnswer, GroundedClaim, SelfCheckVerdict
 from src.api.copilot import CopilotQueryRequest, query_copilot
+from tests.test_agents.test_copilot_agentic import checked, draft_state, generated, scripted
 
 
-def test_old_answer_payload_without_suggestions_still_valid():
-    parsed = GeneratedAnswer(status="answered", answer="Giá niêm yết nằm trong bảng giá [C1].", citation_ids=["C1"])
-
-    assert parsed.talking_points == []
-    assert parsed.suggested_message is None
-    assert parsed.suggested_next_question is None
+def test_generated_output_does_not_duplicate_answer_or_quotes():
+    schema = GeneratedAnswer.model_json_schema()
+    assert "answer" not in schema["properties"]
+    assert "evidence_quotes" not in str(schema)
+    assert GeneratedAnswer(**generated()).suggested_message is None
 
 
 def test_abstention_cannot_expose_sales_suggestions():
     with pytest.raises(ValidationError, match="sales suggestions"):
-        CopilotResponse(
-            status="abstained",
-            answer=ABSTAIN_ANSWER,
-            citations=[],
-            suggested_message="Em cam kết giá tốt nhất.",
-        )
-    with pytest.raises(ValidationError, match="sales suggestions"):
-        GeneratedAnswer(
-            status="abstained",
-            answer=ABSTAIN_ANSWER,
-            citation_ids=[],
-            talking_points=["Giá rất tốt."],
-        )
+        CopilotResponse(status="abstained", answer=ABSTAIN_ANSWER, suggested_message="Cam kết giá tốt nhất")
 
 
 def test_suggestion_count_and_size_are_bounded():
     with pytest.raises(ValidationError):
-        GeneratedAnswer(
-            status="answered", answer="Nguồn [C1].", citation_ids=["C1"], talking_points=["A", "B", "C", "D"]
-        )
+        GeneratedAnswer(**generated(), sales_actions=["a"] * 4)
     with pytest.raises(ValidationError):
-        GeneratedAnswer(status="answered", answer="Nguồn [C1].", citation_ids=["C1"], suggested_message="x" * 501)
-
-
-def test_prompt_requests_optional_source_bound_suggestions():
-    prompt = format_user_prompt("Giá VF 8?", "[C1] Bảng giá", "2026-10-03")
-
-    assert "talking_points" in prompt
-    assert "suggested_message" in prompt
-    assert "suggested_next_question" in prompt
-    assert "không bổ sung số liệu" in COPILOT_SYSTEM_PROMPT
+        GeneratedAnswer(**generated(), suggested_message="x" * 501)
 
 
 @pytest.mark.asyncio
-async def test_generation_exposes_only_source_bound_talking_points(monkeypatch):
-    answer_line = "Giá tham khảo nằm trong bảng giá [C1]."
-    model_output = {
-        "status": "answered",
-        "answer": answer_line,
-        "citation_ids": ["C1"],
-        "talking_points": [answer_line, "Cam kết giảm giá chưa có trong câu trả lời [C1]."],
-        "suggested_message": "Em có thể gửi anh/chị tài liệu chính thức để đối chiếu.",
-        "suggested_next_question": "Anh/chị muốn xem thêm điều kiện áp dụng không?",
-    }
-
-    class FakeModel:
-        async def ainvoke(self, messages):
-            return SimpleNamespace(content=json.dumps(model_output, ensure_ascii=False))
-
-    monkeypatch.setattr(nodes, "get_llm", lambda: FakeModel())
-    monkeypatch.setattr(nodes, "get_settings", lambda: SimpleNamespace(llm_timeout_seconds=5))
-    evidence = {
-        "chunk_id": "price-1",
-        "document_id": "price-list",
-        "content": "Giá tham khảo nằm trong bảng giá.",
-        "title": "Bảng giá",
-        "section": None,
-        "page": None,
-        "source_uri": "https://example.com/price.pdf",
-        "effective_from": "2026-10-01",
-        "effective_to": None,
-        "status": "active",
-        "version": "1",
-        "product_model": "VF 8",
-        "retrieval_method": "bm25",
-        "native_score": 5.0,
-        "rank": 1,
-        "dense_score": None,
-        "bm25_score": 5.0,
-        "rrf_score": 0.016,
-    }
-    state = {"query": "Giá VF 8?", "selected_evidence": [evidence]}
-
-    generated = await nodes.generate_node(state)
-    assert generated["validation_error"] is None
-    result = generated["draft_response"]
-    assert result.talking_points == [answer_line]
-    assert result.suggested_message == model_output["suggested_message"]
-    assert result.suggested_next_question == model_output["suggested_next_question"]
-    validated = await nodes.validate_response_node({**state, **generated})
-    assert validated["validation_status"] == "valid"
-    assert validated["final_response"].talking_points == [answer_line]
+@pytest.mark.parametrize("safe", [True, False])
+async def test_only_reviewed_suggestions_are_published(monkeypatch, safe):
+    state = draft_state()
+    state["draft_answer"] = "VF 5 có quãng đường 326 km NEDC [C1]"
+    state["suggested_message"] = "Em có thể gửi tài liệu VF 5 để đối chiếu."
+    state["suggested_next_question"] = "Anh/chị có chỗ sạc ở nhà không?"
+    verdict = checked()
+    verdict["suggestions_safe"] = safe
+    scripted(monkeypatch, [verdict])
+    state.update(await nodes.check_grounding(state))
+    result = (await nodes.finalize_response(state))["final_response"]
+    assert bool(result.suggested_message) == safe
+    assert result.talking_points == [result.answer]
 
 
-def test_quantified_sales_suggestion_is_dropped_without_affecting_answer():
-    parsed = GeneratedAnswer(
-        status="answered",
-        answer="Thông tin trong nguồn [C1].",
-        citation_ids=["C1"],
-        suggested_message="Em cam kết giảm 20 triệu.",
-        suggested_next_question="Anh muốn mua ở mức 500 triệu?",
+@pytest.mark.asyncio
+async def test_finalizer_keeps_whole_long_claims_within_public_limits():
+    state = draft_state()
+    long_answer = "\n".join("x" * 1000 + " [C1]" for _ in range(12))
+    state.update(
+        draft_answer=long_answer,
+        self_check=SelfCheckVerdict(grounded=True, missing_information=["Thông tin một phần"]),
     )
-
-    points, message, question = nodes._safe_suggestions(parsed, {"C1"})
-    assert points == []
-    assert message is None
-    assert question is None
-
-    parsed.suggested_message = "Em cam kết pin miễn phí."
-    _, message, _ = nodes._safe_suggestions(parsed, {"C1"})
-    assert message is None
+    response = (await nodes.finalize_response(state))["final_response"]
+    assert len(response.answer) <= 12000 and response.status == "partial"
+    assert all(line == "x" * 1000 + " [C1]" for line in response.answer.splitlines())
+    assert response.talking_points == []
 
 
-def test_model_number_is_allowed_in_non_factual_suggestions():
-    parsed = GeneratedAnswer(
-        status="answered",
-        answer="Thông tin trong nguồn [C1].",
-        citation_ids=["C1"],
-        suggested_message="Em có thể gửi anh/chị tài liệu VF 8 để đối chiếu.",
-        suggested_next_question="Anh/chị muốn xem phiên bản VF 8 nào?",
+@pytest.mark.asyncio
+async def test_finalizer_with_rejected_sources_cannot_loop_back():
+    state = draft_state()
+    state.update(
+        draft_answer="VF 5 [C99]",
+        self_check=SelfCheckVerdict(grounded=True),
     )
-
-    _, message, question = nodes._safe_suggestions(parsed, {"C1"})
-    assert message == parsed.suggested_message
-    assert question == parsed.suggested_next_question
-
-    parsed.suggested_message = "VF 8 giảm giá 20 triệu."
-    _, message, _ = nodes._safe_suggestions(parsed, {"C1"})
-    assert message is None
+    state.update(await nodes.finalize_response(state))
+    response = (await nodes.fallback_response(state))["final_response"]
+    assert response.status == "abstained" and response.reason_code == "verification_failed"
 
 
 @pytest.mark.asyncio
 async def test_copilot_api_returns_suggestions_without_changing_existing_fields(monkeypatch):
-    async def fake_graph(state):
+    async def fake_graph(state, **kwargs):
         return {
             "final_response": CopilotResponse(
                 status="answered",

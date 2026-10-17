@@ -155,7 +155,6 @@ class AuthService:
         user = await self._repository.user_for_session(self.hash_token(token), self._clock())
         if user is None:
             raise AuthenticationRequiredError("authentication required")
-        user.must_change_password = await self._repository.requires_password_change(user.user_id)
         return user
 
     async def change_password(self, user: AuthenticatedUser, current_password: str, new_password: str) -> None:

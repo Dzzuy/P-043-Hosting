@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#679BCC" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Tra cứu có nguồn">
+
+      <path d="M10 7.5H28.6L37.5 16.5V27.2" />
+      <path d="M10 7.5V37.7H27" />
+      <path d="M28.6 7.7V16.5H37.3" />
+      <path d="M18 22H25.7" />
+      <path d="M18 30H22.4" />
+      <circle cx="30.6" cy="30.9" r="8.1" />
+      <path d="M36.4 36.7L43.5 43.5" />
+    </svg>

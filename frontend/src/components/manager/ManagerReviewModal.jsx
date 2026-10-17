@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { managerApi } from '../../api/managerApi';
 
 const CRITERION_LABELS = {
   need_discovery: 'Khám phá nhu cầu',
@@ -39,6 +40,58 @@ function ScoreEditor({ evaluation, value, onChange, readOnly = false }) {
         </div>
       )}
     </article>
+  );
+}
+
+function VoiceUsageCard({ sessionId }) {
+  const [usage, setUsage] = useState(null);
+  const [status, setStatus] = useState('loading');
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    managerApi.getVoiceUsage(sessionId)
+      .then((result) => {
+        if (!active) return;
+        setUsage(result);
+        setStatus('ready');
+      })
+      .catch((loadError) => {
+        if (!active) return;
+        setError(loadError.message || 'Không thể tải chi phí giọng nói.');
+        setStatus('error');
+      });
+    return () => { active = false; };
+  }, [sessionId]);
+
+  const retry = async () => {
+    setStatus('loading');
+    setError('');
+    try {
+      setUsage(await managerApi.getVoiceUsage(sessionId));
+      setStatus('ready');
+    } catch (loadError) {
+      setError(loadError.message || 'Không thể tải chi phí giọng nói.');
+      setStatus('error');
+    }
+  };
+
+  return (
+    <section className="manager-voice-usage">
+      <h3>Sử dụng giọng nói · phiên này</h3>
+      {status === 'loading' && <p role="status">Đang tải số liệu giọng nói…</p>}
+      {status === 'error' && <p role="alert">{error} <button type="button" onClick={retry}>Thử lại</button></p>}
+      {status === 'ready' && usage && (
+        usage.stt_requests + usage.tts_requests === 0
+          ? <p>Phiên này chưa sử dụng giọng nói.</p>
+          : <>
+            <p>Nhận dạng: {usage.stt_requests} lượt · {usage.stt_billed_seconds.toFixed(1)} giây tính phí</p>
+            <p>Phát giọng khách: {usage.tts_requests} lượt · {usage.tts_characters} ký tự</p>
+            <strong>Chi phí ước tính: ${usage.estimated_usd.toFixed(6)}</strong>
+            <small>Ước tính theo đơn giá cấu hình; hóa đơn nhà cung cấp có thể khác.</small>
+          </>
+      )}
+    </section>
   );
 }
 
@@ -106,6 +159,8 @@ export function ManagerReviewModal({ detail, onClose, onApprove }) {
                 <strong className="review-version">{shownResult?.rubric_version || '—'}</strong>
               </div>
             </section>
+
+            <VoiceUsageCard sessionId={detail.attempt.session_id} />
 
             {approvedReview && (
               <section className="manager-approved-note">
@@ -183,7 +238,7 @@ export function ManagerReviewModal({ detail, onClose, onApprove }) {
             <footer className="review-modal-actions">
               <button type="button" className="review-secondary" onClick={onClose}>Hủy</button>
               {canReview && <button type="submit" className="review-approve" disabled={status !== 'idle'}>
-                {status === 'saving' ? 'Đang lưu…' : '✓ Phê duyệt & lưu'}
+                {status === 'saving' ? 'Đang lưu…' : 'Phê duyệt & lưu'}
               </button>}
             </footer>
           </div>

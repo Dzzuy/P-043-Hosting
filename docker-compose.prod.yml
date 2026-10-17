@@ -1,0 +1,103 @@
+# =================================================================
+# Docker Compose — Production Deployment
+# Usage:
+#   docker compose -f docker-compose.prod.yml up --build -d
+# =================================================================
+
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.7-pg16-bookworm
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-p043_prod}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a strong POSTGRES_PASSWORD in .env for production}
+      POSTGRES_DB: ${POSTGRES_DB:-p043_prod}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-p043_prod} -d ${POSTGRES_DB:-p043_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      APP_ENV: production
+      PORT: 8000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-p043_prod}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-p043_prod}
+      VECTOR_STORE_TYPE: pgvector
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?OPENROUTER_API_KEY is required in production}
+      OPENROUTER_MODEL_NAME: ${OPENROUTER_MODEL_NAME:-google/gemini-2.0-flash-001}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-openrouter}
+      EMBEDDING_MODEL_NAME: ${EMBEDDING_MODEL_NAME:-openai/text-embedding-3-small}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GOOGLE_TTS_SERVICE_ACCOUNT_JSON: ${GOOGLE_TTS_SERVICE_ACCOUNT_JSON:-}
+      VOICE_STT_USD_PER_HOUR: ${VOICE_STT_USD_PER_HOUR:-0.04}
+      VOICE_TTS_USD_PER_MILLION_CHARACTERS: ${VOICE_TTS_USD_PER_MILLION_CHARACTERS:-16}
+      AUTH_COOKIE_SECURE: "true"
+      CORS_ORIGINS: ${CORS_ORIGINS:?Set CORS_ORIGINS (e.g. https://your-domain.com) in .env}
+      BOOTSTRAP_MANAGER_USERNAME: ${BOOTSTRAP_MANAGER_USERNAME:-manager}
+      BOOTSTRAP_MANAGER_DISPLAY_NAME: ${BOOTSTRAP_MANAGER_DISPLAY_NAME:-Quản trị viên}
+      BOOTSTRAP_MANAGER_PASSWORD: ${BOOTSTRAP_MANAGER_PASSWORD:-}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      AI_LOG_SERVER: ${AI_LOG_SERVER:-}
+      AI_LOG_API_KEY: ${AI_LOG_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - app_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "30m"
+        max-file: "5"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      PORT: 3000
+      BACKEND_UPSTREAM: backend:8000
+    ports:
+      - "${FRONTEND_PORT:-80}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - app_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

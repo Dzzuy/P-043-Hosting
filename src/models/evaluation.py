@@ -110,6 +110,9 @@ class SessionEvaluationResult(BaseModel):
 
     session_id: str
     scenario_id: str
+    judge_model: str | None = None
+    closing_outcome: str | None = None
+    closing_outcome_label: str | None = None
     rubric_version: str = Field(min_length=1)
     assessed_criteria_count: int = Field(ge=0, le=5)
     overall_score: float | None = Field(None, ge=1.0, le=3.0)

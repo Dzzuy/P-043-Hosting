@@ -1,4 +1,19 @@
-import { request } from './client';
+import { ApiError, request } from './client';
+
+async function voiceRequest(path, options = {}, responseType = 'json') {
+  let response;
+  try {
+    response = await fetch(`/api/v1${path}`, { credentials: 'include', ...options });
+  } catch (error) {
+    throw new ApiError(error.message || 'Không thể kết nối dịch vụ giọng nói.', 0);
+  }
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    const detail = typeof payload.detail === 'string' ? payload.detail : 'Dịch vụ giọng nói chưa sẵn sàng. Vui lòng thử lại.';
+    throw new ApiError(detail, response.status, detail, payload.code || null);
+  }
+  return responseType === 'blob' ? response.blob() : response.json();
+}
 
 export const practiceApi = {
   async getScenarios() {
@@ -7,10 +22,10 @@ export const practiceApi = {
     });
   },
 
-  async startSession(scenarioId, maxTurns = 10, assignmentId = null) {
+  async startSession(scenarioId, assignmentId = null) {
     return request('/practice/sessions', {
       method: 'POST',
-      body: JSON.stringify({ scenario_id: scenarioId, max_turns: maxTurns, ...(assignmentId ? { assignment_id: assignmentId } : {}) }),
+      body: JSON.stringify({ scenario_id: scenarioId, ...(assignmentId ? { assignment_id: assignmentId } : {}) }),
     });
   },
 
@@ -23,6 +38,23 @@ export const practiceApi = {
       method: 'POST',
       body: JSON.stringify({ message: message.trim() }),
     });
+  },
+
+  async transcribeVoice(sessionId, audioBlob, durationSeconds) {
+    const query = `duration_seconds=${encodeURIComponent(durationSeconds)}`;
+    return voiceRequest(`/practice/${encodeURIComponent(sessionId)}/voice/transcribe?${query}`, {
+      method: 'POST',
+      headers: { 'Content-Type': audioBlob.type || 'audio/webm' },
+      body: audioBlob,
+    });
+  },
+
+  async customerSpeech(sessionId, messageId, gender) {
+    return voiceRequest(`/practice/${encodeURIComponent(sessionId)}/voice/speech`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message_id: messageId, gender }),
+    }, 'blob');
   },
 
   async retryCustomerReply(sessionId) {

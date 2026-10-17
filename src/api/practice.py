@@ -2,10 +2,9 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Path, status
+from fastapi import APIRouter, Path, status
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from src.agents.roleplay.customer_agent import CustomerResponseError
 from src.agents.roleplay.graph import (
     RoleplayScenarioNotFoundError,
     RoleplaySessionConflictError,
@@ -13,9 +12,8 @@ from src.agents.roleplay.graph import (
 )
 from src.agents.roleplay.scenario_loader import ScenarioSummary
 from src.agents.roleplay.state_reducer import StateTransitionError
-from src.agents.roleplay.turn_analyzer import TurnAnalysisError
+from src.api.practice_errors import PracticeAPIError, PracticeRoute, session_conflict
 from src.services.practice import (
-    PracticeEvaluationUnavailableError,
     PracticeResultView,
     PracticeService,
     PracticeSessionView,
@@ -54,7 +52,7 @@ class AdvisorMessageRequest(BaseModel):
 
 def create_practice_router(service: PracticeService) -> APIRouter:
     """Create a router with explicit service injection for app composition/tests."""
-    router = APIRouter(prefix="/practice", tags=["practice"])
+    router = APIRouter(prefix="/practice", tags=["practice"], route_class=PracticeRoute)
 
     @router.get("/scenarios", response_model=list[ScenarioSummary])
     async def list_scenarios() -> list[ScenarioSummary]:
@@ -73,10 +71,7 @@ def create_practice_router(service: PracticeService) -> APIRouter:
                 return await service.start_session(request.scenario_id)
             return await service.start_session(request.scenario_id, max_turns=request.max_turns)
         except RoleplayScenarioNotFoundError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Practice scenario was not found.",
-            ) from exc
+            raise PracticeAPIError("session_not_found") from exc
 
     @router.post(
         "/{session_id}/message",
@@ -89,20 +84,9 @@ def create_practice_router(service: PracticeService) -> APIRouter:
         try:
             return await service.send_message(session_id, request.message)
         except RoleplaySessionNotFoundError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Practice session was not found.",
-            ) from exc
+            raise PracticeAPIError("session_not_found") from exc
         except (RoleplaySessionConflictError, StateTransitionError) as exc:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Practice session cannot accept this message in its current state.",
-            ) from exc
-        except (CustomerResponseError, TurnAnalysisError) as exc:
-            raise HTTPException(
-                status_code=status.HTTP_502_BAD_GATEWAY,
-                detail=("The AI response could not be completed. The advisor turn was saved and can be retried."),
-            ) from exc
+            raise session_conflict(exc) from exc
 
     @router.post("/{session_id}/finish", response_model=PracticeResultView)
     async def finish_session(
@@ -111,20 +95,9 @@ def create_practice_router(service: PracticeService) -> APIRouter:
         try:
             return await service.finish_session(session_id)
         except RoleplaySessionNotFoundError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Practice session was not found.",
-            ) from exc
+            raise PracticeAPIError("session_not_found") from exc
         except RoleplaySessionConflictError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Practice session cannot be finished in its current state.",
-            ) from exc
-        except PracticeEvaluationUnavailableError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Evaluation is temporarily unavailable. The saved attempt can be retried.",
-            ) from exc
+            raise session_conflict(exc) from exc
 
     @router.get("/{session_id}/result", response_model=PracticeResultView)
     async def get_result(
@@ -133,10 +106,7 @@ def create_practice_router(service: PracticeService) -> APIRouter:
         try:
             return await service.get_result(session_id)
         except RoleplaySessionNotFoundError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Practice session was not found.",
-            ) from exc
+            raise PracticeAPIError("session_not_found") from exc
 
     @router.get("/{session_id}", response_model=PracticeSessionView)
     async def get_session(
@@ -145,9 +115,6 @@ def create_practice_router(service: PracticeService) -> APIRouter:
         try:
             return await service.get_session(session_id)
         except RoleplaySessionNotFoundError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Practice session was not found.",
-            ) from exc
+            raise PracticeAPIError("session_not_found") from exc
 
     return router

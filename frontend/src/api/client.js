@@ -1,11 +1,12 @@
 const API_BASE = '/api/v1';
 
 export class ApiError extends Error {
-  constructor(message, status = 500, detail = null) {
+  constructor(message, status = 500, detail = null, code = null) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.detail = detail;
+    this.code = code;
   }
 }
 
@@ -25,13 +26,15 @@ export async function request(endpoint, options = {}) {
 
     if (!response.ok) {
       let errorDetail = '';
+      let errorCode = null;
       try {
         const errorData = await response.json();
+        errorCode = errorData.code || null;
         errorDetail = errorData.detail || errorData.message || response.statusText;
       } catch {
         errorDetail = await response.text().catch(() => response.statusText);
       }
-      throw new ApiError(errorDetail || `Request failed with status ${response.status}`, response.status, errorDetail);
+      throw new ApiError(errorDetail || `Request failed with status ${response.status}`, response.status, errorDetail, errorCode);
     }
 
     if (response.status === 204) {

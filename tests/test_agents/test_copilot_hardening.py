@@ -1,6 +1,5 @@
 """Regression checks for failure reporting, citations and source validity."""
 
-import json
 from datetime import date
 from types import SimpleNamespace
 
@@ -9,9 +8,12 @@ from fastapi import HTTPException
 
 from src.agents.copilot import nodes
 from src.agents.copilot.nodes import CopilotDependencyError
+from src.agents.copilot.nodes import retrieval as retrieval_nodes
+from src.agents.copilot.state import SearchRequest
 from src.api.copilot import CopilotQueryRequest, query_copilot, router
 from src.knowledge.schemas import ChunkMetadata
 from src.knowledge.validity import is_document_retrievable
+from tests.test_agents.test_copilot_agentic import draft_state, scripted
 
 EVIDENCE = {
     "chunk_id": "price-1",
@@ -41,49 +43,31 @@ async def test_retrieval_failure_is_not_an_empty_knowledge_result(monkeypatch):
         def search(self, **kwargs):
             raise TimeoutError("provider unavailable")
 
-    async def inline_call(function, **kwargs):
-        return function(**kwargs)
-
-    monkeypatch.setattr(nodes.asyncio, "to_thread", inline_call)
-    monkeypatch.setattr(nodes, "get_dense_search_engine", lambda: BrokenSearch())
-    monkeypatch.setattr(nodes, "get_bm25_search_engine", lambda: BrokenSearch())
-    monkeypatch.setattr(nodes, "get_settings", lambda: SimpleNamespace(retrieval_timeout_seconds=5))
-    with pytest.raises(CopilotDependencyError, match="retrieval unavailable"):
-        await nodes.dual_retrieval_node({"query": "Giá VF 8"})
+    monkeypatch.setattr(retrieval_nodes, "get_dense_search_engine", lambda: BrokenSearch())
+    monkeypatch.setattr(retrieval_nodes, "get_bm25_search_engine", lambda: BrokenSearch())
+    monkeypatch.setattr(retrieval_nodes, "get_settings", lambda: SimpleNamespace(retrieval_timeout_seconds=5))
+    with pytest.raises(CopilotDependencyError, match="retrieval dependencies unavailable"):
+        await nodes._search(SearchRequest(query="Giá VF 8"), {})
 
 
 @pytest.mark.asyncio
 async def test_generation_failure_is_not_abstention(monkeypatch):
-    class BrokenModel:
-        async def ainvoke(self, messages):
-            raise TimeoutError("provider unavailable")
-
-    monkeypatch.setattr(nodes, "get_llm", lambda: BrokenModel())
-    monkeypatch.setattr(nodes, "get_settings", lambda: SimpleNamespace(llm_timeout_seconds=5))
-    with pytest.raises(CopilotDependencyError, match="generation unavailable"):
-        await nodes.generate_node({"query": "Giá VF 8", "selected_evidence": [EVIDENCE]})
+    scripted(monkeypatch, [ConnectionError("offline"), ConnectionError("offline")])
+    with pytest.raises(CopilotDependencyError, match="generate_answer unavailable"):
+        await nodes.generate_node(draft_state())
 
 
 @pytest.mark.asyncio
 async def test_retry_does_not_attach_citation_to_unsupported_claim(monkeypatch):
-    class Model:
-        async def ainvoke(self, messages):
-            return SimpleNamespace(
-                content=json.dumps({"status": "answered", "answer": "Giảm giá 50%.", "citation_ids": ["C1"]})
-            )
-
-    monkeypatch.setattr(nodes, "get_llm", lambda: Model())
-    monkeypatch.setattr(nodes, "get_settings", lambda: SimpleNamespace(llm_timeout_seconds=5))
-    result = await nodes.generate_node(
-        {"query": "Giá VF 8", "selected_evidence": [EVIDENCE], "validation_error": "missing citation"}
-    )
-    assert result["draft_response"] is None
-    assert "citation" in result["validation_error"]
+    scripted(monkeypatch, [{"answer": "Giảm giá 50%.", "citation_ids": ["C1"]}])
+    result = await nodes.generate_node(draft_state())
+    assert result["draft_answer"] is None
+    assert result["generation_count"] == 2
 
 
 @pytest.mark.asyncio
 async def test_api_reports_dependency_failure_for_retry(monkeypatch):
-    async def broken_graph(state):
+    async def broken_graph(state, **kwargs):
         raise CopilotDependencyError("generation unavailable")
 
     monkeypatch.setattr("src.api.copilot.copilot_agent.ainvoke", broken_graph)
@@ -116,20 +100,18 @@ def test_public_ingest_endpoint_is_not_registered():
 
 
 @pytest.mark.asyncio
-async def test_evidence_gate_does_not_let_one_document_crowd_out_a_price_list():
+async def test_context_does_not_let_one_document_crowd_out_a_price_list():
     product_hits = [{**EVIDENCE, "chunk_id": f"product-{index}", "document_id": "product-vf8"} for index in range(1, 6)]
     price_hit = {**EVIDENCE, "chunk_id": "price-1", "document_id": "price-list"}
 
-    result = await nodes.evidence_gate_node({"fused_hits": [*product_hits, price_hit]})
-
-    assert result["evidence_status"] == "sufficient"
-    assert len(result["selected_evidence"]) == 4
-    assert price_hit in result["selected_evidence"]
-    assert result["selected_evidence"][0] == product_hits[0]
+    _, selected = nodes._merge_evidence({}, [*product_hits, price_hit])
+    assert len(selected) <= 8
+    assert "price-list" in {item["document_id"] for item in selected}
+    assert selected[0]["chunk_id"] == product_hits[0]["chunk_id"]
 
 
 @pytest.mark.asyncio
-async def test_short_price_query_can_select_sparse_price_evidence():
+async def test_context_keeps_sparse_price_evidence():
     product_hits = [{**EVIDENCE, "chunk_id": f"product-{index}", "document_id": "product-vf8"} for index in range(1, 8)]
     price_hit = {
         **EVIDENCE,
@@ -139,6 +121,5 @@ async def test_short_price_query_can_select_sparse_price_evidence():
         "bm25_score": 2.48,
     }
 
-    result = await nodes.evidence_gate_node({"fused_hits": [*product_hits, price_hit]})
-
-    assert price_hit in result["selected_evidence"]
+    _, selected = nodes._merge_evidence({}, [*product_hits, price_hit])
+    assert "price-list" in {item["document_id"] for item in selected}

@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Any, Protocol
+import logging
+import re
+from typing import TYPE_CHECKING, Any, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from src.models.evaluation import (
     CriterionEvaluation,
     CriterionStatus,
+    CriterionType,
     FactualClaimStatus,
     FactualFinding,
     RecommendedNextPractice,
@@ -17,10 +20,16 @@ from src.models.evaluation import (
     TranscriptEvidence,
 )
 
-from .contracts import ScenarioContract
+from .contracts import ScenarioContract, policy_prompt_context
 from .prompts import EVALUATOR_PROMPT_VERSION, EVALUATOR_SYSTEM_PROMPT
 from .prompts.evaluator import FACTUAL_FINDINGS_SYSTEM_PROMPT
+from .scenario_loader import ScenarioRepository
 from .state import RoleplayMessage, RoleplayState, TerminationStatus
+
+if TYPE_CHECKING:
+    from src.integrations.practice_policy import ScenarioPolicyResolver
+
+logger = logging.getLogger(__name__)
 
 
 class KnowledgeEvidence(BaseModel):
@@ -74,8 +83,22 @@ class EvaluationError(ValueError):
 
 
 class RoleplayEvaluator:
-    def __init__(self, model: EvaluationModel) -> None:
+    def __init__(
+        self,
+        model: EvaluationModel,
+        *,
+        judge_model: str | None = None,
+        scenario_ids: set[str] | None = None,
+        policy_resolver: ScenarioPolicyResolver | None = None,
+    ) -> None:
+        self._policy_resolver = policy_resolver
         self._model = model
+        self._judge_model = judge_model
+        self._scenario_ids = (
+            scenario_ids
+            if scenario_ids is not None
+            else {item.scenario_id for item in ScenarioRepository().list_public()}
+        )
 
     async def evaluate(
         self,
@@ -88,6 +111,7 @@ class RoleplayEvaluator:
         if state.termination_status is TerminationStatus.ACTIVE:
             raise EvaluationError("active role-play sessions cannot be evaluated")
 
+        policies = self._policy_resolver.resolve(scenario, state.target_date) if self._policy_resolver else []
         context = {
             "prompt_version": EVALUATOR_PROMPT_VERSION,
             "scenario": scenario.model_dump(mode="json", exclude={"hidden_facts", "disclosure_rules"}),
@@ -97,6 +121,29 @@ class RoleplayEvaluator:
             "transcript": [message.model_dump(mode="json") for message in state.messages],
             "knowledge_evidence": [item.model_dump(mode="json") for item in knowledge_evidence],
         }
+        context["scenario"]["policy_expectations"] = policy_prompt_context(scenario)
+        context["current_policy_evidence"] = [item.model_dump(mode="json") for item in policies]
+        for objection in context["scenario"]["objections"]:
+            objection.pop("ideal_sales_response", None)
+        closing_outcome = getattr(state, "closing_outcome", None)
+        context["final_state"]["closing_outcome"] = closing_outcome
+        misconduct = str(state.termination_status) == "advisor_misconduct"
+        # Early sessions may offer no policy evidence. Never force the judge to
+        # invent transcript citations solely because the scenario lists policies.
+        policy_discussed = any(
+            claim.category in {"policy", "price", "promotion", "warranty"} for claim in state.factual_claims
+        ) or any(
+            message.role == "advisor"
+            and re.search(
+                r"chính sách|giá|ưu đãi|khuyến mãi|chiết khấu|bảo hành|vay|lãi suất|policy|price|warranty",
+                message.content,
+                re.I,
+            )
+            for message in state.messages
+        )
+        context["policy_assessment_required"] = bool(
+            scenario.policy_expectations and policy_discussed and not misconduct
+        )
         try:
             for attempt in range(2):
                 raw_draft = await self._model.evaluate(
@@ -105,24 +152,50 @@ class RoleplayEvaluator:
                 )
                 draft = EvaluationDraft.model_validate(raw_draft)
                 try:
+                    if misconduct:
+                        for evaluation in draft.evaluations:
+                            if evaluation.score is not None:
+                                evaluation.score = 1
+                        draft.summary_weaknesses = ["Phiên luyện tập kết thúc do hành vi sai phạm của tư vấn viên."]
+                    if context["policy_assessment_required"] and any(
+                        item.criterion is CriterionType.POLICY_ACCURACY and item.status is not CriterionStatus.ASSESSED
+                        for item in draft.evaluations
+                    ):
+                        raise EvaluationError("policy_accuracy must be assessed for configured policy expectations")
                     self._validate_transcript_evidence(draft, state.messages)
                     await self._complete_factual_findings(draft, state, knowledge_evidence)
                     self._validate_factual_claim_coverage(draft, state)
                     self._validate_factual_sources(draft, state.messages, knowledge_evidence)
                     break
                 except EvaluationError as exc:
-                    # A single correction attempt for invalid transcript references.
+                    # A single correction attempt for repairable judge mistakes.
                     # The validator still rejects an invalid second draft.
                     if attempt or not (
                         str(exc).startswith("evidence quote is not exact")
                         or str(exc).startswith("evidence references unknown message_id")
+                        or str(exc).startswith("policy_accuracy must be assessed")
                     ):
                         raise
+                    if str(exc).startswith("policy_accuracy must be assessed"):
+                        context["correction_required"] = (
+                            "policy_accuracy must be assessed because the advisor discussed policy/price "
+                            "and the scenario has policy expectations. Return assessed with a score from 1 to 3 "
+                            "and exact transcript evidence; cite the relevant advisor policy/price turn."
+                        )
+                        continue
                     context["correction_required"] = (
                         "Your previous draft used an invalid transcript quote or message_id. "
                         "Copy each message_id and quote verbatim from the supplied transcript. "
                         "Do not invent or paraphrase either field."
                     )
+            recommendation = draft.recommended_next_practice
+            if (
+                recommendation
+                and recommendation.type == "scenario"
+                and recommendation.target_id not in self._scenario_ids
+            ):
+                logger.warning("Dropping unknown recommended scenario id: %s", recommendation.target_id)
+                draft.recommended_next_practice = None
             assessed_scores = [
                 evaluation.score
                 for evaluation in draft.evaluations
@@ -132,6 +205,11 @@ class RoleplayEvaluator:
             return SessionEvaluationResult(
                 session_id=state.session_id,
                 scenario_id=state.scenario_id,
+                judge_model=self._judge_model,
+                closing_outcome=closing_outcome,
+                closing_outcome_label=next(
+                    (item.label for item in scenario.acceptable_outcomes if item.outcome_id == closing_outcome), None
+                ),
                 rubric_version=EVALUATOR_PROMPT_VERSION,
                 assessed_criteria_count=len(assessed_scores),
                 overall_score=overall_score,

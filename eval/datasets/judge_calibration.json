@@ -666,6 +666,335 @@
           "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp."
         }
       }
+    },
+    {
+      "case_id": "JC6_VF6_PLUS_UPSELL",
+      "purpose": "strong",
+      "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+      "scenario_version": "1.4",
+      "rubric_version": "sales-rubric-v3",
+      "completion_context": "curated_conversation_ended_no_runtime_state",
+      "messages": [
+        {
+          "message_id": "JC6-M01",
+          "role": "advisor",
+          "content": "Chào chị Hà, VF 6 đang có ưu đãi 9% Vì Tương Lai Xanh 2 từ 19/09 đến 19/12/2026 cho khách đủ điều kiện. Chị hiện đang đi xe gì, xe có đứng tên chị không ạ?"
+        },
+        {
+          "message_id": "JC6-M02",
+          "role": "customer",
+          "content": "Chị đang tìm hiểu Eco. Chị đi xe máy xăng đứng tên chị, chưa dùng xe này để nhận ưu đãi chuyển đổi lần nào."
+        },
+        {
+          "message_id": "JC6-M03",
+          "role": "advisor",
+          "content": "Dạ, xe máy xăng đứng tên chị đủ điều kiện về xe sở hữu. Chị cần cam kết chuyển đổi sang xe điện VinFast; em sẽ đối chiếu giấy tờ trước khi áp dụng, chương trình không cộng gộp VinClub hay Tri ân xe xăng. Chị dùng xe hằng ngày vào việc gì, thường chở ai ạ?"
+        },
+        {
+          "message_id": "JC6-M04",
+          "role": "customer",
+          "content": "Chị đi làm và đưa đón hai con nhỏ đi học."
+        },
+        {
+          "message_id": "JC6-M05",
+          "role": "advisor",
+          "content": "Cuối tuần chị có hay đi xa không?"
+        },
+        {
+          "message_id": "JC6-M06",
+          "role": "customer",
+          "content": "Thỉnh thoảng chị chở cả nhà về quê."
+        },
+        {
+          "message_id": "JC6-M07",
+          "role": "advisor",
+          "content": "Chị lái xe lâu chưa, và chỗ đỗ ở nhà, cơ quan thế nào ạ?"
+        },
+        {
+          "message_id": "JC6-M08",
+          "role": "customer",
+          "content": "Chị mới có bằng hơn một năm, đỗ chưa quen. Nhà trong ngõ nhỏ, cơ quan có hầm khá chật."
+        },
+        {
+          "message_id": "JC6-M09",
+          "role": "advisor",
+          "content": "Chị dự tính ngân sách bao nhiêu và ưu tiên điều gì khi chọn xe? Nhà mình có chỗ sạc không ạ?"
+        },
+        {
+          "message_id": "JC6-M10",
+          "role": "customer",
+          "content": "Khoảng 600 triệu, đáng thì thêm được tầm 50 triệu. Chị muốn dùng lâu dài, an toàn và hợp lý về tiền. Nhà có sân để sạc."
+        },
+        {
+          "message_id": "JC6-M11",
+          "role": "advisor",
+          "content": "VF 6 Eco Tiêu chuẩn 1 niêm yết 646 triệu, giảm 9% còn 587,86 triệu khi hồ sơ đủ điều kiện. Đây là giá xe, em sẽ tính chi phí lăn bánh riêng. Mức này phù hợp ngân sách chị chứ ạ?"
+        },
+        {
+          "message_id": "JC6-M12",
+          "role": "customer",
+          "content": "Eco giá đó chị thu xếp được em."
+        },
+        {
+          "message_id": "JC6-M13",
+          "role": "advisor",
+          "content": "Em giới thiệu thêm VF 6 Plus Tiêu chuẩn 1 niêm yết 700 triệu, giảm 9% còn 637 triệu khi đủ điều kiện. Chị có muốn cân nhắc các trang bị hỗ trợ gia đình và đỗ xe của Plus không?"
+        },
+        {
+          "message_id": "JC6-M14",
+          "role": "customer",
+          "content": "Chênh gần 50 triệu thì nhiều quá. Chị sợ thêm tiền cho những thứ không dùng tới, Eco đã đủ chưa em?"
+        },
+        {
+          "message_id": "JC6-M15",
+          "role": "advisor",
+          "content": "Em hiểu, mình chỉ thêm khi thấy hữu ích. Plus có 7 túi khí so với 4 trên Eco, là trang bị an toàn đáng cân nhắc khi chị chở hai con nhỏ. Plus có camera 360 thay vì camera lùi trên Eco, hỗ trợ quan sát quanh xe lúc chị mới lái, xoay trở trong ngõ hẹp và hầm chật; chị vẫn cần quan sát trực tiếp. Chênh lệch sau ưu đãi là 637 - 587,86 = 49,14 triệu. Mình lái thử để xem hai tiện ích này có đáng với chị không, Eco vẫn là lựa chọn phù hợp nếu đáp ứng nhu cầu."
+        },
+        {
+          "message_id": "JC6-M16",
+          "role": "customer",
+          "content": "Thêm 50 triệu mà cũng có nhiều thứ có ích nhỉ. Cũng tốt đấy. Cho chị lái thử bản Plus nhé."
+        },
+        {
+          "message_id": "JC6-M17",
+          "role": "advisor",
+          "content": "Em hẹn chị lái thử bản Plus lúc 9 giờ thứ Bảy tại showroom, thử quan sát camera và thao tác đỗ xe. Sau buổi thử em đối chiếu hồ sơ ưu đãi, báo chi phí lăn bánh để chị cân nhắc, được không ạ?"
+        },
+        {
+          "message_id": "JC6-M18",
+          "role": "customer",
+          "content": "Được em, 9 giờ thứ Bảy chị đến lái thử bản Plus."
+        }
+      ],
+      "knowledge_sources": [
+        {
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "1. | Chính sách “Vì Tương Lai Xanh 2”:\n\na. | Đối với các đối tượng:\n\n- | Khách hàng đang sở hữu xe ô tô xăng/ xe máy xăng/ xe máy điện VinFast/ ô tô điện VinFast.\n\n- | Mức ưu đãi được áp dụng như sau:\n\n• | Các dòng VF 2, VF 3 & Minio Green: Ưu đãi 3% MSRP.\n\n• | Các dòng VF 7, VF 9, VF 8 Thế hệ mới, Lạc Hồng 900 LX, EC Van & VF Wild: Ưu đãi 5% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.\n\nb. | Đối với các đối tượng đặc biệt:\n\n- | Khách hàng phục vụ trong ngành công an và quân đội, bao gồm: Sĩ quan, quân nhân chuyên nghiệp, hạ sĩ quan, chiến sĩ thuộc Quân đội nhân dân Việt Nam và Công an nhân dân\n\nViệt Nam và người thân (vợ chồng/con cái/ tứ thân phụ mẫu) đang công tác trong biên chế chính thức. Giấy tờ xác định đối tượng hưởng ưu đãi là thẻ ngành: Thẻ sĩ quan/ thẻ quân\n\nnhân/ thẻ Công an nhân dân.\n\n- | Khách hàng là nhân sự của Tổng công ty Bưu điện Việt Nam – VN Post.\n\n- | Mức ưu đãi được áp dụng như sau:\n\n• | Các dòng VF 2, VF 3 & Minio Green: Ưu đãi 6% MSRP.\n\n• | Các dòng VF 7, VF 9, VF 8 Thế hệ mới, Lạc Hồng 900 LX, EC Van & VF Wild: Ưu đãi 7% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.\n\nc. | Thời gian áp dụng: Từ ngày 19/09/2026 đến hết ngày 19/12/2026.\n\nd. | Điều kiện áp dụng:\n\n- | Áp dụng cho chủ sở hữu xe hoặc vợ chồng/con cái /tứ thân phụ mẫu/công ty do họ sở hữu số cổ phần/phần góp lớn nhất.\n\n- | Xe mới có thể được đứng tên bởi chính chủ sở hữu xe hoặc vợ chồng, con cái, tứ thân phụ mẫu; hoặc công ty do họ sở hữu số cổ phần/ phần vốn góp lớn nhất. Trường hợp chủ sở\n\nhữu xe là pháp nhân, xe mới có thể được đứng tên pháp nhân đó hoặc cá nhân sở hữu cổ phần/ phần vốn góp lớn nhất.\n\n- | Mỗi xe chỉ được sử dụng 01 lần để hưởng ưu đãi chuyển đổi sang xe điện VinFast cho toàn bộ chương trình Vì Tương Lai Xanh 2 & Thu xăng đổi điện VinFast đã triển khai.\n\n- | Với Khách hàng sở hữu xe ô tô xăng hoặc xe máy xăng, Khách hàng cam kết chuyển đổi sang xe điện VinFast.\n\n- | Chính sách này không được áp dụng đồng thời với:\n\n• | Chương trình Tri ân Khách hàng xe xăng VinFast chuyển đổi xanh tại mục 6 của văn bản này.\n\n• | Chính sách Khách hàng thân thiết VinClub tại thị trường Việt Nam."
+        },
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Eco | 646.000.000 VNĐ | 650.000.000 VNĐ\n\nVF 6\n\nPlus | 699.000.000 VNĐ | 700.000.000 VNĐ | 710.000.000 VNĐ"
+        },
+        {
+          "document_id": "FAQ_VF6_20260922",
+          "version": "2026.09.22",
+          "quote": "1. Hệ thống 4 túi khí (VF 6 Eco) và 7 túi khí (VF 6 Plus)."
+        }
+      ],
+      "annotated_claims": [
+        {
+          "message_id": "JC6-M01",
+          "text": "VF 6 đang có ưu đãi 9% Vì Tương Lai Xanh 2 từ 19/09 đến 19/12/2026 cho khách đủ điều kiện",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M03",
+          "text": "xe máy xăng đứng tên chị đủ điều kiện về xe sở hữu",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M03",
+          "text": "Chị cần cam kết chuyển đổi sang xe điện VinFast",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M03",
+          "text": "chương trình không cộng gộp VinClub hay Tri ân xe xăng",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M11",
+          "text": "VF 6 Eco Tiêu chuẩn 1 niêm yết 646 triệu",
+          "category": "price",
+          "source_document_id": "PRICE_LIST_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M11",
+          "text": "giảm 9% còn 587,86 triệu khi hồ sơ đủ điều kiện",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M13",
+          "text": "VF 6 Plus Tiêu chuẩn 1 niêm yết 700 triệu",
+          "category": "price",
+          "source_document_id": "PRICE_LIST_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M13",
+          "text": "giảm 9% còn 637 triệu khi đủ điều kiện",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M15",
+          "text": "Plus có 7 túi khí so với 4 trên Eco",
+          "category": "product",
+          "source_document_id": "FAQ_VF6_20260922"
+        },
+        {
+          "message_id": "JC6-M15",
+          "text": "Plus có camera 360 thay vì camera lùi trên Eco",
+          "category": "product",
+          "source_document_id": "FAQ_VF6_20260922"
+        },
+        {
+          "message_id": "JC6-M15",
+          "text": "Chênh lệch sau ưu đãi là 637 - 587,86 = 49,14 triệu",
+          "category": "price",
+          "source_document_id": "PRICE_LIST_VINFAST_20260921"
+        }
+      ],
+      "expert_labels": {
+        "need_discovery": {
+          "label_version": "sales-rubric-v3",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC6-M08",
+              "quote": "Chị mới có bằng hơn một năm, đỗ chưa quen. Nhà trong ngõ nhỏ, cơ quan có hầm khá chật."
+            },
+            {
+              "message_id": "JC6-M09",
+              "quote": "Chị dự tính ngân sách bao nhiêu và ưu tiên điều gì khi chọn xe?"
+            },
+            {
+              "message_id": "JC6-M10",
+              "quote": "Chị muốn dùng lâu dài, an toàn và hợp lý về tiền."
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "là trang bị an toàn đáng cân nhắc khi chị chở hai con nhỏ"
+            }
+          ],
+          "rationale": "Advisor hỏi mục đích dùng, người đi cùng, kinh nghiệm lái, chỗ đỗ, ngân sách và ưu tiên của khách, rồi dùng đúng các ý chở con, mới lái và hầm chật để tư vấn Plus.",
+          "expected_weakness": null,
+          "reviewer_id": "tú-vinfast-sales-advisor",
+          "reviewed_at": "2026-10-17T08:30:00+07:00",
+          "provenance": "Nháp điểm do AI (Claude Opus 5.5) chấm theo sales-rubric-v3; Tú, tư vấn viên bán hàng VinFast, review từng tiêu chí, nâng objection_handling từ 2 lên 3, xác nhận giá VF 6 Eco Tiêu chuẩn 1 646 triệu và Plus Tiêu chuẩn 1 700 triệu, rồi phê duyệt 5 nhãn JC6; quyết định được truyền qua Duy trong phiên Claude Code ngày 2026-10-17."
+        },
+        "product_knowledge": {
+          "label_version": "sales-rubric-v3",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC6-M04",
+              "quote": "Chị đi làm và đưa đón hai con nhỏ đi học."
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "Plus có 7 túi khí so với 4 trên Eco"
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "Plus có camera 360 thay vì camera lùi trên Eco"
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "chị vẫn cần quan sát trực tiếp"
+            }
+          ],
+          "rationale": "Advisor chỉ chọn hai khác biệt đúng nguồn (7 so với 4 túi khí, camera 360 so với camera lùi) gắn với nhu cầu, nêu giới hạn của camera và không chê Eco.",
+          "expected_weakness": null,
+          "reviewer_id": "tú-vinfast-sales-advisor",
+          "reviewed_at": "2026-10-17T08:30:00+07:00",
+          "provenance": "Nháp điểm do AI (Claude Opus 5.5) chấm theo sales-rubric-v3; Tú, tư vấn viên bán hàng VinFast, review từng tiêu chí, nâng objection_handling từ 2 lên 3, xác nhận giá VF 6 Eco Tiêu chuẩn 1 646 triệu và Plus Tiêu chuẩn 1 700 triệu, rồi phê duyệt 5 nhãn JC6; quyết định được truyền qua Duy trong phiên Claude Code ngày 2026-10-17."
+        },
+        "objection_handling": {
+          "label_version": "sales-rubric-v3",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC6-M14",
+              "quote": "Chị sợ thêm tiền cho những thứ không dùng tới, Eco đã đủ chưa em?"
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "Em hiểu, mình chỉ thêm khi thấy hữu ích."
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "Chênh lệch sau ưu đãi là 637 - 587,86 = 49,14 triệu."
+            },
+            {
+              "message_id": "JC6-M16",
+              "quote": "Cũng tốt đấy. Cho chị lái thử bản Plus nhé."
+            }
+          ],
+          "rationale": "Advisor nhận đúng nỗi lo gốc là trả thêm cho thứ không dùng tới, trả lời bằng lợi ích gắn nhu cầu và mức chênh đúng; băn khoăn được giải quyết vì khách tự chuyển sang lái thử bản Plus.",
+          "expected_weakness": null,
+          "reviewer_id": "tú-vinfast-sales-advisor",
+          "reviewed_at": "2026-10-17T08:30:00+07:00",
+          "provenance": "Nháp điểm do AI (Claude Opus 5.5) chấm theo sales-rubric-v3; Tú, tư vấn viên bán hàng VinFast, review từng tiêu chí, nâng objection_handling từ 2 lên 3, xác nhận giá VF 6 Eco Tiêu chuẩn 1 646 triệu và Plus Tiêu chuẩn 1 700 triệu, rồi phê duyệt 5 nhãn JC6; quyết định được truyền qua Duy trong phiên Claude Code ngày 2026-10-17."
+        },
+        "policy_accuracy": {
+          "label_version": "sales-rubric-v3",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC6-M02",
+              "quote": "Chị đi xe máy xăng đứng tên chị, chưa dùng xe này để nhận ưu đãi chuyển đổi lần nào."
+            },
+            {
+              "message_id": "JC6-M03",
+              "quote": "Chị cần cam kết chuyển đổi sang xe điện VinFast; em sẽ đối chiếu giấy tờ trước khi áp dụng, chương trình không cộng gộp VinClub hay Tri ân xe xăng."
+            },
+            {
+              "message_id": "JC6-M11",
+              "quote": "VF 6 Eco Tiêu chuẩn 1 niêm yết 646 triệu, giảm 9% còn 587,86 triệu khi hồ sơ đủ điều kiện."
+            }
+          ],
+          "rationale": "Advisor xác nhận xe sở hữu trước khi báo giá ưu đãi, nêu đúng điều kiện cam kết chuyển đổi, đối chiếu giấy tờ và không cộng gộp, và báo giá sau ưu đãi kèm điều kiện, tách chi phí lăn bánh.",
+          "expected_weakness": null,
+          "reviewer_id": "tú-vinfast-sales-advisor",
+          "reviewed_at": "2026-10-17T08:30:00+07:00",
+          "provenance": "Nháp điểm do AI (Claude Opus 5.5) chấm theo sales-rubric-v3; Tú, tư vấn viên bán hàng VinFast, review từng tiêu chí, nâng objection_handling từ 2 lên 3, xác nhận giá VF 6 Eco Tiêu chuẩn 1 646 triệu và Plus Tiêu chuẩn 1 700 triệu, rồi phê duyệt 5 nhãn JC6; quyết định được truyền qua Duy trong phiên Claude Code ngày 2026-10-17."
+        },
+        "closing_next_step": {
+          "label_version": "sales-rubric-v3",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC6-M16",
+              "quote": "Cho chị lái thử bản Plus nhé."
+            },
+            {
+              "message_id": "JC6-M17",
+              "quote": "Em hẹn chị lái thử bản Plus lúc 9 giờ thứ Bảy tại showroom, thử quan sát camera và thao tác đỗ xe."
+            },
+            {
+              "message_id": "JC6-M18",
+              "quote": "Được em, 9 giờ thứ Bảy chị đến lái thử bản Plus."
+            }
+          ],
+          "rationale": "Khách sẵn sàng lái thử chứ chưa mua; advisor chốt lịch cụ thể, nội dung thử và bước tiếp theo về hồ sơ, chi phí lăn bánh, và khách đồng ý.",
+          "expected_weakness": null,
+          "reviewer_id": "tú-vinfast-sales-advisor",
+          "reviewed_at": "2026-10-17T08:30:00+07:00",
+          "provenance": "Nháp điểm do AI (Claude Opus 5.5) chấm theo sales-rubric-v3; Tú, tư vấn viên bán hàng VinFast, review từng tiêu chí, nâng objection_handling từ 2 lên 3, xác nhận giá VF 6 Eco Tiêu chuẩn 1 646 triệu và Plus Tiêu chuẩn 1 700 triệu, rồi phê duyệt 5 nhãn JC6; quyết định được truyền qua Duy trong phiên Claude Code ngày 2026-10-17."
+        }
+      }
     }
   ]
 }

@@ -11,6 +11,14 @@ contracts, consumers, tests, and UI semantics aligned.
 `RoleplayState` is initialized from `ScenarioContract` with a `session_id`. It keeps
 scenario identity, difficulty, persona, stages, turn count, trust/interest, visible
 and hidden facts, objections, discoveries, termination state, and message history.
+New sessions have an empty transcript, stage `opening`, and turn count zero.
+The advisor speaks first in every scenario; the first advisor message counts as
+turn one. The first customer reply introduces only buying intent from `customer_goals`;
+usage needs are discovered through relevant advisor questions. Disclosures
+triggered by that opening still use configured revealed statements and are recorded against the first customer reply. Creating
+a session makes no customer model call; the existing maximum advisor-turn limit
+is unchanged.
+
 Validated advisor factual claims are retained with their originating message ID and
 category so Finish can retrieve evidence for the exact claim rather than the whole
 transcript.
@@ -36,6 +44,36 @@ Adaptive difficulty inside an attempt is out of MVP scope; later attempts may us
 different configured difficulty.
 
 ## Context boundaries
+
+The scenario schema forbids unknown fields on the scenario and nested typed
+contracts. Persona and hidden facts remain extensible dictionaries. Objections
+must declare a stage or non-empty advisor-message trigger keywords (or both);
+keyword matching is intended to be case-insensitive. Termination defaults share
+the state's 1–15 turn validation bounds.
+
+Optional `acceptable_outcomes` describe successful products and the objection IDs
+that must be resolved. Missing outcomes compute a fresh legacy `close` outcome,
+labelled “Chốt bước tiếp theo”, with an empty product and no required objections.
+`upsell_benefits` link benefits to hidden need keys; empty links allow needs already
+shared in customer goals, such as carrying children or weekend travel. An
+`upsell_rule` references an existing objection and declares minimum linked/safety
+benefit counts. `policy_expectations` carry expected/bonus descriptions, evidence
+document IDs, and eligibility-check flags. Dataset tests verify those document IDs
+against `corpus.json` and `faq.json` using their `document_id` fields.
+
+Private repository lookups expose these fields. Public scenario summaries expose
+only `outcome_labels`, excluding product choices, prerequisites, upsell rules,
+benefits, policy expectations, and hidden facts. These additions provide the data
+contract for later runtime/evaluator work; keyword activation and outcome-aware
+evaluation are not implemented by this schema change.
+
+The VF 6 Eco/Plus scenario retains the requested 30-million-VND deposit as a
+training assumption: `POLICY_DEPOSIT_TERMS_20260922` verifies the seven-working-day
+deadline but leaves the deposit amount blank. No controlled document currently
+verifies that amount. Source verification is still needed before evaluating it as
+a grounded factual claim. The VF 5 charging expectation follows the source's
+precise restriction: Friday–Sunday only 23:00–06:00 and 14:00–16:00; other weekdays
+also allow the remaining hours.
 
 `customer_prompt_context()` is server-only input for the AI customer. It includes
 difficulty, persona, trust/interest levels, customer goals, current intent, revealed
@@ -76,7 +114,7 @@ battery, charging, and product facts must use the knowledge tool, not scenario d
 Stages are `opening`, `discovery`, `presentation`, `objection_handling`, `closing`, and
 `finished`. D2 can move them forward or backward based on dialogue. Termination is
 active, completed, advisor-ended, dropped-out, or max-turns. Advisors choose 8–15
-turns at session start; scenario defaults are at least eight turns. The final
+turns at session start; scenario defaults validate within 1–15 turns. The final
 allowed advisor message still receives a customer reply before max-turns ends
 the session.
 

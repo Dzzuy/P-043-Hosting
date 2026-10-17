@@ -2,11 +2,20 @@ from pathlib import Path
 
 import pytest
 
+from src.agents.roleplay.prompts.analyzer import TURN_ANALYZER_SYSTEM_PROMPT
 from src.agents.roleplay.scenario_loader import ScenarioRepository
 from src.agents.roleplay.state import RoleplayState
 from src.agents.roleplay.turn_analyzer import TurnAnalysisError, TurnAnalyzer
 
 SCENARIOS = Path("data/scenarios/scenarios.json")
+
+
+def test_prompt_resolves_confirmation_only_objections_in_customer_question_context():
+    assert "customer's last question" in TURN_ANALYZER_SYSTEM_PROMPT
+    assert "resolve_condition only requires confirmation" in TURN_ANALYZER_SYSTEM_PROMPT
+    assert 'Short affirmative answers ("được", "dạ có", "đúng rồi ạ")' in TURN_ANALYZER_SYSTEM_PROMPT
+    assert "both addressed and resolved" in TURN_ANALYZER_SYSTEM_PROMPT
+    assert "Keep all configured upsell requirements" in TURN_ANALYZER_SYSTEM_PROMPT
 
 
 class StaticAnalysisModel:
@@ -151,3 +160,14 @@ async def test_analyzer_preserves_original_casing_for_recorded_claim():
     result = await analyzer.analyze("Dạ, với VF 5 Plus chạy biển vàng có ưu đãi.", scenario, state)
 
     assert [claim.text for claim in result.factual_claims] == ["với VF 5 Plus chạy biển vàng"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("output,expected", [({}, False), ({"off_topic": True}, True), ({"off_topic": False}, False)])
+async def test_off_topic_survives_analysis_validation(output, expected):
+    scenario = ScenarioRepository(SCENARIOS).get("SCENARIO_01_VF5_TAXI")
+    state = RoleplayState.from_scenario("session-1", scenario)
+
+    analysis = await TurnAnalyzer(StaticAnalysisModel(output)).analyze("xyz xyz", scenario, state)
+
+    assert analysis.off_topic is expected

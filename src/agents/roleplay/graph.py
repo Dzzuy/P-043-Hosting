@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import TypedDict
+import logging
+from typing import Literal, TypedDict
 
 from langgraph.graph import END, StateGraph
 from pydantic import ValidationError
@@ -11,10 +12,13 @@ from src.models.evaluation import SessionEvaluationResult
 
 from .contracts import CheckpointContract, ScenarioContract
 from .customer_agent import CustomerAgent
+from .guardrails import check_advisor_message
 from .scenario_loader import ScenarioNotFoundError, ScenarioRepository
-from .state import ConversationStage, EvaluationStatus, RoleplayState, TerminationStatus
-from .state_reducer import apply_turn_analysis
+from .state import ConversationStage, EvaluationStatus, RoleplayMessage, RoleplayState, TerminationStatus
+from .state_reducer import OFF_TOPIC_REASON, apply_turn_analysis
 from .turn_analyzer import TurnAnalysis, TurnAnalyzer
+
+logger = logging.getLogger(__name__)
 
 
 class RoleplayRuntimeState(TypedDict, total=False):
@@ -25,6 +29,7 @@ class RoleplayRuntimeState(TypedDict, total=False):
     advisor_message: str
     analysis: TurnAnalysis
     customer_reply: str
+    misconduct_category: str
 
 
 class RoleplayGraphError(ValueError):
@@ -40,7 +45,16 @@ class RoleplaySessionNotFoundError(RoleplayGraphError):
 
 
 class RoleplaySessionConflictError(RoleplayGraphError):
-    """Raised when a session identifier is reused incompatibly."""
+    """A stable conflict code independent of internal diagnostic wording."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        code: Literal["session_finished", "session_busy", "validation_error"] = "validation_error",
+    ) -> None:
+        super().__init__(message)
+        self.code = code
 
 
 def build_roleplay_turn_graph(
@@ -51,6 +65,18 @@ def build_roleplay_turn_graph(
     """Build one advisor-turn graph with persistence before provider generation."""
 
     async def analyze_advisor_turn(state: RoleplayRuntimeState) -> RoleplayRuntimeState:
+        verdict = check_advisor_message(state["advisor_message"])
+        if verdict.level == "end_session":
+            return {
+                "analysis": TurnAnalysis(unsafe_or_abusive=True),
+                "misconduct_category": verdict.category or "code_abuse",
+            }
+        if verdict.level == "warn":
+            logger.warning(
+                "Advisor guardrail warning: session_id=%s category=%s",
+                state["roleplay_state"].session_id,
+                verdict.category,
+            )
         analysis = await analyzer.analyze(
             state["advisor_message"],
             state["scenario"],
@@ -65,7 +91,36 @@ def build_roleplay_turn_graph(
             state["advisor_message"],
             state["analysis"],
         )
+        updated.pending_next_step_attempted = (
+            state["analysis"].next_step_attempted if updated.termination_status is TerminationStatus.ACTIVE else False
+        )
+        if updated.termination_status is TerminationStatus.ADVISOR_MISCONDUCT:
+            category = state.get("misconduct_category", "semantic_abuse")
+            updated.misconduct_reason = category
+            updated.termination_reason = f"Advisor misconduct: {category}."
+            address = customer_agent.persona_address(state["scenario"])
+            reply = (
+                f"{address} sẽ báo cáo em lên quản lý. {address} không có nhu cầu mua xe ở đây nữa."
+                if category != "semantic_abuse"
+                else f"{address} nghĩ mình nên dừng cuộc trao đổi ở đây. Chào em."
+            )
+            updated.messages.append(RoleplayMessage(role="customer", content=reply))
+            return {"roleplay_state": updated, "customer_reply": reply}
+        if (
+            updated.termination_status is TerminationStatus.DROPPED_OUT
+            and updated.termination_reason == OFF_TOPIC_REASON
+        ):
+            address = customer_agent.persona_address(state["scenario"])
+            reply = f"{address} thấy em không tập trung tư vấn nên {address.lower()} xin phép dừng ở đây. Chào em."
+            updated.messages.append(RoleplayMessage(role="customer", content=reply))
+            return {"roleplay_state": updated, "customer_reply": reply}
         return {"roleplay_state": updated}
+
+    async def route_pending_turn(state: RoleplayRuntimeState) -> RoleplayRuntimeState:
+        return {}
+
+    async def route_after_pending_check(state: RoleplayRuntimeState) -> str:
+        return "customer_turn" if state["roleplay_state"].pending_customer_reply else "analyze_advisor_turn"
 
     async def persist_advisor_turn(state: RoleplayRuntimeState) -> RoleplayRuntimeState:
         await _save_state(checkpoint, state["roleplay_state"])
@@ -84,17 +139,40 @@ def build_roleplay_turn_graph(
             state["scenario"],
             prior,
             mode="response",
-            consider_next_step=state["analysis"].next_step_attempted,
+            consider_next_step=prior.pending_next_step_attempted,
         )
         message = turn.message
         updated = prior.model_copy(deep=True)
         updated.messages.append(message)
+        updated.pending_next_step_attempted = False
         for rule in pending:
-            if rule.revealed_statement in message.content:
+            if rule.fact_key in turn.disclosed_fact_keys or rule.revealed_statement in message.content:
                 updated.spoken_fact_message_ids[rule.fact_key] = message.message_id
-        if turn.accepted_next_step and state["analysis"].next_step_attempted:
+        if turn.accepted_next_step and prior.pending_next_step_attempted:
             accepted_id = focus_id or next(iter(updated.active_objections), None)
-            if accepted_id is not None:
+            updated.closing_outcome = customer_agent.validated_outcome_id(
+                turn.accepted_outcome_id, state["scenario"], prior
+            )
+            rule = state["scenario"].upsell_rule
+            outcome = next(
+                (item for item in state["scenario"].acceptable_outcomes if item.outcome_id == updated.closing_outcome),
+                None,
+            )
+            if rule and outcome and rule.objection_id not in outcome.requires_resolved_objections:
+                # Closing the base product declines the upsell; no resolution credit.
+                # closing_outcome preserves the reason, and removing unresolved
+                # prevents keyword/stage activation on later turns.
+                updated.active_objections = [key for key in updated.active_objections if key != rule.objection_id]
+                updated.unresolved_objections = [
+                    key for key in updated.unresolved_objections if key != rule.objection_id
+                ]
+            accepted_objection = next(
+                (item for item in state["scenario"].objections if item.objection_id == accepted_id), None
+            )
+            facts_known = accepted_objection is not None and set(accepted_objection.requires_revealed_facts).issubset(
+                prior.revealed_facts
+            )
+            if accepted_id is not None and facts_known and (rule is None or accepted_id != rule.objection_id):
                 objection_id = accepted_id
                 updated.active_objections.remove(objection_id)
                 if objection_id in updated.unresolved_objections:
@@ -126,12 +204,14 @@ def build_roleplay_turn_graph(
         return {}
 
     graph = StateGraph(RoleplayRuntimeState)
+    graph.add_node("route_pending_turn", route_pending_turn)
     graph.add_node("analyze_advisor_turn", analyze_advisor_turn)
     graph.add_node("update_customer_state", update_customer_state)
     graph.add_node("persist_advisor_turn", persist_advisor_turn)
     graph.add_node("customer_turn", customer_turn)
     graph.add_node("persist_customer_turn", persist_customer_turn)
-    graph.set_entry_point("analyze_advisor_turn")
+    graph.set_entry_point("route_pending_turn")
+    graph.add_conditional_edges("route_pending_turn", route_after_pending_check)
     graph.add_edge("analyze_advisor_turn", "update_customer_state")
     graph.add_edge("update_customer_state", "persist_advisor_turn")
     graph.add_conditional_edges("persist_advisor_turn", route_after_advisor_turn)
@@ -175,24 +255,16 @@ class RoleplayGraph:
         if existing is not None:
             state = self._validate_checkpoint(existing, session_id)
             if state.scenario_id != scenario_id:
-                raise RoleplaySessionConflictError("session_id already belongs to a different scenario")
+                raise RoleplaySessionConflictError(
+                    "session_id already belongs to a different scenario", code="validation_error"
+                )
             if max_turns is not None and state.max_turns != max_turns:
-                raise RoleplaySessionConflictError("session_id already has a different turn limit")
+                raise RoleplaySessionConflictError(
+                    "session_id already has a different turn limit", code="validation_error"
+                )
             return state.advisor_visible_context()
 
         state = RoleplayState.from_scenario(session_id, scenario, max_turns=max_turns)
-        await _save_state(self._checkpoint, state)
-        opening_turn = await self._customer_agent.generate_turn(
-            scenario,
-            state,
-            mode="opening",
-        )
-        opening_message = opening_turn.message
-        state.messages.append(opening_message)
-        if opening_turn.raised_objection_id and opening_turn.raised_objection_id in state.unresolved_objections:
-            state.spoken_concern_message_ids[opening_turn.raised_objection_id] = opening_message.message_id
-            state.active_objections.append(opening_turn.raised_objection_id)
-            state.conversation_stage = ConversationStage.OBJECTION_HANDLING
         await _save_state(self._checkpoint, state)
         return state.advisor_visible_context()
 
@@ -206,7 +278,20 @@ class RoleplayGraph:
             raise RoleplaySessionNotFoundError(f"unknown session_id: {session_id}")
         state = self._validate_checkpoint(checkpoint_data, session_id)
         if state.termination_status is not TerminationStatus.ACTIVE:
-            raise RoleplaySessionConflictError("cannot continue a finished practice session")
+            raise RoleplaySessionConflictError("cannot continue a finished practice session", code="session_finished")
+        if state.pending_customer_reply:
+            raise RoleplaySessionConflictError(
+                "customer reply is pending; retry it before sending another message", code="session_busy"
+            )
+        return await self._run_turn(state, advisor_message)
+
+    async def retry_customer_reply(self, session_id: str) -> dict:
+        state = await self.get_session_state(session_id)
+        if not state.pending_customer_reply:
+            raise RoleplaySessionConflictError("no customer reply is pending", code="validation_error")
+        return await self._run_turn(state, state.messages[-1].content)
+
+    async def _run_turn(self, state: RoleplayState, advisor_message: str) -> dict:
         try:
             scenario = self._repository.get(state.scenario_id)
         except ScenarioNotFoundError as exc:
@@ -234,6 +319,10 @@ class RoleplayGraph:
 
     async def finish_session(self, session_id: str) -> RoleplayState:
         state = await self.get_session_state(session_id)
+        if state.pending_customer_reply:
+            raise RoleplaySessionConflictError(
+                "customer reply is pending; retry it before finishing", code="session_busy"
+            )
         if state.termination_status is TerminationStatus.ACTIVE:
             state.termination_status = TerminationStatus.ADVISOR_ENDED
             state.termination_reason = "Advisor ended the practice session."
@@ -246,12 +335,14 @@ class RoleplayGraph:
     async def save_evaluation_result(self, session_id: str, result: SessionEvaluationResult) -> RoleplayState:
         state = await self.get_session_state(session_id)
         if state.termination_status is TerminationStatus.ACTIVE:
-            raise RoleplaySessionConflictError("cannot evaluate an active practice session")
+            raise RoleplaySessionConflictError("cannot evaluate an active practice session", code="validation_error")
         if result.session_id != session_id or result.scenario_id != state.scenario_id:
-            raise RoleplaySessionConflictError("evaluation does not match practice session")
+            raise RoleplaySessionConflictError("evaluation does not match practice session", code="validation_error")
         if state.evaluation_result is not None:
             if state.evaluation_result != result:
-                raise RoleplaySessionConflictError("practice session already has an evaluation")
+                raise RoleplaySessionConflictError(
+                    "practice session already has an evaluation", code="validation_error"
+                )
             return state
         state.evaluation_result = result
         state.evaluation_status = EvaluationStatus.COMPLETE

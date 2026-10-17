@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from functools import wraps
 from threading import Lock
 
 from sqlalchemy import (
@@ -21,9 +22,18 @@ from sqlalchemy import (
 )
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import IntegrityError
+from starlette.concurrency import run_in_threadpool
 
 from src.integrations.practice_persistence import normalize_database_url
 from src.models.auth import AccountAlreadyExistsError, AuthenticatedUser, StoredSession, StoredUser, UserRole
+
+
+def _offload_sql(function):
+    """Keep each synchronous SQL transaction in one worker, outside the event loop."""
+    @wraps(function)
+    async def run(*args, **kwargs):
+        return await run_in_threadpool(function, *args, **kwargs)
+    return run
 
 
 class SQLAuthRepository:
@@ -67,7 +77,8 @@ class SQLAuthRepository:
                 self._metadata.create_all(self._engine)
                 self._schema_ready = True
 
-    async def upsert_user(self, user: StoredUser) -> None:
+    @_offload_sql
+    def upsert_user(self, user: StoredUser) -> None:
         """Create or replace one explicitly seeded local user."""
         self._ensure_schema()
         values = user.model_dump(mode="json", exclude={"must_change_password"})
@@ -78,7 +89,8 @@ class SQLAuthRepository:
             connection.execute(delete(self._users).where(self._users.c.username == user.username))
             connection.execute(insert(self._users).values(**values))
 
-    async def create_user(self, user: StoredUser, *, require_password_change: bool = False) -> None:
+    @_offload_sql
+    def create_user(self, user: StoredUser, *, require_password_change: bool = False) -> None:
         """Insert without replacing an account or invalidating its sessions."""
         self._ensure_schema()
         try:
@@ -91,14 +103,16 @@ class SQLAuthRepository:
         except IntegrityError as exc:
             raise AccountAlreadyExistsError("username already exists") from exc
 
-    async def user_by_username(self, username: str) -> StoredUser | None:
+    @_offload_sql
+    def user_by_username(self, username: str) -> StoredUser | None:
         self._ensure_schema()
         query = select(self._users).where(self._users.c.username == username)
         with self._engine.connect() as connection:
             row = connection.execute(query).mappings().first()
         return StoredUser.model_validate(dict(row)) if row else None
 
-    async def manager_exists(self) -> bool:
+    @_offload_sql
+    def manager_exists(self) -> bool:
         self._ensure_schema()
         with self._engine.connect() as connection:
             row = connection.execute(
@@ -106,7 +120,8 @@ class SQLAuthRepository:
             ).first()
         return row is not None
 
-    async def requires_password_change(self, user_id: str) -> bool:
+    @_offload_sql
+    def requires_password_change(self, user_id: str) -> bool:
         self._ensure_schema()
         with self._engine.connect() as connection:
             row = connection.execute(
@@ -116,7 +131,8 @@ class SQLAuthRepository:
             ).first()
         return row is not None
 
-    async def update_password(self, user_id: str, password_hash: str, password_salt: str, iterations: int) -> None:
+    @_offload_sql
+    def update_password(self, user_id: str, password_hash: str, password_salt: str, iterations: int) -> None:
         self._ensure_schema()
         with self._engine.begin() as connection:
             connection.execute(
@@ -133,7 +149,8 @@ class SQLAuthRepository:
             )
             connection.execute(delete(self._sessions).where(self._sessions.c.user_id == user_id))
 
-    async def active_advisors(self) -> list[AuthenticatedUser]:
+    @_offload_sql
+    def active_advisors(self) -> list[AuthenticatedUser]:
         """Return public identities only; never expose password fields."""
         self._ensure_schema()
         query = (
@@ -144,7 +161,8 @@ class SQLAuthRepository:
         with self._engine.connect() as connection:
             return [AuthenticatedUser.model_validate(dict(row)) for row in connection.execute(query).mappings()]
 
-    async def active_advisor(self, user_id: str) -> AuthenticatedUser | None:
+    @_offload_sql
+    def active_advisor(self, user_id: str) -> AuthenticatedUser | None:
         self._ensure_schema()
         query = select(
             self._users.c.user_id, self._users.c.username, self._users.c.display_name, self._users.c.role
@@ -157,12 +175,16 @@ class SQLAuthRepository:
             row = connection.execute(query).mappings().first()
         return AuthenticatedUser.model_validate(dict(row)) if row else None
 
-    async def create_session(self, session: StoredSession) -> None:
+    @_offload_sql
+    def create_session(self, session: StoredSession) -> None:
         self._ensure_schema()
         with self._engine.begin() as connection:
+            # Reclaim expired rows on login, never on the authenticated read path.
+            connection.execute(delete(self._sessions).where(self._sessions.c.expires_at <= session.created_at))
             connection.execute(insert(self._sessions).values(**session.model_dump()))
 
-    async def user_for_session(self, token_hash: str, now: datetime) -> AuthenticatedUser | None:
+    @_offload_sql
+    def user_for_session(self, token_hash: str, now: datetime) -> AuthenticatedUser | None:
         self._ensure_schema()
         query = (
             select(
@@ -170,14 +192,16 @@ class SQLAuthRepository:
                 self._users.c.username,
                 self._users.c.display_name,
                 self._users.c.role,
+                select(self._password_change_required.c.user_id)
+                .where(self._password_change_required.c.user_id == self._users.c.user_id)
+                .exists().label("must_change_password"),
             )
             .select_from(self._sessions.join(self._users, self._sessions.c.user_id == self._users.c.user_id))
             .where(self._sessions.c.token_hash == token_hash)
             .where(self._sessions.c.expires_at > now)
             .where(self._users.c.active.is_(True))
         )
-        with self._engine.begin() as connection:
-            connection.execute(delete(self._sessions).where(self._sessions.c.expires_at <= now))
+        with self._engine.connect() as connection:
             row = connection.execute(query).mappings().first()
         if row is None:
             return None
@@ -186,9 +210,11 @@ class SQLAuthRepository:
             username=row.username,
             display_name=row.display_name,
             role=UserRole(row.role),
+            must_change_password=row.must_change_password,
         )
 
-    async def delete_session(self, token_hash: str) -> None:
+    @_offload_sql
+    def delete_session(self, token_hash: str) -> None:
         self._ensure_schema()
         with self._engine.begin() as connection:
             connection.execute(delete(self._sessions).where(self._sessions.c.token_hash == token_hash))

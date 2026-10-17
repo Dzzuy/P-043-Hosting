@@ -1,73 +1,81 @@
+"""Nine logical nodes with explicit per-node transitions, one corrective round, and one regeneration."""
+
 from langgraph.graph import END, START, StateGraph
 
-from src.agents.copilot.nodes import (
-    MAX_RETRIES,
-    abstain_node,
-    dual_retrieval_node,
-    evidence_gate_node,
-    generate_node,
-    rrf_fusion_node,
-    validate_response_node,
-)
+from src.agents.copilot import nodes
 from src.agents.copilot.state import CopilotState
 
+NODE_NAMES = (
+    "analyze_and_route",
+    "plan_queries",
+    "retrieve_documents",
+    "select_evidence",
+    "build_context",
+    "generate_answer",
+    "check_grounding",
+    "finalize_response",
+    "fallback_response",
+)
 
-def route_after_evidence_gate(state: CopilotState) -> str:
-    """Conditional Edge 1: Route to generation if evidence is sufficient, else abstain directly."""
-    if state.get("evidence_status") == "sufficient":
-        return "generate"
-    return "abstain"
+NODE_TRANSITIONS: dict[str, dict[str, str]] = {
+    "analyze_and_route": {
+        "retrieve_documents": "retrieve_documents",
+        "plan_queries": "plan_queries",
+        "generate_answer": "generate_answer",
+        "finalize_response": "finalize_response",
+        "fallback_response": "fallback_response",
+        "end": END,
+    },
+    "plan_queries": {
+        "retrieve_documents": "retrieve_documents",
+        "finalize_response": "finalize_response",
+        "fallback_response": "fallback_response",
+    },
+    "retrieve_documents": {
+        "select_evidence": "select_evidence",
+        "finalize_response": "finalize_response",
+        "fallback_response": "fallback_response",
+    },
+    "select_evidence": {
+        "build_context": "build_context",
+        "finalize_response": "finalize_response",
+        "fallback_response": "fallback_response",
+    },
+    "build_context": {
+        "generate_answer": "generate_answer",
+        "plan_queries": "plan_queries",
+        "retrieve_documents": "retrieve_documents",
+        "finalize_response": "finalize_response",
+        "fallback_response": "fallback_response",
+    },
+    "generate_answer": {
+        "check_grounding": "check_grounding",
+        "finalize_response": "finalize_response",
+        "fallback_response": "fallback_response",
+    },
+    "check_grounding": {
+        "finalize_response": "finalize_response",
+        "generate_answer": "generate_answer",
+        "plan_queries": "plan_queries",
+        "fallback_response": "fallback_response",
+    },
+    "finalize_response": {
+        "end": END,
+        "fallback_response": "fallback_response",
+    },
+    "fallback_response": {
+        "end": END,
+    },
+}
 
 
-def route_after_validation(state: CopilotState) -> str:
-    """Conditional Edge 2: Complete if valid, retry once if invalid, or fail closed to abstain."""
-    if state.get("validation_status") == "valid":
-        return "end"
-    if state.get("retry_count", 0) <= MAX_RETRIES:
-        return "retry"
-    return "abstain"
-
-
-def build_copilot_graph() -> StateGraph:
-    """Compile the six-node baseline with at most one generation retry."""
+def build_copilot_graph():
     graph = StateGraph(CopilotState)
-
-    # 1. Add Nodes
-    graph.add_node("dual_retrieval", dual_retrieval_node)
-    graph.add_node("rrf_fusion", rrf_fusion_node)
-    graph.add_node("evidence_gate", evidence_gate_node)
-    graph.add_node("generate", generate_node)
-    graph.add_node("validate_response", validate_response_node)
-    graph.add_node("abstain", abstain_node)
-
-    # 2. Add Edges & Conditional Edges
-    graph.add_edge(START, "dual_retrieval")
-    graph.add_edge("dual_retrieval", "rrf_fusion")
-    graph.add_edge("rrf_fusion", "evidence_gate")
-
-    graph.add_conditional_edges(
-        "evidence_gate",
-        route_after_evidence_gate,
-        {
-            "generate": "generate",
-            "abstain": "abstain",
-        },
-    )
-
-    graph.add_edge("generate", "validate_response")
-
-    graph.add_conditional_edges(
-        "validate_response",
-        route_after_validation,
-        {
-            "end": END,
-            "retry": "generate",
-            "abstain": "abstain",
-        },
-    )
-
-    graph.add_edge("abstain", END)
-
+    for name in NODE_NAMES:
+        graph.add_node(name, getattr(nodes, name))
+    graph.add_edge(START, "analyze_and_route")
+    for name, transitions in NODE_TRANSITIONS.items():
+        graph.add_conditional_edges(name, lambda state: state["route"], transitions)
     return graph.compile()
 
 
