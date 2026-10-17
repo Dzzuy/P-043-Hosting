@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VinFast Sales Coach — Design System</title>
+<link rel="stylesheet" href="tokens.css"><link rel="stylesheet" href="components/bundle.css">
+<style>
+body{background:var(--advisor-bg);padding:32px 16px} main{max-width:1000px;margin:0 auto;display:grid;gap:28px}
+h1.page{font-size:1.6rem;color:var(--ink-navy)} section h2{font-size:1rem;color:var(--ink-navy);margin-bottom:10px}
+.frame{background:var(--surface);border:1px solid var(--blue-border);border-radius:var(--radius-lg);overflow:hidden}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.sw{background:var(--surface);border:1px solid var(--blue-border);border-radius:10px;padding:8px;font-size:.72rem;display:grid;gap:3px}
+.sw div{height:40px;border-radius:6px;border:1px solid var(--border)} .sw code{color:var(--muted)}
+</style></head><body><main>
+<h1 class="page">VinFast Sales Coach — Design System</h1>
+<section><h2>Cover</h2><div class="frame" style="overflow-x:auto"><style>
+  html, body { margin: 0; height: 100%; background: var(--advisor-bg); }
+  .cover { position: relative; width: 960px; height: 288px; overflow: hidden; background: var(--advisor-bg); font-family: var(--font-sans); }
+  .cover svg { position: absolute; inset: 0; }
+  .slab { fill: var(--navy-950); }
+  .accent { fill: var(--blue-600); }
+  .deep { fill: var(--header-blue); }
+  .tint { fill: var(--blue-tint); }
+  .r-card { rx: var(--radius-card); }
+  .r-lg { rx: var(--radius-lg); }
+  .r-md { rx: var(--radius-md); }
+  .v { fill: none; stroke-width: 6px; stroke-linecap: round; stroke-linejoin: round; }
+  .v1 { stroke: var(--blue-tint); }
+  .v2 { stroke: var(--blue-600); }
+  .v3 { stroke: var(--blue-750); }
+  .name { position: absolute; left: 48px; bottom: 64px; max-width: 440px; margin: 0; color: var(--ink-navy); font-size: 64px; line-height: .95; font-weight: 800; letter-spacing: -0.04em; }
+  .tagline { position: absolute; left: 48px; bottom: 36px; max-width: 440px; margin: 0; color: var(--ink-slate-strong); font-size: 14px; }
+</style>
+<div class="cover">
+  <!--
+    blocks: navy-950 slab 320x320 (bleeds top/right/bottom), blue-600 192x96, header-blue 96x120, blue-tint 96x72
+    arrangement: one tall navy slab at the right edge (the header's dark end) with three satellites staggered to its left
+    pattern: literal motif, the triple V of the VinFast emblem as three nested chevrons in blue-tint / blue-600 / blue-750; the brand is the V
+    scales: sides in space-6 (24px) multiples; corners radius-card 16, radius-lg 14, radius-md 10; chevrons 24 apart (space-6)
+  -->
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <rect class="slab r-card" x="656" y="-16" width="320" height="320" />
+    <rect class="deep r-lg" x="536" y="24" width="96" height="120" />
+    <rect class="accent r-lg" x="536" y="168" width="192" height="96" />
+    <rect class="tint r-md" x="840" y="192" width="96" height="72" />
+    <polyline class="v v1" points="728,40 800,136 872,40" />
+    <polyline class="v v2" points="728,64 800,160 872,64" />
+    <polyline class="v v3" points="728,88 800,184 872,88" />
+  </svg>
+  <h1 class="name">VinFast<br>Sales Coach</h1>
+  <p class="tagline">Luyện tập, tra cứu và tư vấn tự tin cùng AI.</p>
+</div>
+</div></section>
+<section><h2>Colors</h2><div class="grid"><div class="sw"><div style="background:var(--bg-app)"></div><b>bg-app</b><code>#f7f7f5</code></div><div class="sw"><div style="background:var(--surface)"></div><b>surface</b><code>#ffffff</code></div><div class="sw"><div style="background:var(--surface-alt)"></div><b>surface-alt</b><code>#fbfbfa</code></div><div class="sw"><div style="background:var(--primary)"></div><b>primary</b><code>#111111</code></div><div class="sw"><div style="background:var(--secondary)"></div><b>secondary</b><code>#404040</code></div><div class="sw"><div style="background:var(--muted)"></div><b>muted</b><code>#737373</code></div><div class="sw"><div style="background:var(--muted-light)"></div><b>muted-light</b><code>#a3a3a3</code></div><div class="sw"><div style="background:var(--border)"></div><b>border</b><code>#e5e5e5</code></div><div class="sw"><div style="background:var(--border-light)"></div><b>border-light</b><code>#f0f0ee</code></div><div class="sw"><div style="background:var(--border-hover)"></div><b>border-hover</b><code>#d1d1ce</code></div><div class="sw"><div style="background:var(--black)"></div><b>black</b><code>#000000</code></div><div class="sw"><div style="background:var(--white)"></div><b>white</b><code>#ffffff</code></div><div class="sw"><div style="background:var(--hover)"></div><b>hover</b><code>#f2f2f0</code></div><div class="sw"><div style="background:var(--active)"></div><b>active</b><code>#eaeae7</code></div><div class="sw"><div style="background:var(--track)"></div><b>track</b><code>#ecece9</code></div><div class="sw"><div style="background:var(--dark-card)"></div><b>dark-card</b><code>#121316</code></div><div class="sw"><div style="background:var(--dark-card-hover)"></div><b>dark-card-hover</b><code>#1c1d22</code></div><div class="sw"><div style="background:var(--dark-border)"></div><b>dark-border</b><code>#26282f</code></div><div class="sw"><div style="background:var(--dark-text-muted)"></div><b>dark-text-muted</b><code>#8e929b</code></div><div class="sw"><div style="background:var(--status-good-bg)"></div><b>status-good-bg</b><code>#f4f4f5</code></div><div class="sw"><div style="background:var(--status-good-text)"></div><b>status-good-text</b><code>#18181b</code></div><div class="sw"><div style="background:var(--status-good-border)"></div><b>status-good-border</b><code>#e4e4e7</code></div><div class="sw"><div style="background:var(--status-warn-bg)"></div><b>status-warn-bg</b><code>#f4f4f5</code></div><div class="sw"><div style="background:var(--status-warn-text)"></div><b>status-warn-text</b><code>#52525b</code></div><div class="sw"><div style="background:var(--status-warn-border)"></div><b>status-warn-border</b><code>#e4e4e7</code></div><div class="sw"><div style="background:var(--status-badge-bg)"></div><b>status-badge-bg</b><code>#f4f4f3</code></div><div class="sw"><div style="background:var(--status-badge-text)"></div><b>status-badge-text</b><code>#333333</code></div><div class="sw"><div style="background:var(--advisor-bg)"></div><b>advisor-bg</b><code>#f8fbfe</code></div><div class="sw"><div style="background:var(--blue-wash)"></div><b>blue-wash</b><code>#f6faff</code></div><div class="sw"><div style="background:var(--blue-wash-strong)"></div><b>blue-wash-strong</b><code>#f1f7ff</code></div><div class="sw"><div style="background:var(--blue-tint)"></div><b>blue-tint</b><code>#e8f3ff</code></div><div class="sw"><div style="background:var(--blue-tint-chip)"></div><b>blue-tint-chip</b><code>#eaf3ff</code></div><div class="sw"><div style="background:var(--blue-hover)"></div><b>blue-hover</b><code>#edf6ff</code></div><div class="sw"><div style="background:var(--blue-border)"></div><b>blue-border</b><code>#e0eaf6</code></div><div class="sw"><div style="background:var(--blue-border-control)"></div><b>blue-border-control</b><code>#d6e5f5</code></div><div class="sw"><div style="background:var(--blue-border-strong)"></div><b>blue-border-strong</b><code>#cadcf1</code></div><div class="sw"><div style="background:var(--blue-border-hover)"></div><b>blue-border-hover</b><code>#a9c7fb</code></div><div class="sw"><div style="background:var(--blue-focus)"></div><b>blue-focus</b><code>#338af5</code></div><div class="sw"><div style="background:var(--blue-disabled)"></div><b>blue-disabled</b><code>#c6d7ea</code></div><div class="sw"><div style="background:var(--blue-500)"></div><b>blue-500</b><code>#0a84ff</code></div><div class="sw"><div style="background:var(--blue-600)"></div><b>blue-600</b><code>#0869ed</code></div><div class="sw"><div style="background:var(--blue-650)"></div><b>blue-650</b><code>#075de8</code></div><div class="sw"><div style="background:var(--blue-700)"></div><b>blue-700</b><code>#064eae</code></div><div class="sw"><div style="background:var(--blue-text)"></div><b>blue-text</b><code>#165ab6</code></div><div class="sw"><div style="background:var(--blue-text-soft)"></div><b>blue-text-soft</b><code>#235b9e</code></div><div class="sw"><div style="background:var(--navy-950)"></div><b>navy-950</b><code>#08111e</code></div><div class="sw"><div style="background:var(--navy-hero)"></div><b>navy-hero</b><code>#07111f</code></div><div class="sw"><div style="background:var(--navy-900)"></div><b>navy-900</b><code>#071b35</code></div><div class="sw"><div style="background:var(--navy-850)"></div><b>navy-850</b><code>#0c1d35</code></div><div class="sw"><div style="background:var(--navy-800)"></div><b>navy-800</b><code>#0b2347</code></div><div class="sw"><div style="background:var(--blue-750)"></div><b>blue-750</b><code>#0a54bd</code></div><div class="sw"><div style="background:var(--header-blue)"></div><b>header-blue</b><code>#123763</code></div><div class="sw"><div style="background:var(--ink-navy)"></div><b>ink-navy</b><code>#0b1c35</code></div><div class="sw"><div style="background:var(--ink-body)"></div><b>ink-body</b><code>#213956</code></div><div class="sw"><div style="background:var(--ink-slate)"></div><b>ink-slate</b><code>#627a9c</code></div><div class="sw"><div style="background:var(--ink-slate-strong)"></div><b>ink-slate-strong</b><code>#536b8d</code></div><div class="sw"><div style="background:var(--header-text)"></div><b>header-text</b><code>#d4dbe6</code></div><div class="sw"><div style="background:var(--header-subtext)"></div><b>header-subtext</b><code>#b3c1d4</code></div><div class="sw"><div style="background:var(--violet-600)"></div><b>violet-600</b><code>#4b18db</code></div><div class="sw"><div style="background:var(--violet-tint)"></div><b>violet-tint</b><code>#f0edff</code></div><div class="sw"><div style="background:var(--success)"></div><b>success</b><code>#188650</code></div><div class="sw"><div style="background:var(--success-text)"></div><b>success-text</b><code>#14753e</code></div><div class="sw"><div style="background:var(--success-bg)"></div><b>success-bg</b><code>#e9f9ef</code></div><div class="sw"><div style="background:var(--success-border)"></div><b>success-border</b><code>#bce8cb</code></div><div class="sw"><div style="background:var(--warning)"></div><b>warning</b><code>#b97900</code></div><div class="sw"><div style="background:var(--danger)"></div><b>danger</b><code>#dc3636</code></div></div></section>
+<section><h2>Badge</h2><div class="frame"><div style="padding:20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+  <span class="badge">Mặc định</span>
+  <span class="badge badge-highlight">Nổi bật</span>
+  <span class="badge-model">VF 8</span>
+  <span class="badge-difficulty">Trung bình</span>
+  <span class="badge-grounded">Có nguồn trích dẫn</span>
+  <span class="badge-status">Còn hiệu lực</span>
+  <span class="badge badge-dark" style="margin-left:4px">Dark</span>
+</div>
+</div></section><section><h2>Button</h2><div class="frame"><div style="padding:20px;display:grid;gap:14px">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <button class="btn-primary">Bắt đầu luyện tập</button>
+    <button class="btn-outline">Xem lịch sử</button>
+    <button class="btn-ghost">Bỏ qua</button>
+    <button class="btn-primary" disabled><span class="spinner"></span>Đang xử lý...</button>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px;border-radius:14px;background:var(--dark-card)">
+    <button class="btn-white">Đăng nhập</button>
+    <button class="btn-outline-dark">Tìm hiểu thêm</button>
+  </div>
+</div>
+</div></section><section><h2>Card</h2><div class="frame"><div style="padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px;background:var(--advisor-bg)">
+  <div class="card-white"><div style="font-weight:600;font-size:1.05rem">Card trắng</div><p style="color:var(--muted);font-size:.88rem;margin-top:6px">Bề mặt mặc định cho nội dung trong khu vực quản lý.</p></div>
+  <div class="card-quick"><div class="icon-tile"><img src="../frontend/public/luyen-tap-tinh-huong.svg" width="30" height="30" alt=""></div><div><div style="font-weight:700;color:var(--ink-navy)">Luyện tập tình huống</div><p style="color:var(--ink-slate-strong);font-size:.82rem">Nhập vai cùng khách hàng AI</p></div></div>
+  <div class="card-dark" style="grid-column:span 2;padding:24px"><div style="font-weight:700">Card tối</div><p style="color:var(--dark-text-muted);font-size:.88rem;margin-top:6px">Dùng cho banner và điểm nhấn trên trang quản lý.</p></div>
+</div>
+</div></section><section><h2>ChatBubble</h2><div class="frame"><div style="padding:20px;display:grid;gap:14px;background:linear-gradient(#fff,#fcfdff)">
+  <div class="bubble-customer"><div class="bubble-speaker">Khách hàng</div>Chi phí thuê pin VF 8 mỗi tháng là bao nhiêu?</div>
+  <div class="bubble-advisor"><div class="bubble-speaker">Tư vấn viên</div>Dạ, VinFast đang có gói thuê pin linh hoạt theo quãng đường. Em gửi anh bảng chi tiết nhé.</div>
+</div>
+</div></section><section><h2>Chip</h2><div class="frame"><div style="padding:20px;display:grid;gap:12px">
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="chip active">Tất cả</button><button class="chip">Chính sách</button><button class="chip">Hợp đồng</button><button class="chip">FAQ</button></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><strong style="font-size:.8rem;color:#14233c;margin-right:4px">Mẫu xe</strong><button class="chip-filter selected">VF 8</button><button class="chip-filter">VF 9</button><button class="chip-filter">VF 6</button></div>
+</div>
+</div></section><section><h2>Composer</h2><div class="frame"><div style="padding:20px;background:var(--surface)"><form class="composer" onsubmit="return false"><input placeholder="Hỏi Copilot về chính sách, giá, thông số..."><button class="btn-send" aria-label="Gửi"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></button></form></div>
+</div></section><section><h2>EmptyState</h2><div class="frame"><div style="padding:20px"><div class="state-box"><div class="state-icon"><img src="../frontend/public/icons/inbox.svg" width="32" height="32" alt="" style="opacity:.55"></div><h3>Không có dữ liệu</h3><p>Hiện tại chưa có thông tin nào được hiển thị.</p></div></div>
+</div></section><section><h2>ErrorState</h2><div class="frame"><div style="padding:20px"><div class="state-box error"><div class="state-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div><h3>Đã có sự cố xảy ra</h3><p>Không thể tải dữ liệu vào lúc này. Vui lòng thử lại sau.</p><button class="btn-outline" style="margin-top:8px">Thử lại</button></div></div>
+</div></section><section><h2>Input</h2><div class="frame"><div style="padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+  <div class="form-group"><label class="form-label">Tên khách hàng</label><input class="form-input" placeholder="Nguyễn Văn A"></div>
+  <div class="form-group"><label class="form-label">Mẫu xe</label><select class="form-select"><option>VF 8</option></select></div>
+  <div class="form-group"><label class="form-label">Mã nhân viên</label><input class="form-input" value="NV-0231" disabled></div>
+  <div class="form-group"><label class="form-label">Tìm kiếm</label><input class="search-input" placeholder="Tìm tài liệu, chính sách..."></div>
+</div>
+</div></section><section><h2>Modal</h2><div class="frame"><div class="modal-backdrop" style="height:300px"><div class="modal" style="max-width:480px"><div class="modal-header"><h2>Lịch sử luyện tập</h2><button class="modal-close" aria-label="Đóng"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><div class="modal-body"><p style="color:var(--secondary);font-size:.9rem">Bạn đã hoàn thành 3 phiên luyện tập cho kịch bản này. Điểm cao nhất: 86/100.</p></div></div></div>
+</div></section><section><h2>NoticeDialog</h2><div class="frame"><div class="notice-dialog-backdrop" style="height:340px"><section class="notice-dialog notice-dialog-warning" role="alertdialog"><div class="notice-dialog-icon">!</div><h2>Kết thúc phiên luyện tập?</h2><p>Phiên sẽ được chấm điểm ngay. Bạn không thể tiếp tục hội thoại sau khi kết thúc.</p><div class="notice-dialog-actions"><button class="notice-dialog-action notice-dialog-action-secondary">Tiếp tục</button><button class="notice-dialog-action notice-dialog-action-primary">Kết thúc</button></div></section></div>
+</div></section><section><h2>ProgressBar</h2><div class="frame"><div style="padding:20px;display:grid;gap:14px"><div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:6px"><span>Xử lý từ chối</span><strong>72%</strong></div><div class="progress-track"><div class="progress-fill" style="width:72%"></div></div></div><div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:6px"><span>Kiến thức sản phẩm</span><strong>45%</strong></div><div class="progress-track"><div class="progress-fill" style="width:45%"></div></div></div></div>
+</div></section><section><h2>Skeleton</h2><div class="frame"><div style="padding:20px"><div class="card-white" style="display:flex;flex-direction:column;gap:16px"><div style="display:flex;gap:8px"><div class="skeleton" style="width:120px;height:22px;border-radius:999px"></div><div class="skeleton" style="width:90px;height:22px;border-radius:999px"></div></div><div class="skeleton" style="width:85%;height:24px"></div><div style="display:flex;gap:12px;align-items:center"><div class="skeleton" style="width:40px;height:40px;border-radius:50%"></div><div style="flex:1;display:grid;gap:8px"><div class="skeleton" style="width:60%;height:16px"></div><div class="skeleton" style="width:90%;height:14px"></div></div></div></div></div>
+</div></section><section><h2>TopHeader</h2><div class="frame"><header class="top-header"><div class="top-header-inner"><div class="brand-section"><img src="../frontend/public/vinfast-official-logo.png" alt="VinFast"><div><div class="brand-title">VinFast AI Sales Coach</div><div class="brand-subtitle">Nền tảng đào tạo tư vấn viên</div></div></div><nav class="nav-tabs"><a class="nav-tab-item active">Trang chủ</a><a class="nav-tab-item">Luyện tập</a><a class="nav-tab-item">Copilot</a><a class="nav-tab-item">Kiến thức</a></nav></div></header>
+</div></section>
+</main></body></html>

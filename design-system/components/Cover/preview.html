@@ -1,0 +1,38 @@
+<!-- @dsCard height=288 -->
+<style>
+  html, body { margin: 0; height: 100%; background: var(--advisor-bg); }
+  .cover { position: relative; width: 960px; height: 288px; overflow: hidden; background: var(--advisor-bg); font-family: var(--font-sans); }
+  .cover svg { position: absolute; inset: 0; }
+  .slab { fill: var(--navy-950); }
+  .accent { fill: var(--blue-600); }
+  .deep { fill: var(--header-blue); }
+  .tint { fill: var(--blue-tint); }
+  .r-card { rx: var(--radius-card); }
+  .r-lg { rx: var(--radius-lg); }
+  .r-md { rx: var(--radius-md); }
+  .v { fill: none; stroke-width: 6px; stroke-linecap: round; stroke-linejoin: round; }
+  .v1 { stroke: var(--blue-tint); }
+  .v2 { stroke: var(--blue-600); }
+  .v3 { stroke: var(--blue-750); }
+  .name { position: absolute; left: 48px; bottom: 64px; max-width: 440px; margin: 0; color: var(--ink-navy); font-size: 64px; line-height: .95; font-weight: 800; letter-spacing: -0.04em; }
+  .tagline { position: absolute; left: 48px; bottom: 36px; max-width: 440px; margin: 0; color: var(--ink-slate-strong); font-size: 14px; }
+</style>
+<div class="cover">
+  <!--
+    blocks: navy-950 slab 320x320 (bleeds top/right/bottom), blue-600 192x96, header-blue 96x120, blue-tint 96x72
+    arrangement: one tall navy slab at the right edge (the header's dark end) with three satellites staggered to its left
+    pattern: literal motif, the triple V of the VinFast emblem as three nested chevrons in blue-tint / blue-600 / blue-750; the brand is the V
+    scales: sides in space-6 (24px) multiples; corners radius-card 16, radius-lg 14, radius-md 10; chevrons 24 apart (space-6)
+  -->
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <rect class="slab r-card" x="656" y="-16" width="320" height="320" />
+    <rect class="deep r-lg" x="536" y="24" width="96" height="120" />
+    <rect class="accent r-lg" x="536" y="168" width="192" height="96" />
+    <rect class="tint r-md" x="840" y="192" width="96" height="72" />
+    <polyline class="v v1" points="728,40 800,136 872,40" />
+    <polyline class="v v2" points="728,64 800,160 872,64" />
+    <polyline class="v v3" points="728,88 800,184 872,88" />
+  </svg>
+  <h1 class="name">VinFast<br>Sales Coach</h1>
+  <p class="tagline">Luyện tập, tra cứu và tư vấn tự tin cùng AI.</p>
+</div>

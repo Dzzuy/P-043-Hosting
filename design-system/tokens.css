@@ -1,0 +1,110 @@
+/* VinFast Sales Coach — generated from tokens.json */
+:root {
+  --bg-app: #f7f7f5;
+  --surface: #ffffff;
+  --surface-alt: #fbfbfa;
+  --primary: #111111;
+  --secondary: #404040;
+  --muted: #737373;
+  --muted-light: #a3a3a3;
+  --border: #e5e5e5;
+  --border-light: #f0f0ee;
+  --border-hover: #d1d1ce;
+  --black: #000000;
+  --white: #ffffff;
+  --hover: #f2f2f0;
+  --active: #eaeae7;
+  --track: #ecece9;
+  --dark-card: #121316;
+  --dark-card-hover: #1c1d22;
+  --dark-border: #26282f;
+  --dark-text-muted: #8e929b;
+  --status-good-bg: #f4f4f5;
+  --status-good-text: #18181b;
+  --status-good-border: #e4e4e7;
+  --status-warn-bg: #f4f4f5;
+  --status-warn-text: #52525b;
+  --status-warn-border: #e4e4e7;
+  --status-badge-bg: #f4f4f3;
+  --status-badge-text: #333333;
+  --advisor-bg: #f8fbfe;
+  --blue-wash: #f6faff;
+  --blue-wash-strong: #f1f7ff;
+  --blue-tint: #e8f3ff;
+  --blue-tint-chip: #eaf3ff;
+  --blue-hover: #edf6ff;
+  --blue-border: #e0eaf6;
+  --blue-border-control: #d6e5f5;
+  --blue-border-strong: #cadcf1;
+  --blue-border-hover: #a9c7fb;
+  --blue-focus: #338af5;
+  --blue-disabled: #c6d7ea;
+  --blue-500: #0a84ff;
+  --blue-600: #0869ed;
+  --blue-650: #075de8;
+  --blue-700: #064eae;
+  --blue-text: #165ab6;
+  --blue-text-soft: #235b9e;
+  --navy-950: #08111e;
+  --navy-hero: #07111f;
+  --navy-900: #071b35;
+  --navy-850: #0c1d35;
+  --navy-800: #0b2347;
+  --blue-750: #0a54bd;
+  --header-blue: #123763;
+  --ink-navy: #0b1c35;
+  --ink-body: #213956;
+  --ink-slate: #627a9c;
+  --ink-slate-strong: #536b8d;
+  --header-text: #d4dbe6;
+  --header-subtext: #b3c1d4;
+  --violet-600: #4b18db;
+  --violet-tint: #f0edff;
+  --success: #188650;
+  --success-text: #14753e;
+  --success-bg: #e9f9ef;
+  --success-border: #bce8cb;
+  --warning: #b97900;
+  --danger: #dc3636;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-2-5: 10px;
+  --space-3: 12px;
+  --space-3-5: 14px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-6-5: 26px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --radius-sm: 6px;
+  --radius-btn: 9px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-card: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 9999px;
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-flyout: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-advisor-card: 0 10px 28px rgba(16, 50, 91, 0.07);
+  --shadow-advisor-tile: 0 5px 18px rgba(15, 48, 86, 0.05);
+  --shadow-bubble: 0 5px 14px rgba(13, 79, 160, 0.15);
+  --shadow-modal: 0 20px 50px rgba(0, 0, 0, 0.2);
+  --shadow-dialog: 0 24px 80px rgba(0, 0, 0, 0.22);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.hero-title { font-family: var(--font-sans); font-size: 49.6px; line-height: 1.12; font-weight: 800; letter-spacing: -0.04em; }
+.page-title { font-family: var(--font-sans); font-size: 32.8px; line-height: 1.18; font-weight: 700; }
+.section-title { font-family: var(--font-sans); font-size: 22.72px; line-height: 1.3; font-weight: 700; letter-spacing: -0.035em; }
+.card-title { font-family: var(--font-sans); font-size: 17.6px; line-height: 1.4; font-weight: 800; letter-spacing: -0.02em; }
+.item-title { font-family: var(--font-sans); font-size: 16.8px; line-height: 1.4; font-weight: 600; }
+.body { font-family: var(--font-sans); font-size: 14.4px; line-height: 1.5; font-weight: 400; }
+.button { font-family: var(--font-sans); font-size: 14.08px; line-height: 1.2; font-weight: 600; }
+.small { font-family: var(--font-sans); font-size: 13.12px; line-height: 1.45; font-weight: 500; }
+.caption { font-family: var(--font-sans); font-size: 12px; line-height: 1.4; font-weight: 600; }
+.micro { font-family: var(--font-sans); font-size: 10.88px; line-height: 1.35; font-weight: 500; }
+.eyebrow { font-family: var(--font-sans); font-size: 12px; line-height: 1.4; font-weight: 700; letter-spacing: 0.23em; }
+.mono { font-family: var(--font-mono); font-size: 13.12px; line-height: 1.5; font-weight: 400; }
