@@ -27,6 +27,7 @@ export const managerApi = {
     return request(`/manager/reviews/${encodeURIComponent(sessionId)}/voice/usage`);
   },
 
+  // decision: { score_overrides: { [criterion]: { score, reason } }, general_comment? }
   approveReview(sessionId, decision) {
     return request(`/manager/reviews/${encodeURIComponent(sessionId)}`, {
       method: "PATCH",
@@ -34,8 +35,26 @@ export const managerApi = {
     });
   },
 
-  getTeamOverview() {
-    return request("/manager/overview");
+  getDashboard(weeks = 8) {
+    return request(`/manager/dashboard?weeks=${encodeURIComponent(weeks)}`);
+  },
+
+  getTodos() {
+    return request('/manager/todos');
+  },
+
+  createTodo(text) {
+    return request('/manager/todos', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+  },
+
+  setTodoDone(id, done) {
+    return request(`/manager/todos/${encodeURIComponent(id)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ done }),
+    });
   },
 
   getManagerHistory({ advisorId, scenarioId, limit = 50, offset = 0 } = {}) {

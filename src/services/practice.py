@@ -5,10 +5,12 @@ from __future__ import annotations
 import asyncio
 import logging
 from collections.abc import Awaitable, Callable
+from contextlib import AbstractContextManager
 from datetime import datetime
 from typing import Protocol
 from uuid import uuid4
 
+from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict
 
 from src.agents.roleplay.contracts import RoleplayGraphContract, ScenarioContract
@@ -22,6 +24,7 @@ from src.agents.roleplay.state import (
     TerminationStatus,
 )
 from src.models.evaluation import SessionEvaluationResult
+from src.roleplay_tracing import RoleplayTracing
 
 logger = logging.getLogger(__name__)
 
@@ -109,12 +112,14 @@ class PracticeService:
         session_id_factory: Callable[[], str] | None = None,
         evaluator: RoleplayEvaluator | None = None,
         knowledge_evidence: KnowledgeEvidenceProvider | None = None,
+        tracing: RoleplayTracing | None = None,
     ) -> None:
         self._graph = graph
         self._scenarios = scenarios
         self._session_id_factory = session_id_factory or (lambda: str(uuid4()))
         self._evaluator = evaluator
         self._knowledge_evidence = knowledge_evidence
+        self._tracing = tracing
         self._session_locks: dict[str, asyncio.Lock] = {}
 
     def list_scenarios(self) -> list[ScenarioSummary]:
@@ -122,26 +127,29 @@ class PracticeService:
 
     async def start_session(self, scenario_id: str, max_turns: int | None = None) -> PracticeSessionView:
         session_id = self._session_id_factory()
-        result = (
-            await self._graph.start(session_id, scenario_id, max_turns=max_turns)
-            if max_turns is not None
-            else await self._graph.start(session_id, scenario_id)
-        )
-        return PracticeSessionView.model_validate(result)
+        with self._trace("practice.start", session_id=session_id, scenario_id=scenario_id):
+            result = (
+                await self._graph.start(session_id, scenario_id, max_turns=max_turns)
+                if max_turns is not None
+                else await self._graph.start(session_id, scenario_id)
+            )
+            return PracticeSessionView.model_validate(result)
 
     async def send_message(
         self,
         session_id: str,
         advisor_message: str,
     ) -> PracticeSessionView:
-        async with self._lock_for(session_id):
-            result = await self._graph.continue_session(session_id, advisor_message)
-            return PracticeSessionView.model_validate(result)
+        with self._trace("practice.turn", session_id=session_id, kind="send"):
+            async with self._lock_for(session_id):
+                result = await self._graph.continue_session(session_id, advisor_message)
+                return PracticeSessionView.model_validate(result)
 
     async def retry_customer_reply(self, session_id: str) -> PracticeSessionView:
-        async with self._lock_for(session_id):
-            result = await self._graph.retry_customer_reply(session_id)
-            return PracticeSessionView.model_validate(result)
+        with self._trace("practice.turn", session_id=session_id, kind="retry"):
+            async with self._lock_for(session_id):
+                result = await self._graph.retry_customer_reply(session_id)
+                return PracticeSessionView.model_validate(result)
 
     async def finish_session(
         self,
@@ -163,13 +171,14 @@ class PracticeService:
             stage = "configuration"
             evidence: list[KnowledgeEvidence] = []
             try:
-                if self._evaluator is None or self._knowledge_evidence is None:
-                    raise PracticeEvaluationUnavailableError("evaluation dependencies are not configured")
-                scenario = self._scenarios.get(state.scenario_id)
-                stage = "retrieval"
-                evidence = await self._knowledge_evidence.for_session(scenario, state)
-                stage = "judge_or_validation"
-                result = await self._evaluator.evaluate(scenario, state, evidence)
+                with self._trace("practice.evaluate", session_id=session_id, scenario_id=state.scenario_id):
+                    if self._evaluator is None or self._knowledge_evidence is None:
+                        raise PracticeEvaluationUnavailableError("evaluation dependencies are not configured")
+                    scenario = self._scenarios.get(state.scenario_id)
+                    stage = "retrieval"
+                    evidence = await self._knowledge_evidence.for_session(scenario, state)
+                    stage = "judge_or_validation"
+                    result = await self._evaluator.evaluate(scenario, state, evidence)
             except Exception as exc:
                 logger.warning(
                     "practice_evaluation_failed session_id=%s stage=%s error_type=%s cause_type=%s root_cause_type=%s validation_code=%s claim_count=%d evidence_count=%d",
@@ -197,6 +206,11 @@ class PracticeService:
     async def get_session(self, session_id: str) -> PracticeSessionView:
         state = await self._graph.get_session_state(session_id)
         return PracticeSessionView.model_validate(state.advisor_visible_context())
+
+    def _trace(self, name: str, **metadata: str) -> AbstractContextManager[None]:
+        if self._tracing is None:
+            return tracing_context(enabled=False)
+        return self._tracing.trace(name, **metadata)
 
     def _lock_for(self, session_id: str) -> asyncio.Lock:
         return self._session_locks.setdefault(session_id, asyncio.Lock())

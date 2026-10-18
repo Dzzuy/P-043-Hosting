@@ -6,7 +6,9 @@ import logging
 import re
 from typing import TYPE_CHECKING, Any, Protocol
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler, ValidationError
+from pydantic.json_schema import JsonSchemaValue
+from pydantic_core import CoreSchema
 
 from src.models.evaluation import (
     CriterionEvaluation,
@@ -52,6 +54,13 @@ class EvaluationDraft(BaseModel):
     summary_strengths: list[str] = Field(default_factory=list, max_length=1)
     summary_weaknesses: list[str] = Field(default_factory=list, max_length=2)
     recommended_next_practice: RecommendedNextPractice | None = None
+
+    @classmethod
+    def __get_pydantic_json_schema__(cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler) -> JsonSchemaValue:
+        schema = handler(core_schema)
+        criterion_schema = handler.resolve_ref_schema(schema["properties"]["evaluations"]["items"])
+        criterion_schema["properties"].pop("manager_reason", None)
+        return schema
 
 
 class FactualFindingsDraft(BaseModel):
@@ -202,6 +211,9 @@ class RoleplayEvaluator:
                 if evaluation.status is CriterionStatus.ASSESSED and evaluation.score is not None
             ]
             overall_score = sum(assessed_scores) / len(assessed_scores) if assessed_scores else None
+            for evaluation in draft.evaluations:
+                # Manager review metadata must never originate from the judge.
+                evaluation.manager_reason = None
             return SessionEvaluationResult(
                 session_id=state.session_id,
                 scenario_id=state.scenario_id,

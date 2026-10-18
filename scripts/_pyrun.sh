@@ -8,12 +8,17 @@
 # Exits 0 silently if no Python is found — hooks must never block the AI tool.
 set -u
 
-if command -v python3 >/dev/null 2>&1; then
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -x "$SCRIPT_DIR/../.venv/Scripts/python.exe" ]; then
+  PY="$SCRIPT_DIR/../.venv/Scripts/python.exe"
+elif [ -x "$SCRIPT_DIR/../.venv/bin/python" ]; then
+  PY="$SCRIPT_DIR/../.venv/bin/python"
+elif command -v python3 >/dev/null 2>&1; then
   PY=python3
 elif command -v python >/dev/null 2>&1; then
   PY=python
 elif command -v py >/dev/null 2>&1; then
-  PY="py -3"
+  exec py -3 "$@"
 else
   # PATH lookup failed — probe standard Windows install locations.
   PY=""
@@ -26,8 +31,10 @@ else
     if [ -x "$cand" ]; then PY="$cand"; break; fi
   done
   shopt -u nullglob 2>/dev/null || true
-  [ -n "$PY" ] || exit 0
+  if [ -z "$PY" ]; then
+    echo "[ai-log] Python not found; hook was not executed." >&2
+    exit 1
+  fi
 fi
 
-# shellcheck disable=SC2086
-exec $PY "$@"
+exec "$PY" "$@"

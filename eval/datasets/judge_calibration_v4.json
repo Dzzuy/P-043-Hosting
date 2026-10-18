@@ -1,0 +1,1009 @@
+{
+  "dataset_version": "gate4-judge-calibration-v4",
+  "rubric_version": "sales-rubric-v4",
+  "set_role": "calibration_only_not_held_out",
+  "transcript_origin": "curated_synthetic",
+  "transcript_note": "Curated fixed conversations for expert review; these are not production RoleplayState records or prior evaluator runs.",
+  "cases": [
+    {
+      "case_id": "JC1_WEAK_DISCOVERY",
+      "purpose": "weak",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "scenario_version": "2.5",
+      "rubric_version": "sales-rubric-v4",
+      "completion_context": "curated_conversation_ended_no_runtime_state",
+      "messages": [
+        {
+          "message_id": "JC1-M01",
+          "role": "customer",
+          "content": "Anh đang chạy xe dịch vụ và cân nhắc VF 5 Plus. Anh lo đổi xe rồi chi phí mỗi tháng lại cao hơn."
+        },
+        {
+          "message_id": "JC1-M02",
+          "role": "advisor",
+          "content": "Xe điện đang được nhiều người chọn anh ạ. Anh cứ qua xem xe rồi tính tiếp."
+        },
+        {
+          "message_id": "JC1-M03",
+          "role": "customer",
+          "content": "Nhưng anh cần biết tiền sạc và thời gian dừng xe có hợp lịch chạy không."
+        },
+        {
+          "message_id": "JC1-M04",
+          "role": "advisor",
+          "content": "Anh yên tâm, dùng xe điện tiện lắm. Khi nào rảnh anh ghé cửa hàng nhé."
+        }
+      ],
+      "knowledge_sources": [],
+      "annotated_claims": [],
+      "expert_labels": {
+        "need_discovery": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 1,
+          "evidence": [
+            {
+              "message_id": "JC1-M01",
+              "quote": "Anh đang chạy xe dịch vụ và cân nhắc VF 5 Plus. Anh lo đổi xe rồi chi phí mỗi tháng lại cao hơn."
+            },
+            {
+              "message_id": "JC1-M02",
+              "quote": "Xe điện đang được nhiều người chọn anh ạ. Anh cứ qua xem xe rồi tính tiếp."
+            }
+          ],
+          "rationale": "Khách nêu nghề chạy dịch vụ và lo chi phí, nhưng advisor không hỏi quãng đường, lịch chạy hay ưu tiên trước khi mời xem xe.",
+          "expected_weakness": "Hỏi quãng đường, chi phí hiện tại và ưu tiên vận hành rồi dùng câu trả lời để tư vấn.",
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "product_knowledge": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 1,
+          "evidence": [
+            {
+              "message_id": "JC1-M03",
+              "quote": "Nhưng anh cần biết tiền sạc và thời gian dừng xe có hợp lịch chạy không."
+            },
+            {
+              "message_id": "JC1-M04",
+              "quote": "Anh yên tâm, dùng xe điện tiện lắm. Khi nào rảnh anh ghé cửa hàng nhé."
+            }
+          ],
+          "rationale": "Khách hỏi trực tiếp tiền sạc và thời gian dừng xe; advisor chỉ nói xe điện tiện, không trả lời thông tin sản phẩm liên quan.",
+          "expected_weakness": "Giải đáp câu hỏi trực tiếp bằng dữ liệu sản phẩm có nguồn và nêu điều cần xác minh.",
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "objection_handling": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 1,
+          "evidence": [
+            {
+              "message_id": "JC1-M03",
+              "quote": "Nhưng anh cần biết tiền sạc và thời gian dừng xe có hợp lịch chạy không."
+            },
+            {
+              "message_id": "JC1-M04",
+              "quote": "Anh yên tâm, dùng xe điện tiện lắm. Khi nào rảnh anh ghé cửa hàng nhé."
+            }
+          ],
+          "rationale": "Lo ngại tiền sạc và thời gian dừng xe bị bỏ qua bằng lời trấn an chung, chưa xử lý rào cản vận hành.",
+          "expected_weakness": "Thừa nhận lo ngại, hỏi lịch chạy và cùng kiểm tra phương án sạc phù hợp.",
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "policy_accuracy": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 1,
+          "evidence": [
+            {
+              "message_id": "JC1-M03",
+              "quote": "Nhưng anh cần biết tiền sạc và thời gian dừng xe có hợp lịch chạy không."
+            },
+            {
+              "message_id": "JC1-M04",
+              "quote": "Anh yên tâm, dùng xe điện tiện lắm. Khi nào rảnh anh ghé cửa hàng nhé."
+            }
+          ],
+          "rationale": "Chính sách sạc là chính sách bắt buộc (expected) của kịch bản 01. Khách hỏi thẳng tiền sạc ở M03, tức là có cơ hội rõ ràng, nhưng advisor chỉ trấn an chung ở M04, không nêu đơn giá hay chính sách sạc hiện hành. Theo v4, bỏ qua chính sách bắt buộc dù có cơ hội rõ ràng thì chấm 1.",
+          "expected_weakness": "Khi khách hỏi tiền sạc, nêu đơn giá sạc công cộng hiện hành và ưu đãi sạc kèm điều kiện áp dụng, có dẫn nguồn, rồi gắn với quãng đường chạy dịch vụ của khách.",
+          "reviewer_id": "duy-roleplay-lead",
+          "reviewed_at": "2026-10-18T05:30:00+07:00",
+          "provenance": "Phạm Đình Duy, roleplay lead, phê duyệt đề xuất chuyển nhãn sang sales-rubric-v4 do Claude soạn trong phiên làm việc ngày 2026-10-18; chờ Tú xác nhận lại."
+        },
+        "closing_next_step": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 2,
+          "evidence": [
+            {
+              "message_id": "JC1-M03",
+              "quote": "Nhưng anh cần biết tiền sạc và thời gian dừng xe có hợp lịch chạy không."
+            },
+            {
+              "message_id": "JC1-M04",
+              "quote": "Anh yên tâm, dùng xe điện tiện lắm. Khi nào rảnh anh ghé cửa hàng nhé."
+            }
+          ],
+          "rationale": "Advisor có đề xuất bước tiếp theo (ghé cửa hàng) nhưng mơ hồ: 'khi nào rảnh', không gắn với điều khách cần xác minh là tiền sạc và thời gian dừng xe. Theo v4, đề xuất mơ hồ hoặc chưa được khách đồng ý là mức 2.",
+          "expected_weakness": "Đề xuất bước cụ thể (thời điểm, nội dung) gắn với điều khách cần xác minh rồi xin khách đồng ý.",
+          "reviewer_id": "duy-roleplay-lead",
+          "reviewed_at": "2026-10-18T05:30:00+07:00",
+          "provenance": "Phạm Đình Duy, roleplay lead, phê duyệt đề xuất chuyển nhãn sang sales-rubric-v4 do Claude soạn trong phiên làm việc ngày 2026-10-18; chờ Tú xác nhận lại."
+        }
+      }
+    },
+    {
+      "case_id": "JC2_ADEQUATE_RESPONSE",
+      "purpose": "adequate",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "scenario_version": "2.2",
+      "rubric_version": "sales-rubric-v4",
+      "completion_context": "curated_conversation_ended_no_runtime_state",
+      "messages": [
+        {
+          "message_id": "JC2-M01",
+          "role": "customer",
+          "content": "Chị đang so VF 7 với CX-5 cho gia đình, chưa rõ mẫu nào hợp hơn."
+        },
+        {
+          "message_id": "JC2-M02",
+          "role": "advisor",
+          "content": "Chị thường chở mấy người và dùng xe chủ yếu cho việc gì ạ?"
+        },
+        {
+          "message_id": "JC2-M03",
+          "role": "customer",
+          "content": "Nhà chị có hai con nhỏ, đi làm trong tuần và cuối tuần hay về quê."
+        },
+        {
+          "message_id": "JC2-M04",
+          "role": "advisor",
+          "content": "Em ghi nhận nhu cầu đi cùng gia đình và về quê. Em sẽ chuẩn bị bảng so sánh không gian sử dụng, cách sạc và tổng chi phí theo đúng cấu hình chị quan tâm, có nguồn để chị kiểm tra."
+        },
+        {
+          "message_id": "JC2-M05",
+          "role": "customer",
+          "content": "Ừ, chị muốn xem thông tin cụ thể trước khi quyết."
+        },
+        {
+          "message_id": "JC2-M06",
+          "role": "advisor",
+          "content": "Em gửi bảng so sánh và nguồn tham khảo cho chị hôm nay được không ạ?"
+        }
+      ],
+      "knowledge_sources": [],
+      "annotated_claims": [],
+      "expert_labels": {
+        "need_discovery": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 2,
+          "evidence": [
+            {
+              "message_id": "JC2-M02",
+              "quote": "Chị thường chở mấy người và dùng xe chủ yếu cho việc gì ạ?"
+            },
+            {
+              "message_id": "JC2-M03",
+              "quote": "Nhà chị có hai con nhỏ, đi làm trong tuần và cuối tuần hay về quê."
+            },
+            {
+              "message_id": "JC2-M04",
+              "quote": "Em ghi nhận nhu cầu đi cùng gia đình và về quê. Em sẽ chuẩn bị bảng so sánh không gian sử dụng, cách sạc và tổng chi phí theo đúng cấu hình chị quan tâm, có nguồn để chị kiểm tra."
+            }
+          ],
+          "rationale": "Advisor hỏi mục đích và số người sử dụng, ghi nhận hai con nhỏ cùng nhu cầu về quê, rồi dùng thông tin đó để đề xuất bảng so sánh; chưa làm rõ ưu tiên hoặc đánh đổi để đạt mức 3.",
+          "expected_weakness": "Làm rõ ưu tiên giữa không gian, sạc và tổng chi phí trước khi điều chỉnh lời khuyên.",
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "product_knowledge": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "unassessed",
+          "score": null,
+          "evidence": [],
+          "rationale": "Chưa đủ bằng chứng để chấm Product Knowledge: advisor mới hứa chuẩn bị bảng so sánh, chưa đưa thông tin sản phẩm cụ thể để kiểm tra độ đúng.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "objection_handling": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "unassessed",
+          "score": null,
+          "evidence": [],
+          "rationale": "Không có cơ hội hợp lý để chấm Objection Handling: khách chưa nêu phản đối hoặc rào cản rõ ràng cần xử lý.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "policy_accuracy": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "unassessed",
+          "score": null,
+          "evidence": [],
+          "rationale": "Không có cơ hội hợp lý để chấm Policy Accuracy: transcript chưa có phát biểu về giá, ưu đãi hoặc điều kiện chính sách.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "closing_next_step": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 2,
+          "evidence": [
+            {
+              "message_id": "JC2-M05",
+              "quote": "Ừ, chị muốn xem thông tin cụ thể trước khi quyết."
+            },
+            {
+              "message_id": "JC2-M06",
+              "quote": "Em gửi bảng so sánh và nguồn tham khảo cho chị hôm nay được không ạ?"
+            }
+          ],
+          "rationale": "Advisor đề xuất bước cụ thể, đúng mức sẵn sàng của khách: gửi bảng so sánh có nguồn trong hôm nay. Nhưng hội thoại dừng ở câu hỏi, khách chưa đồng ý. Theo v4, mức 3 cần khách chấp nhận bước tiếp theo.",
+          "expected_weakness": "Chốt được sự đồng ý của khách với việc gửi bảng so sánh và hẹn thời điểm trao đổi lại.",
+          "reviewer_id": "duy-roleplay-lead",
+          "reviewed_at": "2026-10-18T05:30:00+07:00",
+          "provenance": "Phạm Đình Duy, roleplay lead, phê duyệt đề xuất chuyển nhãn sang sales-rubric-v4 do Claude soạn trong phiên làm việc ngày 2026-10-18; chờ Tú xác nhận lại."
+        }
+      }
+    },
+    {
+      "case_id": "JC3_CONTEXT_ADAPTIVE",
+      "purpose": "strong",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "scenario_version": "2.5",
+      "rubric_version": "sales-rubric-v4",
+      "completion_context": "curated_conversation_ended_no_runtime_state",
+      "messages": [
+        {
+          "message_id": "JC3-M01",
+          "role": "customer",
+          "content": "Anh chạy dịch vụ bằng Vios, tính đổi sang VF 5 Plus nhưng sợ dừng sạc mất cuốc."
+        },
+        {
+          "message_id": "JC3-M02",
+          "role": "advisor",
+          "content": "Điều anh cần giữ nhất là thời gian nhận cuốc hay chi phí vận hành? Mỗi ngày anh chạy khoảng bao xa và thường nghỉ lúc nào ạ?"
+        },
+        {
+          "message_id": "JC3-M03",
+          "role": "customer",
+          "content": "Anh ưu tiên không mất cuốc. Ngày chạy khoảng 180 km, nghỉ chừng 12 giờ 30 đến 14 giờ."
+        },
+        {
+          "message_id": "JC3-M04",
+          "role": "advisor",
+          "content": "Vậy em sẽ xem trước khả năng sạc trong giờ nghỉ trưa của anh, thay vì chỉ so tiền điện với tiền xăng. Em cần kiểm tra trạm phù hợp, thời gian sạc thực tế và điều kiện áp dụng trước khi tính phương án."
+        },
+        {
+          "message_id": "JC3-M05",
+          "role": "customer",
+          "content": "Nếu trạm đông đúng giờ đó thì anh vẫn mất cuốc; em tính chuyện này thế nào?"
+        },
+        {
+          "message_id": "JC3-M06",
+          "role": "advisor",
+          "content": "Đúng là thời gian chờ có thể làm phương án không hiệu quả với anh. Mình kiểm tra một trạm trên tuyến chạy và khung 12 giờ 30 đến 14 giờ trước, rồi mới so cả thời gian mất cuốc. Cách đó có giải quyết được băn khoăn chính của anh không?"
+        },
+        {
+          "message_id": "JC3-M07",
+          "role": "customer",
+          "content": "Được, anh muốn thấy phép so có tính thời gian chờ."
+        },
+        {
+          "message_id": "JC3-M08",
+          "role": "advisor",
+          "content": "Em sẽ lập bảng giả định theo quãng 180 km/ngày và thời gian chờ tại trạm anh chọn; mình thống nhất kiểm tra số liệu trạm cùng nhau chiều mai được không ạ?"
+        }
+      ],
+      "knowledge_sources": [],
+      "annotated_claims": [],
+      "expert_labels": {
+        "need_discovery": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC3-M02",
+              "quote": "Điều anh cần giữ nhất là thời gian nhận cuốc hay chi phí vận hành? Mỗi ngày anh chạy khoảng bao xa và thường nghỉ lúc nào ạ?"
+            },
+            {
+              "message_id": "JC3-M03",
+              "quote": "Anh ưu tiên không mất cuốc. Ngày chạy khoảng 180 km, nghỉ chừng 12 giờ 30 đến 14 giờ."
+            },
+            {
+              "message_id": "JC3-M04",
+              "quote": "Vậy em sẽ xem trước khả năng sạc trong giờ nghỉ trưa của anh, thay vì chỉ so tiền điện với tiền xăng. Em cần kiểm tra trạm phù hợp, thời gian sạc thực tế và điều kiện áp dụng trước khi tính phương án."
+            }
+          ],
+          "rationale": "Advisor hỏi ưu tiên thời gian nhận cuốc, quãng đường và giờ nghỉ; sau câu trả lời về 180 km/ngày và nghỉ trưa, advisor chuyển trọng tâm sang khả năng sạc trong giờ nghỉ.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "product_knowledge": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "unassessed",
+          "score": null,
+          "evidence": [],
+          "rationale": "Chưa đủ bằng chứng để chấm Product Knowledge: advisor dự định kiểm tra trạm và thời gian sạc, chưa đưa thông số hoặc khẳng định sản phẩm cụ thể.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "objection_handling": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC3-M05",
+              "quote": "Nếu trạm đông đúng giờ đó thì anh vẫn mất cuốc; em tính chuyện này thế nào?"
+            },
+            {
+              "message_id": "JC3-M06",
+              "quote": "Đúng là thời gian chờ có thể làm phương án không hiệu quả với anh. Mình kiểm tra một trạm trên tuyến chạy và khung 12 giờ 30 đến 14 giờ trước, rồi mới so cả thời gian mất cuốc. Cách đó có giải quyết được băn khoăn chính của anh không?"
+            }
+          ],
+          "rationale": "Khách lo trạm đông làm mất cuốc; advisor thừa nhận nguyên nhân, đề xuất kiểm tra trạm đúng khung nghỉ và tính cả thời gian chờ, rồi hỏi liệu cách đó giải quyết băn khoăn.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "policy_accuracy": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "unassessed",
+          "score": null,
+          "evidence": [],
+          "rationale": "Không có cơ hội hợp lý để chấm Policy Accuracy: không có điều khoản, ưu đãi hoặc cam kết chính sách được advisor trình bày.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "closing_next_step": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 2,
+          "evidence": [
+            {
+              "message_id": "JC3-M07",
+              "quote": "Được, anh muốn thấy phép so có tính thời gian chờ."
+            },
+            {
+              "message_id": "JC3-M08",
+              "quote": "Em sẽ lập bảng giả định theo quãng 180 km/ngày và thời gian chờ tại trạm anh chọn; mình thống nhất kiểm tra số liệu trạm cùng nhau chiều mai được không ạ?"
+            }
+          ],
+          "rationale": "Advisor gắn bảng giả định với 180 km/ngày và trạm khách chọn, đề xuất kiểm tra số liệu chiều mai. Nhưng hội thoại dừng ở câu hỏi, khách chưa đồng ý lịch hẹn. Theo v4, mức 3 cần khách chấp nhận bước tiếp theo.",
+          "expected_weakness": "Xin và nhận được sự đồng ý của khách với lịch kiểm tra số liệu chiều mai.",
+          "reviewer_id": "duy-roleplay-lead",
+          "reviewed_at": "2026-10-18T05:30:00+07:00",
+          "provenance": "Phạm Đình Duy, roleplay lead, phê duyệt đề xuất chuyển nhãn sang sales-rubric-v4 do Claude soạn trong phiên làm việc ngày 2026-10-18; chờ Tú xác nhận lại."
+        }
+      }
+    },
+    {
+      "case_id": "JC4_FACTUAL_ERROR",
+      "purpose": "factual_error",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "scenario_version": "2.5",
+      "rubric_version": "sales-rubric-v4",
+      "completion_context": "curated_conversation_ended_no_runtime_state",
+      "messages": [
+        {
+          "message_id": "JC4-M01",
+          "role": "customer",
+          "content": "Nếu mua VF 5 Plus chạy dịch vụ, anh phải trả tiền điện ở trạm sạc công cộng không?"
+        },
+        {
+          "message_id": "JC4-M02",
+          "role": "advisor",
+          "content": "Theo em, mọi phiên sạc ở trạm công cộng đều miễn phí, không tính tiền điện."
+        },
+        {
+          "message_id": "JC4-M03",
+          "role": "customer",
+          "content": "Anh cần xác nhận nguồn vì chi phí này ảnh hưởng quyết định đổi xe."
+        },
+        {
+          "message_id": "JC4-M04",
+          "role": "advisor",
+          "content": "Em sẽ kiểm tra lại tài liệu đang áp dụng rồi gửi anh nguồn chính thức trước khi tính chi phí."
+        }
+      ],
+      "knowledge_sources": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh"
+        }
+      ],
+      "annotated_claims": [
+        {
+          "message_id": "JC4-M02",
+          "text": "mọi phiên sạc ở trạm công cộng đều miễn phí, không tính tiền điện",
+          "category": "battery_charging",
+          "source_document_id": "CHARGING_TARIFF_VINFAST_20261004"
+        }
+      ],
+      "expert_labels": {
+        "need_discovery": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 1,
+          "evidence": [
+            {
+              "message_id": "JC4-M01",
+              "quote": "Nếu mua VF 5 Plus chạy dịch vụ, anh phải trả tiền điện ở trạm sạc công cộng không?"
+            },
+            {
+              "message_id": "JC4-M02",
+              "quote": "Theo em, mọi phiên sạc ở trạm công cộng đều miễn phí, không tính tiền điện."
+            }
+          ],
+          "rationale": "Khách hỏi chi phí sạc để quyết định đổi xe; advisor khẳng định miễn phí mọi phiên ngay mà không làm rõ điều kiện áp dụng hoặc nhu cầu chạy dịch vụ.",
+          "expected_weakness": "Hỏi điều kiện sử dụng liên quan và kiểm tra chính sách hoặc giá áp dụng trước khi tư vấn.",
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "product_knowledge": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "unassessed",
+          "score": null,
+          "evidence": [],
+          "rationale": "Chưa đủ bằng chứng độc lập để chấm Product Knowledge: tình huống chỉ kiểm tra tuyên bố về giá sạc thuộc Policy Accuracy, không có câu hỏi đặc tính sản phẩm riêng.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "objection_handling": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 2,
+          "evidence": [
+            {
+              "message_id": "JC4-M03",
+              "quote": "Anh cần xác nhận nguồn vì chi phí này ảnh hưởng quyết định đổi xe."
+            },
+            {
+              "message_id": "JC4-M04",
+              "quote": "Em sẽ kiểm tra lại tài liệu đang áp dụng rồi gửi anh nguồn chính thức trước khi tính chi phí."
+            }
+          ],
+          "rationale": "Khi khách yêu cầu nguồn vì chi phí ảnh hưởng quyết định, advisor nhận việc kiểm tra tài liệu và gửi nguồn trước khi tính; chưa thực sự cung cấp nguồn hoặc xác nhận mối lo đã được giải quyết.",
+          "expected_weakness": "Gửi nguồn đã xác minh, sửa phát biểu sai và kiểm tra lại liệu chi phí còn là rào cản.",
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "policy_accuracy": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 1,
+          "evidence": [
+            {
+              "message_id": "JC4-M01",
+              "quote": "Nếu mua VF 5 Plus chạy dịch vụ, anh phải trả tiền điện ở trạm sạc công cộng không?"
+            },
+            {
+              "message_id": "JC4-M02",
+              "quote": "Theo em, mọi phiên sạc ở trạm công cộng đều miễn phí, không tính tiền điện."
+            }
+          ],
+          "rationale": "Advisor khẳng định mọi phiên sạc công cộng miễn phí. Nguồn corpus CHARGING_TARIFF_VINFAST_20261004, version 2026.10.04, ghi đúng: “đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh”; chính sách ưu đãi cần kiểm tra riêng nên không thể khẳng định miễn phí mọi phiên.",
+          "expected_weakness": "Đối chiếu biểu giá và điều kiện ưu đãi hiện hành trước khi phát biểu về tiền điện của khách.",
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "closing_next_step": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 2,
+          "evidence": [
+            {
+              "message_id": "JC4-M03",
+              "quote": "Anh cần xác nhận nguồn vì chi phí này ảnh hưởng quyết định đổi xe."
+            },
+            {
+              "message_id": "JC4-M04",
+              "quote": "Em sẽ kiểm tra lại tài liệu đang áp dụng rồi gửi anh nguồn chính thức trước khi tính chi phí."
+            }
+          ],
+          "rationale": "Advisor đề xuất kiểm tra tài liệu và gửi nguồn chính thức trước khi tính chi phí, nhưng không nêu thời điểm và khách chưa đồng ý. Theo v4, đề xuất mơ hồ hoặc chưa được chấp nhận là mức 2.",
+          "expected_weakness": "Hẹn thời điểm gửi nguồn chính thức và xin khách đồng ý bước tính chi phí tiếp theo.",
+          "reviewer_id": "duy-roleplay-lead",
+          "reviewed_at": "2026-10-18T05:30:00+07:00",
+          "provenance": "Phạm Đình Duy, roleplay lead, phê duyệt đề xuất chuyển nhãn sang sales-rubric-v4 do Claude soạn trong phiên làm việc ngày 2026-10-18; chờ Tú xác nhận lại."
+        }
+      }
+    },
+    {
+      "case_id": "JC5_PARTIAL_OPPORTUNITY",
+      "purpose": "partial",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "scenario_version": "2.2",
+      "rubric_version": "sales-rubric-v4",
+      "completion_context": "curated_conversation_ended_no_runtime_state",
+      "messages": [
+        {
+          "message_id": "JC5-M01",
+          "role": "customer",
+          "content": "Nhà anh ở chung cư chưa có chỗ sạc riêng; nếu cân nhắc VF 6 thì nên tìm hiểu từ đâu?"
+        },
+        {
+          "message_id": "JC5-M02",
+          "role": "advisor",
+          "content": "Em hiểu việc chưa có chỗ sạc riêng là điểm cần kiểm tra. Tòa nhà có quy định về lắp sạc hay anh đã thấy trạm công cộng nào trên tuyến đi hằng ngày chưa ạ?"
+        }
+      ],
+      "knowledge_sources": [],
+      "annotated_claims": [],
+      "expert_labels": {
+        "need_discovery": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "unassessed",
+          "score": null,
+          "evidence": [],
+          "rationale": "Chưa đủ bằng chứng để chấm Need Discovery: advisor mới hỏi về quy định tòa nhà và trạm trên tuyến, khách chưa trả lời để quan sát việc dùng nhu cầu trong tư vấn.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "product_knowledge": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "unassessed",
+          "score": null,
+          "evidence": [],
+          "rationale": "Chưa đủ bằng chứng để chấm Product Knowledge: chưa có thông tin VF 6 hay giải đáp đặc tính sạc cụ thể.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "objection_handling": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 2,
+          "evidence": [
+            {
+              "message_id": "JC5-M01",
+              "quote": "Nhà anh ở chung cư chưa có chỗ sạc riêng; nếu cân nhắc VF 6 thì nên tìm hiểu từ đâu?"
+            },
+            {
+              "message_id": "JC5-M02",
+              "quote": "Em hiểu việc chưa có chỗ sạc riêng là điểm cần kiểm tra. Tòa nhà có quy định về lắp sạc hay anh đã thấy trạm công cộng nào trên tuyến đi hằng ngày chưa ạ?"
+            }
+          ],
+          "rationale": "Advisor nhận đúng lo ngại thiếu chỗ sạc riêng và hỏi quy định tòa nhà cùng trạm trên tuyến để làm rõ phương án; chưa có câu trả lời tiếp theo để xử lý theo bối cảnh và kiểm tra lo ngại.",
+          "expected_weakness": "Sau khi có câu trả lời, đối chiếu phương án sạc phù hợp và hỏi liệu rào cản đã được giải quyết.",
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "policy_accuracy": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "unassessed",
+          "score": null,
+          "evidence": [],
+          "rationale": "Không có cơ hội hợp lý để chấm Policy Accuracy: transcript chưa có khẳng định về điều kiện hoặc chính sách sạc.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "closing_next_step": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "unassessed",
+          "score": null,
+          "evidence": [],
+          "rationale": "Chưa có cơ hội hợp lý để chấm Closing / Next Step: hội thoại dừng ở câu hỏi khám phá đầu tiên, khách chưa phản hồi để thống nhất hành động tiếp.",
+          "expected_weakness": null,
+          "reviewer_id": "dat-eval-lead",
+          "reviewed_at": "2026-10-09T14:41:29+07:00",
+          "provenance": "Đạt, Data/Evaluation Lead, xác nhận phê duyệt chuyên môn 25 nhãn JC1–JC5; quyết định được truyền qua prompt Codex trong cuộc trao đổi ngày 2026-10-09. reviewer_id dat-eval-lead do Đạt cung cấp. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        }
+      }
+    },
+    {
+      "case_id": "JC6_VF6_PLUS_UPSELL",
+      "purpose": "strong",
+      "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+      "scenario_version": "1.4",
+      "rubric_version": "sales-rubric-v4",
+      "completion_context": "curated_conversation_ended_no_runtime_state",
+      "messages": [
+        {
+          "message_id": "JC6-M01",
+          "role": "advisor",
+          "content": "Chào chị Hà, VF 6 đang có ưu đãi 9% Vì Tương Lai Xanh 2 từ 19/09 đến 19/12/2026 cho khách đủ điều kiện. Chị hiện đang đi xe gì, xe có đứng tên chị không ạ?"
+        },
+        {
+          "message_id": "JC6-M02",
+          "role": "customer",
+          "content": "Chị đang tìm hiểu Eco. Chị đi xe máy xăng đứng tên chị, chưa dùng xe này để nhận ưu đãi chuyển đổi lần nào."
+        },
+        {
+          "message_id": "JC6-M03",
+          "role": "advisor",
+          "content": "Dạ, xe máy xăng đứng tên chị đủ điều kiện về xe sở hữu. Chị cần cam kết chuyển đổi sang xe điện VinFast; em sẽ đối chiếu giấy tờ trước khi áp dụng, chương trình không cộng gộp VinClub hay Tri ân xe xăng. Chị dùng xe hằng ngày vào việc gì, thường chở ai ạ?"
+        },
+        {
+          "message_id": "JC6-M04",
+          "role": "customer",
+          "content": "Chị đi làm và đưa đón hai con nhỏ đi học."
+        },
+        {
+          "message_id": "JC6-M05",
+          "role": "advisor",
+          "content": "Cuối tuần chị có hay đi xa không?"
+        },
+        {
+          "message_id": "JC6-M06",
+          "role": "customer",
+          "content": "Thỉnh thoảng chị chở cả nhà về quê."
+        },
+        {
+          "message_id": "JC6-M07",
+          "role": "advisor",
+          "content": "Chị lái xe lâu chưa, và chỗ đỗ ở nhà, cơ quan thế nào ạ?"
+        },
+        {
+          "message_id": "JC6-M08",
+          "role": "customer",
+          "content": "Chị mới có bằng hơn một năm, đỗ chưa quen. Nhà trong ngõ nhỏ, cơ quan có hầm khá chật."
+        },
+        {
+          "message_id": "JC6-M09",
+          "role": "advisor",
+          "content": "Chị dự tính ngân sách bao nhiêu và ưu tiên điều gì khi chọn xe? Nhà mình có chỗ sạc không ạ?"
+        },
+        {
+          "message_id": "JC6-M10",
+          "role": "customer",
+          "content": "Khoảng 600 triệu, đáng thì thêm được tầm 50 triệu. Chị muốn dùng lâu dài, an toàn và hợp lý về tiền. Nhà có sân để sạc."
+        },
+        {
+          "message_id": "JC6-M11",
+          "role": "advisor",
+          "content": "VF 6 Eco Tiêu chuẩn 1 niêm yết 646 triệu, giảm 9% còn 587,86 triệu khi hồ sơ đủ điều kiện. Đây là giá xe, em sẽ tính chi phí lăn bánh riêng. Mức này phù hợp ngân sách chị chứ ạ?"
+        },
+        {
+          "message_id": "JC6-M12",
+          "role": "customer",
+          "content": "Eco giá đó chị thu xếp được em."
+        },
+        {
+          "message_id": "JC6-M13",
+          "role": "advisor",
+          "content": "Em giới thiệu thêm VF 6 Plus Tiêu chuẩn 1 niêm yết 700 triệu, giảm 9% còn 637 triệu khi đủ điều kiện. Chị có muốn cân nhắc các trang bị hỗ trợ gia đình và đỗ xe của Plus không?"
+        },
+        {
+          "message_id": "JC6-M14",
+          "role": "customer",
+          "content": "Chênh gần 50 triệu thì nhiều quá. Chị sợ thêm tiền cho những thứ không dùng tới, Eco đã đủ chưa em?"
+        },
+        {
+          "message_id": "JC6-M15",
+          "role": "advisor",
+          "content": "Em hiểu, mình chỉ thêm khi thấy hữu ích. Plus có 7 túi khí so với 4 trên Eco, là trang bị an toàn đáng cân nhắc khi chị chở hai con nhỏ. Plus có camera 360 thay vì camera lùi trên Eco, hỗ trợ quan sát quanh xe lúc chị mới lái, xoay trở trong ngõ hẹp và hầm chật; chị vẫn cần quan sát trực tiếp. Chênh lệch sau ưu đãi là 637 - 587,86 = 49,14 triệu. Mình lái thử để xem hai tiện ích này có đáng với chị không, Eco vẫn là lựa chọn phù hợp nếu đáp ứng nhu cầu."
+        },
+        {
+          "message_id": "JC6-M16",
+          "role": "customer",
+          "content": "Thêm 50 triệu mà cũng có nhiều thứ có ích nhỉ. Cũng tốt đấy. Cho chị lái thử bản Plus nhé."
+        },
+        {
+          "message_id": "JC6-M17",
+          "role": "advisor",
+          "content": "Em hẹn chị lái thử bản Plus lúc 9 giờ thứ Bảy tại showroom, thử quan sát camera và thao tác đỗ xe. Sau buổi thử em đối chiếu hồ sơ ưu đãi, báo chi phí lăn bánh để chị cân nhắc, được không ạ?"
+        },
+        {
+          "message_id": "JC6-M18",
+          "role": "customer",
+          "content": "Được em, 9 giờ thứ Bảy chị đến lái thử bản Plus."
+        }
+      ],
+      "knowledge_sources": [
+        {
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "1. | Chính sách “Vì Tương Lai Xanh 2”:\n\na. | Đối với các đối tượng:\n\n- | Khách hàng đang sở hữu xe ô tô xăng/ xe máy xăng/ xe máy điện VinFast/ ô tô điện VinFast.\n\n- | Mức ưu đãi được áp dụng như sau:\n\n• | Các dòng VF 2, VF 3 & Minio Green: Ưu đãi 3% MSRP.\n\n• | Các dòng VF 7, VF 9, VF 8 Thế hệ mới, Lạc Hồng 900 LX, EC Van & VF Wild: Ưu đãi 5% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.\n\nb. | Đối với các đối tượng đặc biệt:\n\n- | Khách hàng phục vụ trong ngành công an và quân đội, bao gồm: Sĩ quan, quân nhân chuyên nghiệp, hạ sĩ quan, chiến sĩ thuộc Quân đội nhân dân Việt Nam và Công an nhân dân\n\nViệt Nam và người thân (vợ chồng/con cái/ tứ thân phụ mẫu) đang công tác trong biên chế chính thức. Giấy tờ xác định đối tượng hưởng ưu đãi là thẻ ngành: Thẻ sĩ quan/ thẻ quân\n\nnhân/ thẻ Công an nhân dân.\n\n- | Khách hàng là nhân sự của Tổng công ty Bưu điện Việt Nam – VN Post.\n\n- | Mức ưu đãi được áp dụng như sau:\n\n• | Các dòng VF 2, VF 3 & Minio Green: Ưu đãi 6% MSRP.\n\n• | Các dòng VF 7, VF 9, VF 8 Thế hệ mới, Lạc Hồng 900 LX, EC Van & VF Wild: Ưu đãi 7% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.\n\nc. | Thời gian áp dụng: Từ ngày 19/09/2026 đến hết ngày 19/12/2026.\n\nd. | Điều kiện áp dụng:\n\n- | Áp dụng cho chủ sở hữu xe hoặc vợ chồng/con cái /tứ thân phụ mẫu/công ty do họ sở hữu số cổ phần/phần góp lớn nhất.\n\n- | Xe mới có thể được đứng tên bởi chính chủ sở hữu xe hoặc vợ chồng, con cái, tứ thân phụ mẫu; hoặc công ty do họ sở hữu số cổ phần/ phần vốn góp lớn nhất. Trường hợp chủ sở\n\nhữu xe là pháp nhân, xe mới có thể được đứng tên pháp nhân đó hoặc cá nhân sở hữu cổ phần/ phần vốn góp lớn nhất.\n\n- | Mỗi xe chỉ được sử dụng 01 lần để hưởng ưu đãi chuyển đổi sang xe điện VinFast cho toàn bộ chương trình Vì Tương Lai Xanh 2 & Thu xăng đổi điện VinFast đã triển khai.\n\n- | Với Khách hàng sở hữu xe ô tô xăng hoặc xe máy xăng, Khách hàng cam kết chuyển đổi sang xe điện VinFast.\n\n- | Chính sách này không được áp dụng đồng thời với:\n\n• | Chương trình Tri ân Khách hàng xe xăng VinFast chuyển đổi xanh tại mục 6 của văn bản này.\n\n• | Chính sách Khách hàng thân thiết VinClub tại thị trường Việt Nam."
+        },
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 6 | Eco | Tiêu chuẩn 1 | 646.000.000 VNĐ\n\nVF 6 | Eco | Nâng cấp | 650.000.000 VNĐ\n\nVF 6 | Plus | Tiêu chuẩn 2 | 699.000.000 VNĐ\n\nVF 6 | Plus | Tiêu chuẩn 1 | 700.000.000 VNĐ\n\nVF 6 | Plus | Nâng cấp | 710.000.000 VNĐ"
+        },
+        {
+          "document_id": "FAQ_VF6_20260922",
+          "version": "2026.09.22",
+          "quote": "1. Hệ thống 4 túi khí (VF 6 Eco) và 7 túi khí (VF 6 Plus)."
+        }
+      ],
+      "annotated_claims": [
+        {
+          "message_id": "JC6-M01",
+          "text": "VF 6 đang có ưu đãi 9% Vì Tương Lai Xanh 2 từ 19/09 đến 19/12/2026 cho khách đủ điều kiện",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M03",
+          "text": "xe máy xăng đứng tên chị đủ điều kiện về xe sở hữu",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M03",
+          "text": "Chị cần cam kết chuyển đổi sang xe điện VinFast",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M03",
+          "text": "chương trình không cộng gộp VinClub hay Tri ân xe xăng",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M11",
+          "text": "VF 6 Eco Tiêu chuẩn 1 niêm yết 646 triệu",
+          "category": "price",
+          "source_document_id": "PRICE_LIST_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M11",
+          "text": "giảm 9% còn 587,86 triệu khi hồ sơ đủ điều kiện",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M13",
+          "text": "VF 6 Plus Tiêu chuẩn 1 niêm yết 700 triệu",
+          "category": "price",
+          "source_document_id": "PRICE_LIST_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M13",
+          "text": "giảm 9% còn 637 triệu khi đủ điều kiện",
+          "category": "promotion",
+          "source_document_id": "PROMOTION_SALES_VINFAST_20260921"
+        },
+        {
+          "message_id": "JC6-M15",
+          "text": "Plus có 7 túi khí so với 4 trên Eco",
+          "category": "product",
+          "source_document_id": "FAQ_VF6_20260922"
+        },
+        {
+          "message_id": "JC6-M15",
+          "text": "Plus có camera 360 thay vì camera lùi trên Eco",
+          "category": "product",
+          "source_document_id": "FAQ_VF6_20260922"
+        },
+        {
+          "message_id": "JC6-M15",
+          "text": "Chênh lệch sau ưu đãi là 637 - 587,86 = 49,14 triệu",
+          "category": "price",
+          "source_document_id": "PRICE_LIST_VINFAST_20260921"
+        }
+      ],
+      "expert_labels": {
+        "need_discovery": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC6-M08",
+              "quote": "Chị mới có bằng hơn một năm, đỗ chưa quen. Nhà trong ngõ nhỏ, cơ quan có hầm khá chật."
+            },
+            {
+              "message_id": "JC6-M09",
+              "quote": "Chị dự tính ngân sách bao nhiêu và ưu tiên điều gì khi chọn xe?"
+            },
+            {
+              "message_id": "JC6-M10",
+              "quote": "Chị muốn dùng lâu dài, an toàn và hợp lý về tiền."
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "là trang bị an toàn đáng cân nhắc khi chị chở hai con nhỏ"
+            }
+          ],
+          "rationale": "Advisor hỏi mục đích dùng, người đi cùng, kinh nghiệm lái, chỗ đỗ, ngân sách và ưu tiên của khách, rồi dùng đúng các ý chở con, mới lái và hầm chật để tư vấn Plus.",
+          "expected_weakness": null,
+          "reviewer_id": "tú-vinfast-sales-advisor",
+          "reviewed_at": "2026-10-17T08:30:00+07:00",
+          "provenance": "Nháp điểm do AI (Claude Opus 5.5) chấm theo sales-rubric-v3; Tú, tư vấn viên bán hàng VinFast, review từng tiêu chí, nâng objection_handling từ 2 lên 3, xác nhận giá VF 6 Eco Tiêu chuẩn 1 646 triệu và Plus Tiêu chuẩn 1 700 triệu, rồi phê duyệt 5 nhãn JC6; quyết định được truyền qua Duy trong phiên Claude Code ngày 2026-10-17. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "product_knowledge": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC6-M04",
+              "quote": "Chị đi làm và đưa đón hai con nhỏ đi học."
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "Plus có 7 túi khí so với 4 trên Eco"
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "Plus có camera 360 thay vì camera lùi trên Eco"
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "chị vẫn cần quan sát trực tiếp"
+            }
+          ],
+          "rationale": "Advisor chỉ chọn hai khác biệt đúng nguồn (7 so với 4 túi khí, camera 360 so với camera lùi) gắn với nhu cầu, nêu giới hạn của camera và không chê Eco.",
+          "expected_weakness": null,
+          "reviewer_id": "tú-vinfast-sales-advisor",
+          "reviewed_at": "2026-10-17T08:30:00+07:00",
+          "provenance": "Nháp điểm do AI (Claude Opus 5.5) chấm theo sales-rubric-v3; Tú, tư vấn viên bán hàng VinFast, review từng tiêu chí, nâng objection_handling từ 2 lên 3, xác nhận giá VF 6 Eco Tiêu chuẩn 1 646 triệu và Plus Tiêu chuẩn 1 700 triệu, rồi phê duyệt 5 nhãn JC6; quyết định được truyền qua Duy trong phiên Claude Code ngày 2026-10-17. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "objection_handling": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC6-M14",
+              "quote": "Chị sợ thêm tiền cho những thứ không dùng tới, Eco đã đủ chưa em?"
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "Em hiểu, mình chỉ thêm khi thấy hữu ích."
+            },
+            {
+              "message_id": "JC6-M15",
+              "quote": "Chênh lệch sau ưu đãi là 637 - 587,86 = 49,14 triệu."
+            },
+            {
+              "message_id": "JC6-M16",
+              "quote": "Cũng tốt đấy. Cho chị lái thử bản Plus nhé."
+            }
+          ],
+          "rationale": "Advisor nhận đúng nỗi lo gốc là trả thêm cho thứ không dùng tới, trả lời bằng lợi ích gắn nhu cầu và mức chênh đúng; băn khoăn được giải quyết vì khách tự chuyển sang lái thử bản Plus.",
+          "expected_weakness": null,
+          "reviewer_id": "tú-vinfast-sales-advisor",
+          "reviewed_at": "2026-10-17T08:30:00+07:00",
+          "provenance": "Nháp điểm do AI (Claude Opus 5.5) chấm theo sales-rubric-v3; Tú, tư vấn viên bán hàng VinFast, review từng tiêu chí, nâng objection_handling từ 2 lên 3, xác nhận giá VF 6 Eco Tiêu chuẩn 1 646 triệu và Plus Tiêu chuẩn 1 700 triệu, rồi phê duyệt 5 nhãn JC6; quyết định được truyền qua Duy trong phiên Claude Code ngày 2026-10-17. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "policy_accuracy": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC6-M02",
+              "quote": "Chị đi xe máy xăng đứng tên chị, chưa dùng xe này để nhận ưu đãi chuyển đổi lần nào."
+            },
+            {
+              "message_id": "JC6-M03",
+              "quote": "Chị cần cam kết chuyển đổi sang xe điện VinFast; em sẽ đối chiếu giấy tờ trước khi áp dụng, chương trình không cộng gộp VinClub hay Tri ân xe xăng."
+            },
+            {
+              "message_id": "JC6-M11",
+              "quote": "VF 6 Eco Tiêu chuẩn 1 niêm yết 646 triệu, giảm 9% còn 587,86 triệu khi hồ sơ đủ điều kiện."
+            }
+          ],
+          "rationale": "Advisor xác nhận xe sở hữu trước khi báo giá ưu đãi, nêu đúng điều kiện cam kết chuyển đổi, đối chiếu giấy tờ và không cộng gộp, và báo giá sau ưu đãi kèm điều kiện, tách chi phí lăn bánh.",
+          "expected_weakness": null,
+          "reviewer_id": "tú-vinfast-sales-advisor",
+          "reviewed_at": "2026-10-17T08:30:00+07:00",
+          "provenance": "Nháp điểm do AI (Claude Opus 5.5) chấm theo sales-rubric-v3; Tú, tư vấn viên bán hàng VinFast, review từng tiêu chí, nâng objection_handling từ 2 lên 3, xác nhận giá VF 6 Eco Tiêu chuẩn 1 646 triệu và Plus Tiêu chuẩn 1 700 triệu, rồi phê duyệt 5 nhãn JC6; quyết định được truyền qua Duy trong phiên Claude Code ngày 2026-10-17. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        },
+        "closing_next_step": {
+          "label_version": "sales-rubric-v4",
+          "review_status": "APPROVED",
+          "adjudication_status": "APPROVED",
+          "status": "assessed",
+          "score": 3,
+          "evidence": [
+            {
+              "message_id": "JC6-M16",
+              "quote": "Cho chị lái thử bản Plus nhé."
+            },
+            {
+              "message_id": "JC6-M17",
+              "quote": "Em hẹn chị lái thử bản Plus lúc 9 giờ thứ Bảy tại showroom, thử quan sát camera và thao tác đỗ xe."
+            },
+            {
+              "message_id": "JC6-M18",
+              "quote": "Được em, 9 giờ thứ Bảy chị đến lái thử bản Plus."
+            }
+          ],
+          "rationale": "Khách sẵn sàng lái thử chứ chưa mua; advisor chốt lịch cụ thể, nội dung thử và bước tiếp theo về hồ sơ, chi phí lăn bánh, và khách đồng ý.",
+          "expected_weakness": null,
+          "reviewer_id": "tú-vinfast-sales-advisor",
+          "reviewed_at": "2026-10-17T08:30:00+07:00",
+          "provenance": "Nháp điểm do AI (Claude Opus 5.5) chấm theo sales-rubric-v3; Tú, tư vấn viên bán hàng VinFast, review từng tiêu chí, nâng objection_handling từ 2 lên 3, xác nhận giá VF 6 Eco Tiêu chuẩn 1 646 triệu và Plus Tiêu chuẩn 1 700 triệu, rồi phê duyệt 5 nhãn JC6; quyết định được truyền qua Duy trong phiên Claude Code ngày 2026-10-17. | Chuyển sang sales-rubric-v4 ngày 2026-10-18: nhãn giữ nguyên; Phạm Đình Duy (roleplay lead) xác nhận vẫn đúng theo v4."
+        }
+      }
+    }
+  ]
+}

@@ -96,9 +96,10 @@ cp .env.example .env
 | Bootstrap production | `BOOTSTRAP_MANAGER_USERNAME`, `BOOTSTRAP_MANAGER_DISPLAY_NAME`, `BOOTSTRAP_MANAGER_PASSWORD` |
 | Voice tùy chọn | `GROQ_API_KEY`, `GOOGLE_TTS_SERVICE_ACCOUNT_JSON` |
 | Trace tùy chọn | `LANGSMITH_TRACING`, `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT`, `LANGSMITH_CAPTURE_CONTENT` |
+| Trace Roleplay/Practice (tài khoản riêng) | `ROLEPLAY_LANGSMITH_TRACING`, `ROLEPLAY_LANGSMITH_API_KEY`, `ROLEPLAY_LANGSMITH_ENDPOINT`, `ROLEPLAY_LANGSMITH_PROJECT`, `ROLEPLAY_LANGSMITH_CAPTURE_CONTENT` |
 | Docker / hosted frontend | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `FRONTEND_PORT`, `RENDER_BACKEND_URL` |
 
-Theo [cấu hình Python](src/config.py), generator mặc định là `openai/gpt-6-luna`, embedding là `openai/text-embedding-3-small` qua OpenRouter. Judge mặc định dùng provider OpenRouter và model `google/gemini-3.8-flash`, temperature 0; runtime không cho judge trùng cả provider lẫn model với generator. Chạy trực tiếp mặc định SQLite ở `data/app.db` và Chroma ở `data/chroma`. Đổi embedding model cần reindex phù hợp. Xem [.env.example](.env.example) và [hướng dẫn database](docs/database-backends.md).
+Theo [cấu hình Python](src/config.py), generator mặc định là `openai/gpt-6-luna`, embedding là `openai/text-embedding-3-small` qua OpenRouter. Judge mặc định dùng provider OpenRouter và model `deepseek/deepseek-v3.2`, temperature 0; runtime không cho judge trùng cả provider lẫn model với generator. Chạy trực tiếp mặc định SQLite ở `data/app.db` và Chroma ở `data/chroma`. Đổi embedding model cần reindex phù hợp. Xem [.env.example](.env.example) và [hướng dẫn database](docs/database-backends.md).
 
 Trong `.env`, đặt `DEMO_ADVISOR_PASSWORD` và `DEMO_MANAGER_PASSWORD` riêng, rồi seed tài khoản local:
 
@@ -107,6 +108,19 @@ python -m scripts.seed_demo_users
 ```
 
 Đăng nhập bằng `advisor.demo` và `manager.demo`. Seed script cập nhật hai tài khoản demo cố định khi chạy lại; không dùng với tài khoản thật. Trong mã hiện tại, manager có thể tạo tài khoản Advisor trong tab **Tài khoản**; môi trường production dùng bootstrap manager và bắt buộc đổi mật khẩu khởi tạo.
+
+### Tài khoản demo và dữ liệu mẫu
+
+Để dashboard quản lý và Phòng luyện tập có dữ liệu khi demo, seed dữ liệu mẫu (sau khi đã chạy `seed_demo_users` ở trên):
+
+```bash
+python scripts/seed_practice_showcase.py          # xem trước, không ghi
+python scripts/seed_practice_showcase.py --apply  # ghi vào database của DATABASE_URL
+```
+
+Script tạo khoảng 80 lượt luyện tập hoàn thành trong 6 tuần cho 4 tình huống thật trong `data/scenarios/scenarios.json`, kèm hội thoại chữ tiếng Việt, bản chấm AI nháp, các lượt duyệt của `manager.demo` (một số có điều chỉnh điểm kèm lý do và nhận xét chung), khoảng 10 bài được giao (2 bài quá hạn) và 4 việc cần làm. `advisor.demo` đổi tên hiển thị thành "Phạm Đình Duy" và `manager.demo` thành "Nguyễn Thu Trang" nếu vẫn đang dùng tên mặc định, và có thêm 7 tư vấn viên giả (id bắt đầu bằng `showcase1_`) chỉ là dữ liệu, không có mật khẩu đăng nhập được in ra. Id cố định nên chạy lại `--apply` không tạo thêm dòng; thời gian được tính theo giờ Asia/Ho_Chi_Minh tại lần chèn đầu tiên.
+
+Toàn bộ dữ liệu này là **hư cấu**, không chứa thông tin cá nhân, và **không bao giờ** được dùng làm bằng chứng đánh giá (evaluation) hay chất lượng mô hình. Script không chặn production, nên hãy kiểm tra `DATABASE_URL` trước khi `--apply`.
 
 Chạy hai terminal từ thư mục gốc repo:
 
@@ -161,6 +175,14 @@ Bài được giao chỉ hoàn thành khi một phiên Practice bắt đầu t�
 Không biến giá niêm yết thành “giá lăn bánh” hay tự suy ra mọi VF 5 phải thuê pin. Nếu provider lỗi, UI cần cho retry; không mô tả sai là “không có tài liệu”.
 
 ### Giám sát Copilot
+
+Xem [workflow Copilot: từng node, state và prompt](docs/copilot-workflow.md) để theo dõi luồng hiện tại.
+
+Copilot dùng Structured Outputs cho phân tích, lập kế hoạch, sinh câu trả lời và kiểm tra từng phát biểu; code xác định độ bao phủ requirement và gắn citation trước khi công bố.
+
+Workflow `v9-evidence-review` mặc định dùng Jev qua OpenRouter để chọn evidence (`COPILOT_EVIDENCE_SELECTION_STRATEGY=jev_context`); có fallback RRF khi Jev lỗi và log quyết định từng cụm nguồn.
+
+Kết quả đánh giá Copilot ngày 18/10/2026 (**44/50 Pass = 88.0%**) được lưu tại [eval/reports/copilot_benchmark_live_2026-10-18.md](eval/reports/copilot_benchmark_live_2026-10-18.md) (cùng `summary.json`, `reviews.json`, `results.json` trong `eval/reports/`) và trên LangSmith (`copilot-benchmark-20261018`); các file trace trung gian `.nodes.json` giữ local tại `eval/results/copilot-benchmark-20261018/`. Xem [tài liệu workflow & Sales Copilot](docs/copilot-workflow.md) để đọc chi tiết kiến trúc và kết quả đánh giá.
 
 Dùng `.venv` làm môi trường Python chính. Dependency trực tiếp nằm trong `requirements.txt`; local, CI và Docker cài phiên bản chính xác từ `requirements.lock`. CI cấu hình Python 3.11. Cấu hình LangSmith qua các biến `LANGSMITH_*` trong `.env.example`; mỗi request Copilot có `X-Request-ID` để tìm log và trace.
 

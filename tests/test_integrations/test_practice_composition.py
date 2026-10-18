@@ -162,7 +162,7 @@ async def test_composed_service_runs_practice_through_draft_evaluation(tmp_path:
         CustomerModelOutput,
     ]
     assert [schema for schema, _ in judge.calls] == [EvaluationDraft, FactualFindingsDraft]
-    assert result.result.judge_model == "google/gemini-3.8-flash"
+    assert result.result.judge_model == "deepseek/deepseek-v3.2"
 
 
 def test_default_judge_factory_uses_configured_provider_model(monkeypatch, tmp_path):
@@ -179,14 +179,14 @@ def test_default_judge_factory_uses_configured_provider_model(monkeypatch, tmp_p
     settings = Settings(
         database_url=f"sqlite:///{tmp_path / 'judge.db'}",
         practice_judge_provider="openrouter",
-        practice_judge_model="google/gemini-3.8-flash",
+        practice_judge_model="deepseek/deepseek-v3.2",
     )
     service = build_practice_service(
         settings=settings, model_factory=SchemaQueueModel, retrieval_service=RecordingRetriever()
     )
     assert calls == []
     assert service._evaluator._model._invoker._model_factory() is judge
-    assert calls == [{"provider": "openrouter", "model": "google/gemini-3.8-flash", "temperature": 0}]
+    assert calls == [{"provider": "openrouter", "model": "deepseek/deepseek-v3.2", "temperature": 0}]
 
 
 def test_default_judge_rejects_generator_model(tmp_path):

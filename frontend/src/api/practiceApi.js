@@ -86,6 +86,10 @@ export const practiceApi = {
     return request(`/practice/history${query}`, { method: 'GET' });
   },
 
+  async getProgress() {
+    return request('/practice/progress', { method: 'GET' });
+  },
+
   async getAttempt(sessionId) {
     return request(`/practice/${encodeURIComponent(sessionId)}/attempt`, { method: 'GET' });
   },

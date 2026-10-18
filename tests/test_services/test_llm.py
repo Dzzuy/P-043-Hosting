@@ -33,5 +33,5 @@ def test_openrouter_accepts_separate_practice_judge_model(monkeypatch):
     model = llm_service.get_llm(
         provider=settings.practice_judge_provider, model=settings.practice_judge_model, temperature=0
     )
-    assert model.model_name == "google/gemini-3.8-flash"
+    assert model.model_name == "deepseek/deepseek-v3.2"
     assert model.temperature == 0

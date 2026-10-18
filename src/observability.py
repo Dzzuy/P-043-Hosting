@@ -29,9 +29,11 @@ logger = logging.getLogger("src.telemetry")
 _request = contextvars.ContextVar("copilot_telemetry", default=None)
 _log_span = contextvars.ContextVar("copilot_log_span", default=None)
 worker_timeout = contextvars.ContextVar("copilot_worker_timeout", default=None)
+node_observer = contextvars.ContextVar("copilot_node_observer", default=None)
 _warning_lock = threading.Lock()
 _last_warning = 0.0
 _META = {
+    "case_id", "evaluation_run_id", "dataset_hash", "code_hash", "snapshot_id",
     "source_surface",
     "session_id",
     "conversation_id",
@@ -78,6 +80,7 @@ _META = {
     "profile",
     "selected_count",
     "context_characters",
+    "context_tokens_estimate",
     "reasoning_tokens",
     "finish_reason",
     "coverage_count",
@@ -101,10 +104,15 @@ _META = {
     "candidate_rank",
     "bundle_blocks",
     "bundle_characters",
+    "bundle_hash",
+    "anchor_count",
     "parent_context_reads",
     "missing_count",
     "claim_index",
     "verdict",
+    "decision_status",
+    "decision_route",
+    "decision_cost",
 }
 
 
@@ -146,21 +154,70 @@ def redact(value):
 
 
 _CONTENT_OMIT = {
-    "runtime", "snapshot", "readiness_loader", "progress_queue", "customer_context",
-    "parent_context_cache", "callbacks", "client", "headers", "authorization", "cookie",
-    "password", "secret", "api_key", "apikey", "access_token", "refresh_token",
-    "database_url", "embedding", "embeddings", "vector", "vectors",
+    "runtime",
+    "snapshot",
+    "readiness_loader",
+    "progress_queue",
+    "customer_context",
+    "parent_context_cache",
+    "jev_assessment_cache",
+    "callbacks",
+    "client",
+    "headers",
+    "authorization",
+    "cookie",
+    "password",
+    "secret",
+    "api_key",
+    "apikey",
+    "access_token",
+    "refresh_token",
+    "database_url",
+    "embedding",
+    "embeddings",
+    "vector",
+    "vectors",
 }
 _STATE_CONTENT_FIELDS = {
-    "query", "target_date", "resolved_date", "memory_summary", "history", "domain", "product_models",
-    "task", "answer_kind", "analysis", "requirements", "search_plan", "route", "retrieval_mode",
-    "profile_name", "raw_search_results", "new_hits", "candidate_evidence", "evidence_registry",
-    "selected_evidence", "answer_context", "draft_answer", "self_check", "unsupported_claims",
-    "feedback", "read_anchor_ids", "generation_count", "corrective_retrieval_count", "retrieval_rounds",
-    "tool_calls", "search_signatures", "retrieval_errors", "clarification_question", "fallback_reason",
-    "final_response", "request_id", "trace", "verified_snapshot", "evidence_map", "recovery_requirement_ids",
-    "overflow_anchor_ids", "evidence_selection_diagnostics", "selected_anchor_ids",
-    "evidence_query_provenance", "evidence_query_references", "rejected_evidence_ids",
+    "analysis",
+    "answer_context",
+    "answer_kind",
+    "candidate_evidence",
+    "clarification_question",
+    "corrective_retrieval_count",
+    "domain",
+    "draft_answer",
+    "evidence_registry",
+    "evidence_selection_diagnostics",
+    "fallback_reason",
+    "feedback",
+    "final_response",
+    "generated_answer",
+    "generation_count",
+    "grounding_review",
+    "history",
+    "jev_conflict_chunk_ids",
+    "jev_status",
+    "memory_summary",
+    "product_models",
+    "profile_name",
+    "query",
+    "raw_search_results",
+    "recovery_requirement_ids",
+    "rejected_evidence_ids",
+    "request_id",
+    "requirements",
+    "resolved_date",
+    "retrieval_errors",
+    "retrieval_rounds",
+    "route",
+    "search_plan",
+    "search_signatures",
+    "selected_evidence",
+    "target_date",
+    "tool_calls",
+    "unsupported_claims",
+    "verified_snapshot",
 }
 
 
@@ -328,11 +385,13 @@ class SafeTracer(LangChainTracer):
         logical_node = run.run_type == "chain" and (
             run.name == "LangGraph" or run.name == metadata.get("langgraph_node")
         )
-        capture = self.scope.content_allowed and self.scope.service.capture and (
-            (run.run_type == "llm" and (
-                self.scope.workflow_content or metadata.get("node") != "analyze_and_route"
-            ))
-            or (self.scope.workflow_content and logical_node)
+        capture = (
+            self.scope.content_allowed
+            and self.scope.service.capture
+            and (
+                (run.run_type == "llm" and (self.scope.workflow_content or metadata.get("node") != "analyze_and_route"))
+                or (self.scope.workflow_content and logical_node)
+            )
         )
         if capture:
             self._capture_ids.add(run.id)
@@ -429,9 +488,16 @@ def allow_content():
 def capture_knowledge_input(query):
     """Opt in only for authenticated shared Q&A, before any graph node starts."""
     scope = _request.get()
-    if scope and scope.root and scope.service.capture and scope.metadata.get("http_route") in {
-        "/api/v1/copilot/knowledge", "/api/v1/copilot/knowledge/stream",
-    }:
+    if (
+        scope
+        and scope.root
+        and scope.service.capture
+        and scope.metadata.get("http_route")
+        in {
+            "/api/v1/copilot/knowledge",
+            "/api/v1/copilot/knowledge/stream",
+        }
+    ):
         scope.workflow_content = scope.content_allowed = True
         scope.root.add_inputs(safe_content({"query": query}))
 
@@ -447,6 +513,17 @@ def graph_config():
     if scope and scope.tracer:
         return {"callbacks": [scope.tracer], "metadata": {"request_id": scope.request_id}}
     return {}
+
+
+@contextmanager
+def private_customer_context():
+    """Never export customer analysis, prompts, outputs or provider errors."""
+    token = _request.set(None)
+    try:
+        with tracing_context(enabled=False):
+            yield
+    finally:
+        _request.reset(token)
 
 
 @contextmanager
@@ -639,8 +716,15 @@ class CopilotTelemetryMiddleware:
             }
             event("request_end", duration_ms=round((time.monotonic() - started) * 1000, 3), **metadata)
             if telemetry.root:
-                if telemetry.workflow_content and not telemetry.root.outputs and (metadata["error_type"] or status >= 400):
-                    telemetry.root.outputs = {"status": "error", "error_type": metadata["error_type"] or f"HTTP_{status}"}
+                if (
+                    telemetry.workflow_content
+                    and not telemetry.root.outputs
+                    and (metadata["error_type"] or status >= 400)
+                ):
+                    telemetry.root.outputs = {
+                        "status": "error",
+                        "error_type": metadata["error_type"] or f"HTTP_{status}",
+                    }
                 telemetry.root.end(
                     error=metadata["error_type"] or (f"HTTP_{status}" if status >= 500 else None),
                     metadata=safe_metadata(metadata),

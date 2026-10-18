@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { appendDraft, filterCustomers, headerFacts, mergeMessages, taskCounts, taskGroups, timestamp, toWorkspaceCustomer } from '../src/components/copilot/customerWorkspace/workspaceData.js';
+import { appendDraft, filterCustomers, mergeMessages, taskCounts, taskGroups, timestamp, toWorkspaceCustomer } from '../src/components/copilot/customerWorkspace/workspaceData.js';
 import { readWorkspaceState } from '../src/components/copilot/customerWorkspace/workspaceStorage.js';
 
 const item = { conversation_id: 'conv-1', customer_id: 'customer-1', customer_name: 'Anh Tuấn', phone: '0900000001', lead_stage: 'considering', interested_models: ['VF 6'], pending_tasks_count: 2 };
@@ -102,7 +102,6 @@ test('pagination keeps old source IDs, computes freshness from the server cursor
 test('task grouping uses execution intervals and retains legacy unscheduled items', () => {
   const tasks = [{ id: 'o', starts_at: '2020-01-01', ends_at: '2020-01-02' }, { id: 'u', starts_at: '2090-01-01', ends_at: '2090-01-02' }, { id: 'n' }, { id: 'c', completed: true, ends_at: '2020-01-01' }];
   assert.deepEqual(taskGroups(tasks).map((group) => group.tasks.map((task) => task.id)), [[], ['u'], ['o'], ['n'], [], ['c']]);
-  assert.deepEqual(headerFacts({ model: 'VF 3', deposit: '150.000.000 ₫', payment: 'Trả góp', facts: [{ field: 'down_payment_vnd', verification_status: 'inferred' }] }), ['VF 3', 'Trả góp']);
 });
 
 test('local drafts and favorites are isolated by owner and survive serialized storage; corrupt data is harmless', () => {

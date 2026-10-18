@@ -38,13 +38,14 @@ NODE_TRANSITIONS: dict[str, dict[str, str]] = {
     },
     "select_evidence": {
         "build_context": "build_context",
+        "plan_queries": "plan_queries",
         "finalize_response": "finalize_response",
         "fallback_response": "fallback_response",
     },
     "build_context": {
         "generate_answer": "generate_answer",
+        "select_evidence": "select_evidence",
         "plan_queries": "plan_queries",
-        "retrieve_documents": "retrieve_documents",
         "finalize_response": "finalize_response",
         "fallback_response": "fallback_response",
     },
@@ -54,9 +55,11 @@ NODE_TRANSITIONS: dict[str, dict[str, str]] = {
         "fallback_response": "fallback_response",
     },
     "check_grounding": {
+        "check_grounding": "check_grounding",
         "finalize_response": "finalize_response",
         "generate_answer": "generate_answer",
         "plan_queries": "plan_queries",
+        "select_evidence": "select_evidence",
         "fallback_response": "fallback_response",
     },
     "finalize_response": {

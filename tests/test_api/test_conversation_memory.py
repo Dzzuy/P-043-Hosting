@@ -1,7 +1,7 @@
 """Tests for Conversation Memory & History REST endpoints and repository."""
 
-from datetime import UTC, datetime
 from types import SimpleNamespace
+
 import pytest
 
 from src.agents.copilot.runtime import CopilotAdmission
@@ -9,7 +9,6 @@ from src.agents.copilot.state import Citation, CopilotResponse, ProductInsight
 from src.api.copilot import current_copilot_user
 from src.config import get_settings
 from src.integrations.copilot_sessions import (
-    CopilotSessionNotFoundError,
     SQLCopilotSessionsRepository,
 )
 from src.knowledge.index_readiness import load_snapshot

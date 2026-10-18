@@ -1,0 +1,293 @@
+{
+  "dataset_version": "1",
+  "description": "Finish-time evidence recall probes: does the practice evidence provider hand the judge the chunk holding the ground-truth quote, whatever category the analyzer assigns? Golden probes reuse approved golden findings; paraphrase probes reuse their ground-truth quotes with new wording.",
+  "categories": [
+    "product",
+    "price",
+    "promotion",
+    "policy",
+    "warranty",
+    "battery_charging",
+    "other"
+  ],
+  "probes": [
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "claim_text": "VF 5 Plus đi được 326,4 km/lần sạc anh ạ.",
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc"
+        }
+      ]
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "claim_text": "Pin cao áp của xe mới được bảo hành 8 năm/160.000 km anh nhé.",
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Pin cao áp (Mua lần đầu theo xe mới): 8 năm/160.000 km."
+        }
+      ]
+    },
+    {
+      "probe_id": "S01_EDGE_FALSE_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "claim_text": "VF 5 Plus có quãng đường công bố theo NEDC là 500 km một lần sạc đầy anh ạ.",
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc"
+        }
+      ]
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "claim_text": "VF 7 Plus có 7 túi khí chị ạ.",
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 túi khí"
+        }
+      ]
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "claim_text": "Xe VF 7 được bảo hành 7 năm hoặc 160.000 km, tùy điều kiện nào đến trước chị nhé.",
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách"
+        }
+      ]
+    },
+    {
+      "probe_id": "S02_EDGE_FALSE_WARRANTY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "claim_text": "Xe VF 7 được bảo hành 10 năm, không giới hạn số km chị nhé.",
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách"
+        }
+      ]
+    },
+    {
+      "probe_id": "S03_ON_CHARGING_OBJECTION#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "claim_text": "Ở trạm sạc công cộng VinFast, đơn giá sạc là 3.858 VNĐ/kWh anh ạ.",
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh"
+        }
+      ]
+    },
+    {
+      "probe_id": "S04_EDGE_FALSE_PROMO#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+      "claim_text": "Chương trình Vì Tương Lai Xanh 2 đang giảm 15% giá niêm yết cho VF 6 chị ạ.",
+      "expected": [
+        {
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Ưu đãi 5% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP."
+        }
+      ]
+    },
+    {
+      "probe_id": "S01_ON_FACT_FAST_CHARGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "claim_text": "VF 5 Plus sạc nhanh từ 10% lên 70% mất khoảng 33 phút anh ạ.",
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút"
+        }
+      ]
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_BATTERY_CAPACITY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "claim_text": "VF 5 Plus có pin 37,23 kWh anh ạ, chạy dịch vụ cả ngày vẫn thoải mái.",
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh"
+        }
+      ]
+    },
+    {
+      "probe_id": "S02_ON_FACT_HOME_CHARGER_PRICE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "claim_text": "Nếu lắp sạc tại nhà, bộ sạc AC 11 kW dùng cho VF 7 Plus có giá 12.000.000 VNĐ chị ạ.",
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ"
+        }
+      ]
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_AWD_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "claim_text": "Bản VF 7 Plus hai cầu đi được 469 km/1 lần sạc theo NEDC chị ạ.",
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "469 km/1 lần sạc"
+        }
+      ]
+    },
+    {
+      "probe_id": "S03_ON_FACT_IDLE_FEE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "claim_text": "Sạc xong ở trạm công cộng, nếu xe vẫn chiếm trụ thì từ phút 11 đến phút 60 tính 1.000 VNĐ/phút anh ạ.",
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút"
+        }
+      ]
+    },
+    {
+      "probe_id": "TARIFF_PER_KWH_WORDS",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "claim_text": "Sạc ở trạm VinFast hết 3.858 đồng cho mỗi kWh anh ạ.",
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh"
+        }
+      ]
+    },
+    {
+      "probe_id": "IDLE_FEE_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "claim_text": "Sạc đầy mà không rút ra thì bị tính phí giữ trụ 1.000 đồng mỗi phút anh nhé.",
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút"
+        }
+      ]
+    },
+    {
+      "probe_id": "BATTERY_CAPACITY_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "claim_text": "Pin VF 5 Plus dung lượng 37,23 kWh anh ạ.",
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh"
+        }
+      ]
+    },
+    {
+      "probe_id": "FAST_CHARGE_DC_POST",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "claim_text": "VF 5 Plus cắm trụ sạc DC thì từ 10% lên 70% mất khoảng 33 phút anh ạ.",
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút"
+        }
+      ]
+    },
+    {
+      "probe_id": "MSRP_VF5",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "claim_text": "VF 5 Plus giá niêm yết 496 triệu đồng anh ạ.",
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ"
+        }
+      ]
+    },
+    {
+      "probe_id": "MSRP_VF6_ECO",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "claim_text": "VF 6 Eco giá niêm yết 646.000.000 VNĐ anh ạ.",
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 6 | Eco | Tiêu chuẩn 1 | 646.000.000 VNĐ"
+        }
+      ]
+    },
+    {
+      "probe_id": "MIXED_PRICE_AND_RANGE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "claim_text": "VF 5 Plus giá 496.000.000 VNĐ, sạc đầy đi được 326,4 km anh ạ.",
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ"
+        },
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc"
+        }
+      ]
+    },
+    {
+      "probe_id": "HOME_CHARGER_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "claim_text": "Mua thêm bộ sạc treo tường 11 kW cho VF 7 Plus hết 12 triệu chị ạ.",
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ"
+        }
+      ]
+    }
+  ]
+}

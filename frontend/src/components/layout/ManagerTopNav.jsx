@@ -1,13 +1,13 @@
+import "./managerShell.css";
 import {
-  VinFastLogo,
   DashboardIcon,
   CheckCircleIcon,
   ClipboardIcon,
-  TrophyIcon,
   UsersIcon,
-  LogoutIcon,
 } from "../common/Icons";
+import { AccountMenu } from "./AccountMenu";
 
+// Same markup and classes as the advisor Header, so both portals share one top bar.
 export function ManagerTopNav({
   activeTab,
   onTabChange,
@@ -16,108 +16,64 @@ export function ManagerTopNav({
   onLogout,
 }) {
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: DashboardIcon },
+    { id: "dashboard", label: "Tổng quan", icon: DashboardIcon },
     { id: "assignments", label: "Giao bài", icon: ClipboardIcon },
-    { id: "performance", label: "Năng lực", icon: TrophyIcon },
-    { id: "reports", label: "Lịch sử luyện tập", icon: CheckCircleIcon, badge: pendingCount > 0 ? `${pendingCount}` : null, highlightBadge: pendingCount > 0 },
+    { id: "reports", label: "Lịch sử luyện tập", icon: CheckCircleIcon, badge: pendingCount > 0 ? pendingCount : null },
     { id: "accounts", label: "Tài khoản", icon: UsersIcon },
   ];
 
-  const initials = currentUser?.display_name
-    ? currentUser.display_name.split(" ").slice(-1)[0].substring(0, 2).toUpperCase()
-    : "QL";
+  const displayName = currentUser?.display_name?.trim() || "Quản lý";
+
+  const renderItem = (item, className) => {
+    const Icon = item.icon;
+    const isActive = activeTab === item.id;
+    return (
+      <button
+        key={item.id}
+        type="button"
+        className={`${className} ${isActive ? "active" : ""}`}
+        onClick={() => onTabChange(item.id)}
+        aria-current={isActive ? "page" : undefined}
+      >
+        <Icon style={{ width: 18, height: 18 }} />
+        <span>{item.label}</span>
+        {item.badge && (
+          <span className="nav-tab-badge" aria-label={`${item.badge} bài chờ duyệt`}>
+            {item.badge}
+          </span>
+        )}
+      </button>
+    );
+  };
 
   return (
-    <header className="manager-topnav">
-      <div className="manager-topnav-inner">
-        {/* Left: Brand Logo & Title */}
-        <div
-          className="manager-topnav-brand"
-          onClick={() => onTabChange("dashboard")}
-          role="button"
-          tabIndex={0}
-        >
-          <div className="manager-brand-logo-badge">
-            <VinFastLogo style={{ width: 24, height: 24 }} />
+    <header className="top-header">
+      <div className="top-header-inner">
+        <button className="brand-section" type="button" onClick={() => onTabChange("dashboard")}>
+          <span className="header-brand-logo"><img src="/vinfast-official-logo.png?v=silver" alt="VinFast" /></span>
+          <div className="brand-info">
+            <span className="brand-title">AI Sales Coach &amp; Co-pilot</span>
+            <span className="brand-subtitle">Nền tảng đào tạo và hỗ trợ tư vấn bán hàng ô tô</span>
           </div>
-          <div className="manager-brand-info">
-            <div className="manager-brand-title">AI Sales Coach</div>
-            <div className="manager-brand-subtitle">VinFast Vinh, Nghệ An</div>
-          </div>
-        </div>
+        </button>
 
-        {/* Center: Horizontal Navigation Pill Tabs matching Image 4 & 5 */}
-        <nav className="manager-nav-pills" aria-label="Manager Navigation">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                className={`manager-nav-pill-item ${isActive ? "active" : ""}`}
-                onClick={() => onTabChange(item.id)}
-                aria-current={isActive ? "page" : undefined}
-              >
-                <Icon style={{ width: 15, height: 15 }} />
-                <span>{item.label}</span>
-                {item.badge && (
-                  <span className={`pill-badge ${item.highlightBadge ? "highlight" : ""}`}>
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+        <nav className="nav-tabs-pill desktop-nav-pill" aria-label="Điều hướng quản lý">
+          {menuItems.map((item) => renderItem(item, "nav-tab-item"))}
         </nav>
 
-        {/* Right: Workspace switcher & Actions */}
-        <div className="manager-topnav-actions">
-          {/* User Profile */}
-          <div className="manager-user-badge">
-            <span className="manager-user-avatar">{initials}</span>
-            <div className="manager-user-details">
-              <span className="manager-user-name">{currentUser?.display_name || "Manager"}</span>
-              <span className="manager-user-role">Manager</span>
-            </div>
-          </div>
-
-          {/* Logout Button */}
-          <button
-            type="button"
-            className="manager-logout-btn"
-            onClick={onLogout}
-            title="Đăng xuất khỏi hệ thống"
-          >
-            <LogoutIcon style={{ width: 15, height: 15 }} />
-            <span className="logout-text">Đăng xuất</span>
-          </button>
+        <div className="header-actions">
+          <AccountMenu
+            name={displayName}
+            username={currentUser?.username}
+            roleLabel="Quản lý"
+            onLogout={onLogout}
+          />
         </div>
       </div>
 
-      {/* Mobile/Tablet Horizontal Scroll Sub-bar */}
-      <div className="manager-mobile-subnav">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              className={`manager-mobile-pill ${isActive ? "active" : ""}`}
-              onClick={() => onTabChange(item.id)}
-            >
-              <Icon style={{ width: 14, height: 14 }} />
-              <span>{item.label}</span>
-              {item.badge && (
-                <span className={`pill-badge ${item.highlightBadge ? "highlight" : ""}`}>
-                  {item.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+      <nav className="mobile-nav-pills" aria-label="Điều hướng quản lý (di động)">
+        {menuItems.map((item) => renderItem(item, "mobile-nav-pill-item"))}
+      </nav>
     </header>
   );
 }

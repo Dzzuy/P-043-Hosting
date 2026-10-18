@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Installed by setup_hooks; keep failures visible without blocking Git push.
+echo "[ai-log] pre-push: collecting and submitting AI logs." >&2
+bash scripts/_pyrun.sh scripts/log_antigravity.py --auto || echo "[ai-log] Prompt collection failed." >&2
+bash scripts/_pyrun.sh scripts/submit_log.py || echo "[ai-log] Log submission failed; check local logs." >&2
+exit 0

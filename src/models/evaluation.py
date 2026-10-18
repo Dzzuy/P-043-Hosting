@@ -59,6 +59,7 @@ class CriterionEvaluation(BaseModel):
     evidence: list[TranscriptEvidence] = Field(default_factory=list)
     reason: str = Field(min_length=1)
     improvement_suggestion: str | None = None
+    manager_reason: str | None = None
 
     @model_validator(mode="after")
     def validate_status_and_score(self) -> "CriterionEvaluation":

@@ -64,11 +64,13 @@ export function ContextDrawerHost({ title, children, onClose }) {
     const panel = panelRef.current;
     const query = 'button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled), a[href], [tabindex="0"]';
     panel.querySelector(query)?.focus();
-    const media = window.matchMedia(panel.closest('.copilot-shell') ? '(max-width: 1439px)' : '(max-width: 1199px)');
+    const inShell = Boolean(panel.closest('.copilot-shell'));
+    const copilotColumns = Boolean(panel.closest('.sw-copilot-open'));
+    const media = window.matchMedia(copilotColumns ? '(max-width: 959px)' : inShell ? '(max-width: 1599px)' : '(max-width: 1199px)');
     const workspace = panel.closest('.sw-workspace-body');
     let modal = false;
     function syncModal() {
-      modal = media.matches || workspace.getBoundingClientRect().width < 1100;
+      modal = media.matches || (!copilotColumns && workspace.getBoundingClientRect().width < 1100);
       panel.setAttribute('aria-modal', String(modal));
       panel.parentElement.classList.toggle('is-overlay', modal);
       for (const child of workspace.children) if (child !== panel.parentElement) child.inert = modal;
@@ -93,7 +95,7 @@ export function ContextDrawerHost({ title, children, onClose }) {
   }, []);
   return <div className="sw-context-drawer-host" onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
     <section ref={panelRef} className="sw-tool-drawer sw-context-drawer" role="dialog" aria-labelledby="sw-context-title">
-      <div className="sw-dialog-heading"><div><h2 id="sw-context-title">{title}</h2>{title === 'Trợ lý Copilot' && <small>Kiến thức xe · Không gửi cho khách</small>}</div><IconButton label="Đóng cửa sổ" onClick={onClose}><X size={19} /></IconButton></div>
+      <div className="sw-dialog-heading"><div><h2 id="sw-context-title">{title}</h2></div><IconButton label="Đóng cửa sổ" onClick={onClose}><X size={19} /></IconButton></div>
       <div className="sw-dialog-body">{children}</div>
     </section>
   </div>;

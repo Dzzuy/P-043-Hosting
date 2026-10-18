@@ -20,14 +20,18 @@ from src.services.practice import (
     PracticeService,
     PracticeSessionView,
 )
+from src.services.practice_dashboard import build_dashboard, build_progress
 from src.services.practice_records import (
     AdvisorPerformance,
+    AdvisorProgress,
     AssignmentConflictError,
     AssignmentRecord,
     AttemptSummary,
     CreateAssignmentInput,
+    ManagerDashboard,
     ManagerReviewDecision,
     ManagerReviewRecord,
+    ManagerTodo,
     PracticeRecordsRepository,
     TeamOverview,
 )
@@ -207,3 +211,27 @@ class RecordedPracticeService:
 
     async def approve(self, session_id: str, manager_id: str, decision: ManagerReviewDecision) -> ManagerReviewRecord:
         return await self._records.approve(session_id, manager_id, decision)
+
+    async def manager_dashboard(self, weeks: int = 8, now: datetime | None = None) -> ManagerDashboard:
+        now = now or datetime.now(UTC)
+        advisors = await self._advisors.active_advisors() if self._advisors is not None else []
+        return build_dashboard(
+            advisors,
+            await self._records.scored_attempts(),
+            await self._records.review_queue(),
+            await self._records.assignments(),
+            now,
+            weeks,
+        )
+
+    async def advisor_progress(self, advisor_id: str, now: datetime | None = None) -> AdvisorProgress:
+        return build_progress(await self._records.scored_attempts(advisor_id), now or datetime.now(UTC))
+
+    async def list_todos(self, manager_id: str) -> list[ManagerTodo]:
+        return await self._records.list_todos(manager_id)
+
+    async def create_todo(self, manager_id: str, text: str) -> ManagerTodo:
+        return await self._records.create_todo(manager_id, text)
+
+    async def set_todo_done(self, manager_id: str, todo_id: str, done: bool) -> ManagerTodo:
+        return await self._records.set_todo_done(manager_id, todo_id, done)

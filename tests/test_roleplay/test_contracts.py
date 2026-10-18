@@ -315,7 +315,7 @@ def test_factual_finding_rejects_mismatched_source_ids_and_references():
     ],
 )
 def test_scenario_models_reject_unknown_fields(path):
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     nested = raw
     for key in path:
         nested = nested[key]
@@ -334,7 +334,7 @@ def test_objection_requires_at_least_one_nonblank_trigger(keywords):
 
 
 def test_keyword_only_objection_and_stage_with_keywords_are_supported():
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     scenario = ScenarioContract.model_validate(raw)
     assert scenario.objections[1].trigger_stage is None
     assert scenario.objections[1].trigger_keywords == ["Plus", "bản cao hơn", "nâng cấp lên"]
@@ -342,7 +342,7 @@ def test_keyword_only_objection_and_stage_with_keywords_are_supported():
     assert ScenarioContract.model_validate(raw).objections[1].trigger_stage == "presentation"
 
 
-@pytest.mark.parametrize("index", [0, 1, 2])
+@pytest.mark.parametrize("index", [0, 2, 3])
 def test_legacy_scenarios_compute_independent_default_outcomes(index):
     raw = _raw_scenario(index)
     raw.pop("policy_expectations")
@@ -362,14 +362,14 @@ def test_legacy_scenarios_compute_independent_default_outcomes(index):
 
 
 def test_upsell_rule_rejects_unknown_objection():
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     raw["upsell_rule"]["objection_id"] = "unknown"
     with pytest.raises(ValueError, match="upsell_rule references unknown objection"):
         ScenarioContract.model_validate(raw)
 
 
 def test_upsell_rule_requires_benefits():
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     raw["upsell_benefits"] = []
     with pytest.raises(ValueError, match="requires non-empty upsell_benefits"):
         ScenarioContract.model_validate(raw)
@@ -377,14 +377,14 @@ def test_upsell_rule_requires_benefits():
 
 @pytest.mark.parametrize("key,value", [("min_linked", 0), ("min_safety", -1)])
 def test_upsell_rule_rejects_invalid_thresholds(key, value):
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     raw["upsell_rule"][key] = value
     with pytest.raises(ValueError):
         ScenarioContract.model_validate(raw)
 
 
 def test_upsell_benefits_reject_unknown_need_fact():
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     raw["upsell_benefits"][0]["linked_need_fact_keys"] = ["unknown"]
     with pytest.raises(ValueError, match="upsell benefits reference unknown hidden facts"):
         ScenarioContract.model_validate(raw)
@@ -392,14 +392,14 @@ def test_upsell_benefits_reject_unknown_need_fact():
 
 @pytest.mark.parametrize("field", ["acceptable_outcomes", "upsell_benefits"])
 def test_outcome_and_benefit_ids_must_be_unique(field):
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     raw[field].append(raw[field][0])
     with pytest.raises(ValueError, match="must be unique"):
         ScenarioContract.model_validate(raw)
 
 
 def test_acceptable_outcomes_reject_unknown_resolved_objection():
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     raw["acceptable_outcomes"][0]["requires_resolved_objections"] = ["unknown"]
     with pytest.raises(ValueError, match="acceptable outcomes reference unknown objection"):
         ScenarioContract.model_validate(raw)
@@ -436,7 +436,7 @@ def test_policy_lookups_match_controlled_corpus_metadata_and_keywords():
 
 
 def test_policy_expectations_reject_unknown_level():
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     raw["policy_expectations"][0]["level"] = "required"
     with pytest.raises(ValueError):
         ScenarioContract.model_validate(raw)
@@ -486,7 +486,7 @@ def test_find_corpus_figures_keeps_order_and_ignores_model_and_spec_numbers():
 @pytest.mark.parametrize("figure", ["9 %", "587,86 triệu", "19/12/2026", "7 năm/160.000 km"])
 @pytest.mark.parametrize("field", ["topic", "resolve_condition"])
 def test_policy_topics_and_resolve_conditions_reject_figures_with_clear_errors(field, figure):
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     target = raw["policy_expectations"][0] if field == "topic" else raw["objections"][0]
     target[field] = f"Chính sách {figure}"
     with pytest.raises(ValueError) as error:
@@ -519,7 +519,7 @@ def test_policy_topics_and_resolve_conditions_reject_figures_with_clear_errors(f
     ],
 )
 def test_customer_context_rejects_corpus_figures(path):
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     target = raw
     for key in path[:-1]:
         target = target[key]
@@ -529,21 +529,21 @@ def test_customer_context_rejects_corpus_figures(path):
 
 
 def test_upsell_specs_are_exempt_from_figure_validation():
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     raw["upsell_benefits"][0]["description"] = "7 vs 4 túi khí, 150 vs 130 kW, tầm hoạt động 460 km"
     assert ScenarioContract.model_validate(raw).upsell_benefits[0].description.endswith("460 km")
 
 
 @pytest.mark.parametrize("update", [{"query": ""}, {"document_type": "unknown"}])
 def test_policy_lookup_rejects_invalid_contract(update):
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     raw["policy_expectations"][0]["lookup"].update(update)
     with pytest.raises(ValueError):
         ScenarioContract.model_validate(raw)
 
 
 def test_lookup_can_use_official_program_name_with_figures():
-    scenario = ScenarioContract.model_validate(_raw_scenario(3))
+    scenario = ScenarioContract.model_validate(_raw_scenario(1))
     assert next(policy for policy in scenario.policy_expectations if policy.policy_id == "zero_down").lookup.query == (
         "Mua xe 0 Đồng"
     )
@@ -566,7 +566,7 @@ def test_lookup_can_use_official_program_name_with_figures():
     ],
 )
 def test_customer_owned_money_and_usage_are_allowed(path, figure):
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     target = raw
     for key in path[:-1]:
         target = target[key]
@@ -591,7 +591,7 @@ def test_customer_owned_money_and_usage_are_allowed(path, figure):
     ],
 )
 def test_customer_owned_fields_reject_corpus_only_patterns(path, figure):
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     target = raw
     for key in path[:-1]:
         target = target[key]
@@ -615,7 +615,7 @@ def test_customer_owned_fields_reject_corpus_only_patterns(path, figure):
     ],
 )
 def test_strict_fields_still_reject_money(path):
-    raw = _raw_scenario(3)
+    raw = _raw_scenario(1)
     target = raw
     for key in path[:-1]:
         target = target[key]
@@ -626,7 +626,7 @@ def test_strict_fields_still_reject_money(path):
 
 def test_shipped_customer_financial_and_usage_facts_are_preserved():
     taxi = ScenarioContract.model_validate(_raw_scenario(0))
-    upsell = ScenarioContract.model_validate(_raw_scenario(3))
+    upsell = ScenarioContract.model_validate(_raw_scenario(1))
     assert "300 triệu" in taxi.hidden_facts["budget"]
     assert "180 km/ngày (khoảng 5.000 km/tháng)" in taxi.hidden_facts["daily_distance"]
     assert "8,5 triệu đồng mỗi tháng" in taxi.hidden_facts["fuel_cost_month"]

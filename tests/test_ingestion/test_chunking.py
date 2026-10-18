@@ -6,7 +6,6 @@ from types import SimpleNamespace
 import pytest
 
 from src.agents.copilot.tools import BM25SearchEngine, _make_hit, build_evidence_context
-from src.agents.copilot.validation.excerpts import _quote_part_errors
 from src.knowledge.chunking import CHUNK_SIZE, chunk_document, chunk_embedding_text, chunking_identity
 from src.knowledge.embedding import KnowledgeEmbeddingService
 from src.knowledge.index_readiness import (
@@ -91,8 +90,7 @@ def test_price_rows_keep_headers_for_search_without_rewriting_citations():
     assert hit["context_prefix"] in context
     assert citations[0].section == chunks[-1].metadata.section_title
     assert hit["content"] == chunks[-1].content
-    quote = SimpleNamespace(citation_id="C1", quote_parts=["Dòng xe | Phiên bản | Giá bán"])
-    assert _quote_part_errors(quote, hit, [])  # Metadata cannot masquerade as citation content.
+    assert citations[0].excerpt == hit["content"]  # Header metadata cannot replace verbatim source content.
 
 
 def test_separate_policy_programs_never_overlap():

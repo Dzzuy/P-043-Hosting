@@ -10,7 +10,7 @@ from datetime import date, datetime
 from enum import StrEnum
 from typing import Protocol
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from src.agents.roleplay.state import EvaluationStatus
 from src.models.evaluation import (
@@ -28,6 +28,14 @@ class AttemptNotFoundError(LookupError):
 
 class ReviewConflictError(ValueError):
     """The attempt cannot be reviewed in its current state."""
+
+
+class ReviewValidationError(ValueError):
+    """The review body is well formed but breaks a review rule (for example, a missing reason)."""
+
+
+class TodoNotFoundError(LookupError):
+    """The to-do does not exist or belongs to another manager."""
 
 
 class AssignmentConflictError(ValueError):
@@ -114,22 +122,49 @@ class AdvisorPerformance(BaseModel):
     recent_scores: list[ApprovedScore]
 
 
+class ScoreOverride(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    score: int = Field(ge=1, le=3)
+    reason: str = Field(default="", max_length=2000)
+
+
 class ManagerReviewDecision(BaseModel):
-    """Manager corrections; missing scores retain their AI-draft values."""
+    """Manager corrections; missing scores retain their AI-draft values.
+
+    Overrides are either ``{criterion: {score, reason}}`` or the legacy
+    ``{criterion: score}`` paired with one shared ``change_reason``.
+    """
 
     model_config = ConfigDict(extra="forbid")
 
-    score_overrides: dict[CriterionType, int] = Field(default_factory=dict)
+    score_overrides: dict[CriterionType, int | ScoreOverride] = Field(default_factory=dict)
     recommended_next_practice: RecommendedNextPractice | None = None
-    change_reason: str = Field(min_length=1, max_length=2000)
+    change_reason: str | None = Field(default=None, max_length=2000)
+    general_comment: str | None = Field(default=None, max_length=2000)
 
     @model_validator(mode="after")
     def validate_reason(self) -> ManagerReviewDecision:
-        if not self.change_reason.strip():
+        if self.change_reason is not None and not self.change_reason.strip():
             raise ValueError("change_reason must not be blank")
-        if any(score < 1 or score > 3 for score in self.score_overrides.values()):
-            raise ValueError("score overrides must be between 1 and 3")
+        for value in self.score_overrides.values():
+            score = value.score if isinstance(value, ScoreOverride) else value
+            if score < 1 or score > 3:
+                raise ValueError("score overrides must be between 1 and 3")
+        if any(isinstance(value, int) for value in self.score_overrides.values()) and self.change_reason is None:
+            raise ValueError("change_reason is required for score overrides without a reason")
         return self
+
+    def normalized_overrides(self) -> dict[CriterionType, ScoreOverride]:
+        shared = (self.change_reason or "").strip()
+        return {
+            criterion: value if isinstance(value, ScoreOverride) else ScoreOverride(score=value, reason=shared)
+            for criterion, value in self.score_overrides.items()
+        }
+
+    def stored_comment(self) -> str:
+        """Text kept in the review row: the general comment, else the legacy shared reason."""
+        return (self.general_comment or self.change_reason or "").strip()
 
 
 class ManagerReviewRecord(BaseModel):
@@ -139,8 +174,129 @@ class ManagerReviewRecord(BaseModel):
     manager_id: str
     reviewed_at: datetime
     change_reason: str
+    general_comment: str | None = None
     ai_draft: SessionEvaluationResult
     approved_result: SessionEvaluationResult
+
+
+class ScoredAttempt(BaseModel):
+    """A completed attempt with parsed AI and approved results, for aggregation."""
+
+    session_id: str
+    advisor_id: str
+    scenario_id: str
+    completed_at: datetime
+    evaluation_status: EvaluationStatus
+    ai_draft: SessionEvaluationResult | None = None
+    approved: SessionEvaluationResult | None = None
+
+
+class CreateTodoInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str = Field(min_length=1, max_length=300)
+
+    @field_validator("text", mode="before")
+    @classmethod
+    def strip_text(cls, value):
+        return value.strip() if isinstance(value, str) else value
+
+
+class UpdateTodoInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    done: bool
+
+
+class ManagerTodo(BaseModel):
+    todo_id: str
+    text: str
+    done: bool
+    created_at: datetime
+    done_at: datetime | None = None
+
+
+class CriterionCell(BaseModel):
+    avg: float | None
+    n: int
+    insufficient: bool
+
+
+class SkillMatrixRow(BaseModel):
+    advisor_id: str
+    display_name: str
+    is_sample: bool
+    approved_sessions: int
+    overall_avg: float | None
+    criteria: dict[CriterionType, CriterionCell]
+
+
+class TrendPoint(BaseModel):
+    week_start: date
+    avg_score: float | None
+    attempts: int
+
+
+class AgreementRow(BaseModel):
+    criterion: CriterionType
+    reviewed: int
+    changed: int
+    changed_rate: float
+    mean_delta: float
+
+
+class QueueSummary(BaseModel):
+    pending: int
+    oldest_pending_at: datetime | None
+
+
+class OverdueAssignment(BaseModel):
+    assignment_id: str
+    advisor_id: str
+    advisor_name: str
+    title: str
+    due_date: date
+
+
+class AssignmentsSummary(BaseModel):
+    open: int
+    overdue: list[OverdueAssignment]
+
+
+class ManagerDashboard(BaseModel):
+    has_sample_data: bool
+    advisor_count: int
+    approved_attempts: int
+    weeks: int
+    skill_matrix: list[SkillMatrixRow]
+    team_trend: list[TrendPoint]
+    advisor_trends: dict[str, list[TrendPoint]]
+    ai_agreement: list[AgreementRow]
+    queue: QueueSummary
+    assignments: AssignmentsSummary
+
+
+class CriterionProgress(BaseModel):
+    latest_avg: float | None
+    change_4w: float | None
+    n: int
+
+
+class ScenarioProgress(BaseModel):
+    last_session_id: str
+    last_completed_at: datetime
+    last_status: str
+    last_score: float | None
+
+
+class AdvisorProgress(BaseModel):
+    approved_sessions: int
+    overall_avg: float | None
+    current_week_avg: float | None
+    change_8w: float | None
+    trend: list[TrendPoint]
+    criteria: dict[CriterionType, CriterionProgress]
+    scenarios: dict[str, ScenarioProgress]
 
 
 class PracticeRecordsRepository(Protocol):
@@ -178,6 +334,14 @@ class PracticeRecordsRepository(Protocol):
 
     async def team_overview(self) -> TeamOverview: ...
 
+    async def scored_attempts(self, advisor_id: str | None = None) -> list[ScoredAttempt]: ...
+
+    async def list_todos(self, manager_id: str) -> list[ManagerTodo]: ...
+
+    async def create_todo(self, manager_id: str, text: str) -> ManagerTodo: ...
+
+    async def set_todo_done(self, manager_id: str, todo_id: str, done: bool) -> ManagerTodo: ...
+
     async def approve(
         self, session_id: str, manager_id: str, decision: ManagerReviewDecision
     ) -> ManagerReviewRecord: ...
@@ -187,11 +351,16 @@ def approved_evaluation(draft: SessionEvaluationResult, decision: ManagerReviewD
     """Apply only evidence-backed score edits and recompute the aggregate in code."""
     updated = draft.model_copy(deep=True)
     criteria = {item.criterion: item for item in updated.evaluations}
-    for criterion, score in decision.score_overrides.items():
+    for criterion, override in decision.normalized_overrides().items():
         item = criteria.get(criterion)
         if item is None or item.status is not CriterionStatus.ASSESSED:
             raise ReviewConflictError("only assessed criteria may receive score overrides")
-        item.score = score
+        if override.score == item.score:
+            continue
+        if not override.reason.strip():
+            raise ReviewValidationError(f"Cần nhập lý do khi đổi điểm tiêu chí {criterion.value}.")
+        item.score = override.score
+        item.manager_reason = override.reason.strip()
     if decision.recommended_next_practice is not None:
         updated.recommended_next_practice = decision.recommended_next_practice
     scores = [item.score for item in updated.evaluations if item.status is CriterionStatus.ASSESSED]

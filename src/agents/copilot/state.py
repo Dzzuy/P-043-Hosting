@@ -29,6 +29,8 @@ RequirementId = Annotated[str, StringConstraints(strict=True, pattern=r"^R[1-9]\
 CitationId = Annotated[str, StringConstraints(strict=True, pattern=r"^C[1-9]\d*$")]
 AnswerText = Annotated[str, StringConstraints(strict=True, strip_whitespace=True, min_length=1, max_length=12000)]
 SuggestionText = Annotated[str, StringConstraints(strict=True, strip_whitespace=True, min_length=1, max_length=500)]
+MAX_REQUIREMENTS = 24
+MAX_CLAIMS = 32
 
 
 class RetrievalHit(TypedDict):
@@ -89,11 +91,9 @@ class ProductInsight(BaseModel):
     summary: str = Field(min_length=2, max_length=500)
     citation: Citation | None = None
     insight_id: str | None = None
-    variant: str | None = None
+    variant: str | None = Field(default=None, description="Explicit version/configuration from the request or resolved history. Null means an overview of available source-scoped versions; do not choose a default.")
     essential_conditions: str | None = None
-    advisory_hint: str | None = None
     applicability: Literal["confirmed", "conditional"] | None = None
-    origin_message_id: str | None = None
 
 
 class CopilotResponse(BaseModel):
@@ -107,12 +107,13 @@ class CopilotResponse(BaseModel):
     suggested_message: SuggestionText | None = None
     suggested_next_question: SuggestionText | None = None
     sales_actions: list[SuggestionText] = Field(default_factory=list, max_length=3)
-    missing_information: list[SuggestionText] = Field(default_factory=list, max_length=6)
+    missing_information: list[SuggestionText] = Field(default_factory=list, max_length=MAX_REQUIREMENTS)
     clarification_question: SuggestionText | None = None
 
     request_id: Annotated[str, StringConstraints(pattern=r"^[a-f0-9]{32}$")] | None = None
     reason_code: ReasonCode | None = None
     answer_kind: Literal["factual", "mixed", "coaching"] = "factual"
+    requirement_diagnostics: list["RequirementVerdict"] = Field(default_factory=list, max_length=MAX_REQUIREMENTS)
 
     @model_validator(mode="after")
     def check_status(self) -> "CopilotResponse":
@@ -151,32 +152,6 @@ class CopilotResponse(BaseModel):
         return self
 
 
-class VerbatimQuote(BaseModel):
-    """Separate excerpts from one source; never imply omitted text was contiguous."""
-
-    model_config = ConfigDict(extra="forbid", strict=True)
-    citation_id: CitationId
-    quote_parts: list[AnswerText] = Field(min_length=1, max_length=8)
-
-    @model_validator(mode="before")
-    @classmethod
-    def accept_legacy_quote(cls, value):
-        if isinstance(value, dict) and "quote" in value and "quote_parts" not in value:
-            value = dict(value)
-            value["quote_parts"] = [value.pop("quote")]
-        return value
-
-    @model_validator(mode="after")
-    def bound_excerpt_length(self):
-        if sum(len(part) for part in self.quote_parts) > 12000:
-            raise ValueError("combined quote_parts exceed 12000 characters")
-        return self
-
-
-class EvidenceQuote(VerbatimQuote):
-    pass
-
-
 class StrictContract(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
 
@@ -198,6 +173,22 @@ class Requirement(StrictContract):
     requirement_id: RequirementId
     description: SuggestionText
     kind: Literal["fact", "advice", "external"] = "fact"
+    metric: Literal[
+        "price", "range", "seats", "battery_capacity", "charging", "warranty", "policy", "equipment", "other"
+    ] = "other"
+    product_model: str | None = None
+    variant: str | None = None
+    qualifiers: list[SuggestionText] = Field(default_factory=list, max_length=6)
+    operation: Literal["lookup", "compare", "calculate"] = "lookup"
+    depends_on: list[RequirementId] = Field(default_factory=list, max_length=MAX_REQUIREMENTS)
+
+    @field_validator("product_model")
+    @classmethod
+    def canonical_model(cls, value):
+        if value:
+            match = re.search(r"\bVF[\s-]*(\d+)\b", value, re.I)
+            return "VF " + match.group(1) if match else value
+        return value
 
 
 class SearchRequest(StrictContract):
@@ -216,18 +207,18 @@ class SearchRequest(StrictContract):
 
 
 class PlannedSearch(SearchRequest):
-    requirement_ids: list[RequirementId] = Field(min_length=1, max_length=6)
+    requirement_ids: list[RequirementId] = Field(min_length=1, max_length=MAX_REQUIREMENTS)
 
 
 class SearchPlan(StrictContract):
-    searches: list[PlannedSearch] = Field(min_length=1, max_length=3)
+    searches: list[PlannedSearch] = Field(min_length=1, max_length=8)
 
 
 class IntakeDecision(StrictContract):
     guard_decision: GuardDecision
     task: Literal["knowledge", "comparison", "objection", "call_preparation"] = "knowledge"
     route: Literal["simple", "complex", "clarify", "out_of_scope", "blocked"]
-    requirements: list[Requirement] = Field(default_factory=list, max_length=6)
+    requirements: list[Requirement] = Field(default_factory=list, max_length=MAX_REQUIREMENTS)
     product_models: list[str] = Field(default_factory=list, max_length=6)
     simple_search: SearchRequest | None = None
     clarification_question: SuggestionText | None = None
@@ -242,7 +233,33 @@ class IntakeDecision(StrictContract):
     def check_route(self):
         if len({r.requirement_id for r in self.requirements}) != len(self.requirements):
             raise ValueError("duplicate requirements")
-        if self.guard_decision.decision == "allow" and self.route in {"simple", "complex"} and not self.requirements:
+        requirements = {r.requirement_id: r for r in self.requirements}
+        visited, active = set(), set()
+
+        def visit(rid):
+            if rid in active:
+                raise ValueError("cyclic requirement dependencies")
+            if rid in visited:
+                return
+            active.add(rid)
+            requirement = requirements[rid]
+            if len(set(requirement.depends_on)) != len(requirement.depends_on):
+                raise ValueError("duplicate requirement dependencies")
+            for dependency in requirement.depends_on:
+                if dependency not in requirements:
+                    raise ValueError("unknown requirement dependency")
+                visit(dependency)
+            active.remove(rid)
+            visited.add(rid)
+
+        for rid in requirements:
+            visit(rid)
+        if (
+            self.guard_decision.decision == "allow"
+            and self.route in {"simple", "complex"}
+            and not self.requirements
+            and self.answer_kind != "coaching"
+        ):
             raise ValueError("retrieval requires requirements")
         if (
             self.route == "simple"
@@ -257,17 +274,26 @@ class IntakeDecision(StrictContract):
 
 
 class GroundedClaim(StrictContract):
-    text: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=1000)]
-    requirement_ids: list[RequirementId] = Field(min_length=1, max_length=6)
-    citation_ids: list[CitationId] = Field(min_length=1, max_length=8)
+    text: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=3000)]
+    kind: Literal["fact", "advice", "limitation"] = "fact"
+    requirement_ids: list[RequirementId] = Field(min_length=1, max_length=MAX_REQUIREMENTS)
+    citation_ids: list[CitationId] = Field(default_factory=list, max_length=40)
+
+    @model_validator(mode="after")
+    def check_links(self):
+        if self.kind == "fact" and not self.citation_ids:
+            raise ValueError("factual claims require citations")
+        if len(set(self.requirement_ids)) != len(self.requirement_ids):
+            raise ValueError("duplicate requirement links")
+        if len(set(self.citation_ids)) != len(self.citation_ids):
+            raise ValueError("duplicate citation links")
+        return self
 
 
 class GeneratedAnswer(StrictContract):
-    claims: list[GroundedClaim] = Field(default_factory=list, max_length=12)
-    missing_information: list[SuggestionText] = Field(default_factory=list, max_length=6)
+    claims: list[GroundedClaim] = Field(min_length=1, max_length=MAX_CLAIMS)
     suggested_message: SuggestionText | None = None
     suggested_next_question: SuggestionText | None = None
-    sales_actions: list[SuggestionText] = Field(default_factory=list, max_length=3)
 
 
 VerificationError = Literal[
@@ -281,7 +307,16 @@ VerificationError = Literal[
     "missing_evidence",
     "policy_conflict",
     "unsafe_suggestion",
+    "comparison_basis",
+    "unsupported_scope",
 ]
+
+
+class EvidenceProof(StrictContract):
+    """A verbatim source anchor, not an application-derived semantic verdict."""
+
+    citation_id: CitationId
+    quote: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=500)]
 
 
 class ClaimVerdict(StrictContract):
@@ -289,66 +324,52 @@ class ClaimVerdict(StrictContract):
     status: Literal["supported", "unsupported", "uncertain"]
     error_codes: list[VerificationError] = Field(default_factory=list, max_length=3)
     feedback: Annotated[str, StringConstraints(max_length=300)] = ""
+    evidence_proofs: list[EvidenceProof] = Field(default_factory=list, max_length=12,
+        description="Quote source facts and their scope/conditions from this claim's citations; include conflicting evidence when rejecting a claim.")
 
 
-class GroundingVerdict(StrictContract):
-    claim_verdicts: list[ClaimVerdict] = Field(default_factory=list, max_length=12)
-    answered_requirement_ids: list[RequirementId] = Field(default_factory=list, max_length=6)
-    missing_requirement_ids: list[RequirementId] = Field(default_factory=list, max_length=6)
-    recovery: Literal["none", "regenerate", "read_context", "search", "clarify", "conflict"] = "none"
-    anchor_citation_ids: list[CitationId] = Field(default_factory=list, max_length=2)
-    conflict_citation_ids: list[CitationId] = Field(default_factory=list, max_length=8)
-    clarification_question: SuggestionText | None = None
+class RequirementVerdict(StrictContract):
+    requirement_id: RequirementId
+    evidence_citation_ids: list[CitationId] = Field(default_factory=list, max_length=40)
+    evidence_proofs: list[EvidenceProof] = Field(default_factory=list, max_length=24,
+        description="Independently inventory source values and applicability before judging the answer. For an overview include every relevant available version, not only versions used in the draft.")
+    evidence_reason: Annotated[str, StringConstraints(max_length=500)] = Field(default="",
+        description="Explain whether the quoted evidence establishes the requested scope, quantity/units and conditions. Reporting a source limitation does not establish the requested fact.")
+    evidence_status: Literal["sufficient", "partial", "not_found", "unknown"] = "unknown"
+    status: Literal["answered", "missing"]
+    supporting_claim_indices: list[int] = Field(default_factory=list, max_length=MAX_CLAIMS)
+    missing_information: Annotated[str, StringConstraints(max_length=500)] = ""
+    blocker: Literal[
+        "none", "answer_omission", "incorrect_answer", "insufficient_context",
+        "missing_input", "external_data", "source_conflict", "verification_uncertain",
+    ] = "none"
+
+
+class StructuredGroundingReview(StrictContract):
+    """The checker supplies judgments; application code derives coverage and approval."""
+
+    # Source inventory precedes answer judgments in the provider output schema.
+    requirement_verdicts: list[RequirementVerdict] = Field(default_factory=list, max_length=MAX_REQUIREMENTS)
+    claim_verdicts: list[ClaimVerdict] = Field(min_length=1, max_length=MAX_CLAIMS)
+    recovery: Literal["none", "regenerate", "search"] = "none"
     feedback: Annotated[str, StringConstraints(max_length=500)] = ""
-    suggestions_safe: bool = False
+    suggestions_safe: bool
 
 
 class SelfCheckVerdict(BaseModel):
+    """Application-derived review summary; never accepted as model output or graph state."""
+
     grounded: bool
+    supported_claim_indices: list[int] = Field(default_factory=list)
     feedback: Annotated[str, StringConstraints(max_length=500)] = ""
     unsupported_claims: list[SuggestionText] = Field(default_factory=list, max_length=5)
-    missing_information: list[SuggestionText] = Field(default_factory=list, max_length=6)
-    recovery: str = "none"
+    missing_information: list[SuggestionText] = Field(default_factory=list, max_length=MAX_REQUIREMENTS)
+    recovery: Literal["none", "regenerate", "search"] = "none"
     missing_requirement_ids: list[str] = Field(default_factory=list)
     answered_requirement_ids: list[str] = Field(default_factory=list)
-    suggestions_safe: bool = False
+    requirement_diagnostics: list[RequirementVerdict] = Field(default_factory=list)
 
     model_config = ConfigDict(extra="forbid", strict=True)
-
-    @model_validator(mode="before")
-    @classmethod
-    def _adapt_verdict(cls, data: Any) -> Any:
-        if isinstance(data, dict):
-            if "claim_verdicts" in data and "grounded" not in data:
-                verdicts = data.get("claim_verdicts", [])
-                recovery = str(data.get("recovery", "none"))
-                all_supported = bool(verdicts) and all(v.get("status") == "supported" for v in verdicts)
-                if recovery == "regenerate":
-                    all_supported = False
-                missing = [str(r) for r in data.get("missing_requirement_ids", [])]
-                safe = bool(data.get("suggestions_safe", False))
-                answered = [str(r) for r in data.get("answered_requirement_ids", [])]
-                return {
-                    "grounded": all_supported,
-                    "feedback": "Phát hiện phát biểu không được hỗ trợ" if not all_supported else "",
-                    "unsupported_claims": ["unsupported claim"] if not all_supported else [],
-                    "missing_information": missing[:3],
-                    "missing_requirement_ids": missing,
-                    "answered_requirement_ids": answered,
-                    "recovery": recovery,
-                    "suggestions_safe": safe,
-                }
-        return data
-
-    @model_validator(mode="after")
-    def _validate_disjoint(self) -> "SelfCheckVerdict":
-        if self.grounded and self.unsupported_claims:
-            raise ValueError("grounded=True cannot have unsupported_claims")
-        if set(self.answered_requirement_ids) & set(self.missing_requirement_ids):
-            self.answered_requirement_ids = [
-                r for r in self.answered_requirement_ids if r not in self.missing_requirement_ids
-            ]
-        return self
 
 
 class VerifiedAnswerSnapshot(BaseModel):
@@ -357,21 +378,18 @@ class VerifiedAnswerSnapshot(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
 
     answer: AnswerText
-    draft_hash: str
-    context_hash: str
-    requirements_hash: str
     resolved_date: str
-    corpus_fingerprint: str = ""
     citations: list[Citation] = Field(default_factory=list)
     answered_requirement_ids: list[str] = Field(default_factory=list)
     missing_requirement_ids: list[str] = Field(default_factory=list)
     missing_information: list[SuggestionText] = Field(default_factory=list)
     status: Literal["answered", "partial"]
     reason_code: ReasonCode | None = None
-    created_at_attempt: int = 0
     answer_kind: Literal["factual", "mixed", "coaching"] = "factual"
     suggested_message: SuggestionText | None = None
     suggested_next_question: SuggestionText | None = None
+    requirement_diagnostics: list[RequirementVerdict] = Field(default_factory=list, max_length=MAX_REQUIREMENTS)
+    evidence_fingerprints: dict[str, str] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def _validate_snapshot_invariants(self) -> "VerifiedAnswerSnapshot":
@@ -380,12 +398,6 @@ class VerifiedAnswerSnapshot(BaseModel):
         if self.status == "answered" and self.missing_information:
             raise ValueError("answered snapshot cannot contain missing_information")
         return self
-
-
-# Verbatim excerpt contracts remain available for source utilities, not the graph.
-class EvidenceFinding(VerbatimQuote):
-    requirement_id: RequirementId
-    assessment: SuggestionText
 
 
 CopilotRoute = Literal[
@@ -401,46 +413,40 @@ CopilotRoute = Literal[
 ]
 
 ProfileName = Literal["simple", "complex", "corrective"]
-RetrievalMode = Literal["search", "read_context"]
 
 
 class CopilotState(TypedDict, total=False):
+    jev_assessment_cache: dict[str, Any]
+    jev_status: str
+    jev_conflict_chunk_ids: list[str]
+    generated_answer: GeneratedAnswer | None
+    grounding_review: StructuredGroundingReview | None
     verified_snapshot: VerifiedAnswerSnapshot | None
-    evidence_map: dict[str, list[str]]
     recovery_requirement_ids: list[str]
-    overflow_anchor_ids: list[str]
+    repack_pending: bool
     evidence_selection_diagnostics: list[dict[str, Any]]
-    selected_anchor_ids: list[str]
-    evidence_query_provenance: dict[str, list[int]]
-    evidence_query_references: dict[str, list[str]]
     rejected_evidence_ids: list[str]
     query: str
     target_date: date | str | None
     resolved_date: str
     customer_context: str
     memory_summary: str | None
-    product_models: list[str]
     domain: str
     history: list[dict[str, str]]
-    task: str
     answer_kind: Literal["factual", "mixed", "coaching"]
     analysis: IntakeDecision
     requirements: list[Requirement]
     search_plan: SearchPlan
     route: CopilotRoute
-    retrieval_mode: RetrievalMode
     profile_name: ProfileName
     raw_search_results: list[dict[str, Any]]
-    new_hits: list[RetrievalHit]
     candidate_evidence: list[RetrievalHit]
     evidence_registry: list[RetrievalHit]
     selected_evidence: list[RetrievalHit]
     answer_context: str
     draft_answer: str | None
-    self_check: SelfCheckVerdict | None
     unsupported_claims: list[str]
     feedback: str
-    read_anchor_ids: list[str]
     generation_count: int
     corrective_retrieval_count: int
     retrieval_rounds: int
@@ -455,5 +461,8 @@ class CopilotState(TypedDict, total=False):
     snapshot: Any
     readiness_loader: Any
     request_id: str
-    trace: list[dict[str, Any]]
     progress_queue: Any
+
+
+# Resolve the diagnostic contract before HTTP response subclasses are constructed.
+CopilotResponse.model_rebuild()

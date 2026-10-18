@@ -1,6 +1,5 @@
 """Unit tests for Sales Copilot docx extraction and PostgreSQL repository."""
 
-import pytest
 from src.config import get_settings
 from src.integrations.sales_copilot_repository import SQLSalesCopilotRepository
 from src.services.sales_conversation_service import SalesConversationService, extract_paragraphs_from_docx

@@ -9,6 +9,11 @@ async function mutate(endpoint, options) {
 }
 
 export const salesCopilotApi = {
+  getIntelligence(id) { return request(`/sales-copilot/customers/${id}/intelligence`); },
+  getAnalyzedSource(id, analysis, message) { return request(`/sales-copilot/customers/${id}/analyses/${analysis}/messages/${message}`); },
+  historyChat(id, analysis_id, query) { return request(`/sales-copilot/customers/${id}/history-chat`, { method: 'POST', body: JSON.stringify({ analysis_id, query }) }); },
+  reviewProposal(id, proposal, approve, changes) { return mutate(`/sales-copilot/customers/${id}/proposals/${proposal}/review`, { method: 'POST', body: JSON.stringify({ approve, changes }) }); },
+  confirmMilestone(id, event, revoke) { return mutate(`/sales-copilot/customers/${id}/milestones/${event}/confirm`, { method: 'POST', body: JSON.stringify({ revoke }) }); },
   getDashboard(params = {}) { return request(`/sales-copilot/dashboard?${new URLSearchParams(params)}`); },
   getCalendar(week) { return request(`/sales-copilot/calendar?week_start=${week}`); },
   createPersonalTask(task) { return mutate('/sales-copilot/tasks', { method: 'POST', body: JSON.stringify(task) }); },
@@ -60,12 +65,6 @@ export const salesCopilotApi = {
     });
   },
 
-  async getNextBestActions(conversationId, force = false) {
-    return request(`/sales-copilot/conversations/${conversationId}/recommendations?force=${force}`, {
-      method: 'POST',
-    });
-  },
-
   async generateDraft(conversationId, force = false) {
     return request(`/sales-copilot/conversations/${conversationId}/draft?force=${force}`, {
       method: 'POST',
@@ -80,6 +79,12 @@ export const salesCopilotApi = {
     return mutate(`/sales-copilot/conversations/${conversationId}/tasks`, {
       method: 'POST',
       body: JSON.stringify(task),
+    });
+  },
+
+  async suggestTasksFromMessage(conversationId, messageId) {
+    return request(`/sales-copilot/conversations/${encodeURIComponent(conversationId)}/messages/${encodeURIComponent(messageId)}/suggest-tasks`, {
+      method: 'POST',
     });
   },
 

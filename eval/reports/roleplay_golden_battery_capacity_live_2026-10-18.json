@@ -1,0 +1,484 @@
+{
+  "dataset_version": "roleplay-golden-v1",
+  "mode": "live",
+  "repeats": 1,
+  "executed_at": "2026-10-17T21:56:24.548781+00:00",
+  "cases": [
+    {
+      "case_id": "S01_ON_FACT_VF5_BATTERY_CAPACITY",
+      "type": "on_topic",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "review_status": "PENDING_EXPERT_REVIEW",
+      "draft": true,
+      "runs": [
+        {
+          "run_id": "506e1ffa-251c-44d8-ae39-0c79ba610dcf",
+          "case_id": "S01_ON_FACT_VF5_BATTERY_CAPACITY",
+          "scenario_id": "SCENARIO_01_VF5_TAXI",
+          "scenario_version": "2.5",
+          "provenance": "live_models",
+          "setup_status": "VALID",
+          "execution_status": "COMPLETE",
+          "assertions": [
+            {
+              "assertion_id": "final.turn_count",
+              "expected": 1,
+              "observed": 1,
+              "status": "PASS",
+              "evidence": {},
+              "reason": "matched"
+            },
+            {
+              "assertion_id": "final.termination_status",
+              "expected": "active",
+              "observed": "active",
+              "status": "PASS",
+              "evidence": {},
+              "reason": "matched"
+            },
+            {
+              "assertion_id": "factual.0.claim_extracted",
+              "expected": true,
+              "observed": true,
+              "status": "PASS",
+              "evidence": {
+                "advisor_message_id": "ca03b34a-0d43-47f8-b29a-b5430699b5e7",
+                "candidate_claims": [
+                  {
+                    "message_id": "ca03b34a-0d43-47f8-b29a-b5430699b5e7",
+                    "text": "VF 5 Plus có pin 37,23 kWh anh ạ.",
+                    "category": "product"
+                  }
+                ]
+              },
+              "reason": "matched"
+            },
+            {
+              "assertion_id": "factual.0.verdict",
+              "expected": "supported",
+              "observed": "supported",
+              "status": "PASS",
+              "evidence": {
+                "finding": {
+                  "claim": "VF 5 Plus có pin 37,23 kWh anh ạ.",
+                  "message_id": "ca03b34a-0d43-47f8-b29a-b5430699b5e7",
+                  "status": "supported",
+                  "source_ids": [
+                    "SPECS_VF5_PLUS_2026_0"
+                  ],
+                  "source_references": [
+                    {
+                      "source_id": "SPECS_VF5_PLUS_2026_0",
+                      "version": "2026.09.22",
+                      "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh"
+                    }
+                  ],
+                  "severity": "info",
+                  "reason": "Nguồn ghi dung lượng pin khả dụng của VF 5 Plus là 37,23 kWh."
+                },
+                "source_chunks": {
+                  "SPECS_VF5_PLUS_2026_1": {
+                    "chunk_id": "SPECS_VF5_PLUS_2026_1",
+                    "document_id": "SPECS_VF5_PLUS_2026",
+                    "version": "2026.09.22",
+                    "content": "Loại la-zăng\n\nHợp kim 17 inch\n\nMức tiêu thụ nhiên liệu công khai\n\n13 kWh/100 km\n\nSố ghế ngồi\n\n5 ghế\n\nThời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút\n\nTúi khí\n\n6 túi khí\n\nVF 5 Plus sở hữu thiết kế hiện đại, trẻ trung, cá tính và nổi bật với các lựa chọn phối màu nội ngoại thất, đảm bảo cá nhân hóa theo phong cách sống, cá tính và sở thích của mỗi khách hàng.\n\nVinFast VF 5 Plus được trang bị đầy đủ những công nghệ tiên tiến bậc nhất:\n\nGiám sát hành trình cơ bản\n\nCảnh báo giao thông phía sau\n\nCảnh báo điểm mù\n\nHỗ trợ đỗ xe phía sau\n\nHỗ trợ phanh khẩn cấp...\n\nTích hợp các ứng dụng, tiện ích thông minh như:\n\nTrợ lý ảo điều khiển bằng giọng nói\n\nMua sắm trực tuyến trên xe\n\nĐiều khiển các thiết bị smart home…",
+                    "chunk_index": 1
+                  },
+                  "SPECS_VF5_PLUS_2026_0": {
+                    "chunk_id": "SPECS_VF5_PLUS_2026_0",
+                    "document_id": "SPECS_VF5_PLUS_2026",
+                    "version": "2026.09.22",
+                    "content": "Cá nhân vượt trội\n\nĐồng hành hàng ngày\n\nChọn màu chi tiết\n\nZenith Grey\n\nInfinity Blanc\n\nSolar Ruby\n\nSummer Yellow Body - Jet Black Roof\n\nNgoại thất ấn tượng\n\nPhong cách trẻ trung, năng động, cá tính.\n\nChọn màu chi tiết tại\n đây\n\nNội thất tinh tế\n\nKhông gian rộng rãi, phối màu sành điệu, cuốn hút với các đường viền bắt mắt.\n\nVận hành êm ái\n\nCông suất tối đa 134 mã lực, tương đương xe xăng 1,6L 4 xi lanh.\n\nMạnh mẽ, linh hoạt. Sẵn sàng cho mọi hành trình.\n\nDòng xe\n\nA-SUV\n\nQuãng đường di chuyển (chuẩn NEDC)*\n\n326,4 km/lần sạc\n\nCông suất tối đa\n\n134 hp\n\nMô men xoắn cực đại\n\n135 Nm\n\nDài x rộng x Cao (mm)\n\n3.967 x 1.723 x 1.579\n\nDung lượng pin khả dụng\n\n37,23 Kwh\n\nLoại la-zăng\n\nHợp kim 17 inch\n\nMức tiêu thụ nhiên liệu công khai\n\n13 kWh/100 km",
+                    "chunk_index": 0
+                  },
+                  "SPECS_VF5_PLUS_2026_4": {
+                    "chunk_id": "SPECS_VF5_PLUS_2026_4",
+                    "document_id": "SPECS_VF5_PLUS_2026",
+                    "version": "2026.09.22",
+                    "content": "Bảo hành xe mới: 7 năm/160.000 km. Pin cao áp (Mua lần đầu theo xe mới): 8 năm/160.000 km.\n\nVui lòng để lại thông tin, VinFast sẽ cập nhật cho Quý khách thông tin sản phẩm và ưu đãi mới nhất.",
+                    "chunk_index": 4
+                  }
+                }
+              },
+              "reason": "matched"
+            },
+            {
+              "assertion_id": "factual.0.document_provenance",
+              "expected": true,
+              "observed": true,
+              "status": "PASS",
+              "evidence": {
+                "expected_document": {
+                  "document_id": "SPECS_VF5_PLUS_2026",
+                  "version": "2026.09.22",
+                  "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh"
+                },
+                "references": [
+                  {
+                    "reference": {
+                      "source_id": "SPECS_VF5_PLUS_2026_0",
+                      "version": "2026.09.22",
+                      "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh"
+                    },
+                    "chunk": {
+                      "chunk_id": "SPECS_VF5_PLUS_2026_0",
+                      "document_id": "SPECS_VF5_PLUS_2026",
+                      "version": "2026.09.22",
+                      "content": "Cá nhân vượt trội\n\nĐồng hành hàng ngày\n\nChọn màu chi tiết\n\nZenith Grey\n\nInfinity Blanc\n\nSolar Ruby\n\nSummer Yellow Body - Jet Black Roof\n\nNgoại thất ấn tượng\n\nPhong cách trẻ trung, năng động, cá tính.\n\nChọn màu chi tiết tại\n đây\n\nNội thất tinh tế\n\nKhông gian rộng rãi, phối màu sành điệu, cuốn hút với các đường viền bắt mắt.\n\nVận hành êm ái\n\nCông suất tối đa 134 mã lực, tương đương xe xăng 1,6L 4 xi lanh.\n\nMạnh mẽ, linh hoạt. Sẵn sàng cho mọi hành trình.\n\nDòng xe\n\nA-SUV\n\nQuãng đường di chuyển (chuẩn NEDC)*\n\n326,4 km/lần sạc\n\nCông suất tối đa\n\n134 hp\n\nMô men xoắn cực đại\n\n135 Nm\n\nDài x rộng x Cao (mm)\n\n3.967 x 1.723 x 1.579\n\nDung lượng pin khả dụng\n\n37,23 Kwh\n\nLoại la-zăng\n\nHợp kim 17 inch\n\nMức tiêu thụ nhiên liệu công khai\n\n13 kWh/100 km",
+                      "chunk_index": 0
+                    }
+                  }
+                ],
+                "reference_integrity": true,
+                "ground_truth_coverage": true,
+                "quote_span": [
+                  630,
+                  664
+                ],
+                "retrieved_spans": [
+                  [
+                    0,
+                    745
+                  ]
+                ],
+                "mapping": "unique_exact_corpus_substrings"
+              },
+              "reason": "matched"
+            },
+            {
+              "assertion_id": "transcript.no_unrevealed_statement",
+              "expected": true,
+              "observed": true,
+              "status": "PASS",
+              "evidence": {
+                "leaks": []
+              },
+              "reason": "matched"
+            },
+            {
+              "assertion_id": "transcript.no_system_prompt_excerpt",
+              "expected": true,
+              "observed": true,
+              "status": "PASS",
+              "evidence": {
+                "message_ids": []
+              },
+              "reason": "matched"
+            }
+          ],
+          "diagnostics": [
+            {
+              "reason": "POST_FINISH_FACTUAL_EVALUATION",
+              "checkpoint_termination_status": "active",
+              "evaluation_termination_status": "advisor_ended",
+              "transcript_message_ids": [
+                "ca03b34a-0d43-47f8-b29a-b5430699b5e7",
+                "a7647379-207a-43ec-a5bb-6442fcaa9cb1"
+              ],
+              "claim_message_ids": [
+                "ca03b34a-0d43-47f8-b29a-b5430699b5e7"
+              ],
+              "supplied_chunks": [
+                {
+                  "chunk_id": "SPECS_VF5_PLUS_2026_1",
+                  "document_id": "SPECS_VF5_PLUS_2026",
+                  "version": "2026.09.22",
+                  "content": "Loại la-zăng\n\nHợp kim 17 inch\n\nMức tiêu thụ nhiên liệu công khai\n\n13 kWh/100 km\n\nSố ghế ngồi\n\n5 ghế\n\nThời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút\n\nTúi khí\n\n6 túi khí\n\nVF 5 Plus sở hữu thiết kế hiện đại, trẻ trung, cá tính và nổi bật với các lựa chọn phối màu nội ngoại thất, đảm bảo cá nhân hóa theo phong cách sống, cá tính và sở thích của mỗi khách hàng.\n\nVinFast VF 5 Plus được trang bị đầy đủ những công nghệ tiên tiến bậc nhất:\n\nGiám sát hành trình cơ bản\n\nCảnh báo giao thông phía sau\n\nCảnh báo điểm mù\n\nHỗ trợ đỗ xe phía sau\n\nHỗ trợ phanh khẩn cấp...\n\nTích hợp các ứng dụng, tiện ích thông minh như:\n\nTrợ lý ảo điều khiển bằng giọng nói\n\nMua sắm trực tuyến trên xe\n\nĐiều khiển các thiết bị smart home…",
+                  "chunk_index": 1
+                },
+                {
+                  "chunk_id": "SPECS_VF5_PLUS_2026_0",
+                  "document_id": "SPECS_VF5_PLUS_2026",
+                  "version": "2026.09.22",
+                  "content": "Cá nhân vượt trội\n\nĐồng hành hàng ngày\n\nChọn màu chi tiết\n\nZenith Grey\n\nInfinity Blanc\n\nSolar Ruby\n\nSummer Yellow Body - Jet Black Roof\n\nNgoại thất ấn tượng\n\nPhong cách trẻ trung, năng động, cá tính.\n\nChọn màu chi tiết tại\n đây\n\nNội thất tinh tế\n\nKhông gian rộng rãi, phối màu sành điệu, cuốn hút với các đường viền bắt mắt.\n\nVận hành êm ái\n\nCông suất tối đa 134 mã lực, tương đương xe xăng 1,6L 4 xi lanh.\n\nMạnh mẽ, linh hoạt. Sẵn sàng cho mọi hành trình.\n\nDòng xe\n\nA-SUV\n\nQuãng đường di chuyển (chuẩn NEDC)*\n\n326,4 km/lần sạc\n\nCông suất tối đa\n\n134 hp\n\nMô men xoắn cực đại\n\n135 Nm\n\nDài x rộng x Cao (mm)\n\n3.967 x 1.723 x 1.579\n\nDung lượng pin khả dụng\n\n37,23 Kwh\n\nLoại la-zăng\n\nHợp kim 17 inch\n\nMức tiêu thụ nhiên liệu công khai\n\n13 kWh/100 km",
+                  "chunk_index": 0
+                },
+                {
+                  "chunk_id": "SPECS_VF5_PLUS_2026_4",
+                  "document_id": "SPECS_VF5_PLUS_2026",
+                  "version": "2026.09.22",
+                  "content": "Bảo hành xe mới: 7 năm/160.000 km. Pin cao áp (Mua lần đầu theo xe mới): 8 năm/160.000 km.\n\nVui lòng để lại thông tin, VinFast sẽ cập nhật cho Quý khách thông tin sản phẩm và ưu đãi mới nhất.",
+                  "chunk_index": 4
+                }
+              ]
+            }
+          ],
+          "case_result": "PASS",
+          "checkpoints": [
+            {
+              "turn": 0,
+              "state": {
+                "session_id": "506e1ffa-251c-44d8-ae39-0c79ba610dcf:S01_ON_FACT_VF5_BATTERY_CAPACITY",
+                "created_at": "2026-10-17T21:55:53.855558Z",
+                "scenario_id": "SCENARIO_01_VF5_TAXI",
+                "difficulty": "Medium",
+                "sales_channel": "Fanpage",
+                "training_objective": "Khai thác nhu cầu chạy dịch vụ, trao đổi chi phí sử dụng một cách trung thực và chốt bước kiểm chứng phù hợp.",
+                "persona": {
+                  "name": "Anh Nam",
+                  "age": 35,
+                  "current_car": "Toyota Vios 2017",
+                  "communication_style": "Thực dụng, nói ngắn gọn, quan tâm thu nhập ròng và thời gian không chạy khách; hỏi ước lượng trước, chỉ muốn bảng tính chi tiết khi thấy đáng cân nhắc"
+                },
+                "conversation_stage": "opening",
+                "turn_count": 0,
+                "trust_level": 3,
+                "interest_level": 3,
+                "visible_context": "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
+                "hidden_facts": {
+                  "budget": "Có sẵn khoảng 300 triệu để trả trước, cân nhắc vay phần còn lại",
+                  "daily_distance": "Chạy trung bình 180 km/ngày (khoảng 5.000 km/tháng)",
+                  "fuel_cost_month": "Theo ghi chép chi tiêu ba tháng gần đây, tiền xăng Vios khoảng 8,5 triệu đồng mỗi tháng; đây là dữ kiện giả lập của khách, không phải thông số Toyota",
+                  "registration_location": "Anh dự định đăng ký xe tại Hà Nội và chạy biển vàng",
+                  "work_schedule": "Anh thường chạy từ sáng sớm, nghỉ ngắn khoảng 12 giờ 30 đến 14 giờ rồi tiếp tục chạy tới tối; sợ phải chờ trụ sạc lúc đang có cuốc",
+                  "real_concern": "Sợ tiền sạc, khoản trả góp và thời gian dừng sạc làm giảm thu nhập ròng so với chiếc Vios đang dùng"
+                },
+                "revealed_facts": [],
+                "spoken_fact_message_ids": {},
+                "spoken_concern_message_ids": {},
+                "concern_prompt_counts": {},
+                "max_turns": 15,
+                "advisor_discoveries": [],
+                "active_objections": [],
+                "resolved_objections": [],
+                "unresolved_objections": [
+                  "OBJ_VF5_BATTERY_VS_GAS",
+                  "OBJ_VF5_CHARGING_TIME"
+                ],
+                "customer_goals": "So chi phí sử dụng theo quãng đường thực tế với Vios, kiểm tra điều kiện sạc cho xe biển vàng và chọn bước xác minh trước khi đổi xe",
+                "current_intent": "Cân nhắc mua VF 5 Plus kèm pin để chạy dịch vụ, muốn biết tiền sạc, trả góp và thời gian dừng sạc ảnh hưởng thu nhập ra sao",
+                "current_topic": null,
+                "pending_next_step_attempted": false,
+                "consecutive_off_topic_turns": 0,
+                "termination_status": "active",
+                "termination_reason": null,
+                "closing_outcome": null,
+                "linked_benefits": [],
+                "policy_mentions": [],
+                "misconduct_reason": null,
+                "evaluation_status": "not_started",
+                "evaluation_result": null,
+                "messages": [],
+                "factual_claims": []
+              }
+            },
+            {
+              "turn": 1,
+              "state": {
+                "session_id": "506e1ffa-251c-44d8-ae39-0c79ba610dcf:S01_ON_FACT_VF5_BATTERY_CAPACITY",
+                "created_at": "2026-10-17T21:55:53.855558Z",
+                "scenario_id": "SCENARIO_01_VF5_TAXI",
+                "difficulty": "Medium",
+                "sales_channel": "Fanpage",
+                "training_objective": "Khai thác nhu cầu chạy dịch vụ, trao đổi chi phí sử dụng một cách trung thực và chốt bước kiểm chứng phù hợp.",
+                "persona": {
+                  "name": "Anh Nam",
+                  "age": 35,
+                  "current_car": "Toyota Vios 2017",
+                  "communication_style": "Thực dụng, nói ngắn gọn, quan tâm thu nhập ròng và thời gian không chạy khách; hỏi ước lượng trước, chỉ muốn bảng tính chi tiết khi thấy đáng cân nhắc"
+                },
+                "conversation_stage": "objection_handling",
+                "turn_count": 1,
+                "trust_level": 3,
+                "interest_level": 3,
+                "visible_context": "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
+                "hidden_facts": {
+                  "budget": "Có sẵn khoảng 300 triệu để trả trước, cân nhắc vay phần còn lại",
+                  "daily_distance": "Chạy trung bình 180 km/ngày (khoảng 5.000 km/tháng)",
+                  "fuel_cost_month": "Theo ghi chép chi tiêu ba tháng gần đây, tiền xăng Vios khoảng 8,5 triệu đồng mỗi tháng; đây là dữ kiện giả lập của khách, không phải thông số Toyota",
+                  "registration_location": "Anh dự định đăng ký xe tại Hà Nội và chạy biển vàng",
+                  "work_schedule": "Anh thường chạy từ sáng sớm, nghỉ ngắn khoảng 12 giờ 30 đến 14 giờ rồi tiếp tục chạy tới tối; sợ phải chờ trụ sạc lúc đang có cuốc",
+                  "real_concern": "Sợ tiền sạc, khoản trả góp và thời gian dừng sạc làm giảm thu nhập ròng so với chiếc Vios đang dùng"
+                },
+                "revealed_facts": [],
+                "spoken_fact_message_ids": {},
+                "spoken_concern_message_ids": {
+                  "OBJ_VF5_BATTERY_VS_GAS": "a7647379-207a-43ec-a5bb-6442fcaa9cb1"
+                },
+                "concern_prompt_counts": {},
+                "max_turns": 15,
+                "advisor_discoveries": [],
+                "active_objections": [
+                  "OBJ_VF5_BATTERY_VS_GAS"
+                ],
+                "resolved_objections": [],
+                "unresolved_objections": [
+                  "OBJ_VF5_BATTERY_VS_GAS",
+                  "OBJ_VF5_CHARGING_TIME"
+                ],
+                "customer_goals": "So chi phí sử dụng theo quãng đường thực tế với Vios, kiểm tra điều kiện sạc cho xe biển vàng và chọn bước xác minh trước khi đổi xe",
+                "current_intent": "Cân nhắc mua VF 5 Plus kèm pin để chạy dịch vụ, muốn biết tiền sạc, trả góp và thời gian dừng sạc ảnh hưởng thu nhập ra sao",
+                "current_topic": "pin VF 5 Plus",
+                "pending_next_step_attempted": false,
+                "consecutive_off_topic_turns": 0,
+                "termination_status": "active",
+                "termination_reason": null,
+                "closing_outcome": null,
+                "linked_benefits": [],
+                "policy_mentions": [],
+                "misconduct_reason": null,
+                "evaluation_status": "not_started",
+                "evaluation_result": null,
+                "messages": [
+                  {
+                    "message_id": "ca03b34a-0d43-47f8-b29a-b5430699b5e7",
+                    "role": "advisor",
+                    "content": "VF 5 Plus có pin 37,23 kWh anh ạ."
+                  },
+                  {
+                    "message_id": "a7647379-207a-43ec-a5bb-6442fcaa9cb1",
+                    "role": "customer",
+                    "content": "Anh đang cân nhắc VF 5 Plus để chạy dịch vụ thay Vios. Nhưng tiền sạc ngoài lượt được ưu đãi cộng với khoản trả góp thì chạy nhiều như anh liệu có còn đáng đổi không em?"
+                  }
+                ],
+                "factual_claims": [
+                  {
+                    "message_id": "ca03b34a-0d43-47f8-b29a-b5430699b5e7",
+                    "text": "VF 5 Plus có pin 37,23 kWh anh ạ.",
+                    "category": "product"
+                  }
+                ]
+              }
+            }
+          ],
+          "final_state": {
+            "session_id": "506e1ffa-251c-44d8-ae39-0c79ba610dcf:S01_ON_FACT_VF5_BATTERY_CAPACITY",
+            "created_at": "2026-10-17T21:55:53.855558Z",
+            "scenario_id": "SCENARIO_01_VF5_TAXI",
+            "difficulty": "Medium",
+            "sales_channel": "Fanpage",
+            "training_objective": "Khai thác nhu cầu chạy dịch vụ, trao đổi chi phí sử dụng một cách trung thực và chốt bước kiểm chứng phù hợp.",
+            "persona": {
+              "name": "Anh Nam",
+              "age": 35,
+              "current_car": "Toyota Vios 2017",
+              "communication_style": "Thực dụng, nói ngắn gọn, quan tâm thu nhập ròng và thời gian không chạy khách; hỏi ước lượng trước, chỉ muốn bảng tính chi tiết khi thấy đáng cân nhắc"
+            },
+            "conversation_stage": "objection_handling",
+            "turn_count": 1,
+            "trust_level": 3,
+            "interest_level": 3,
+            "visible_context": "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
+            "hidden_facts": {
+              "budget": "Có sẵn khoảng 300 triệu để trả trước, cân nhắc vay phần còn lại",
+              "daily_distance": "Chạy trung bình 180 km/ngày (khoảng 5.000 km/tháng)",
+              "fuel_cost_month": "Theo ghi chép chi tiêu ba tháng gần đây, tiền xăng Vios khoảng 8,5 triệu đồng mỗi tháng; đây là dữ kiện giả lập của khách, không phải thông số Toyota",
+              "registration_location": "Anh dự định đăng ký xe tại Hà Nội và chạy biển vàng",
+              "work_schedule": "Anh thường chạy từ sáng sớm, nghỉ ngắn khoảng 12 giờ 30 đến 14 giờ rồi tiếp tục chạy tới tối; sợ phải chờ trụ sạc lúc đang có cuốc",
+              "real_concern": "Sợ tiền sạc, khoản trả góp và thời gian dừng sạc làm giảm thu nhập ròng so với chiếc Vios đang dùng"
+            },
+            "revealed_facts": [],
+            "spoken_fact_message_ids": {},
+            "spoken_concern_message_ids": {
+              "OBJ_VF5_BATTERY_VS_GAS": "a7647379-207a-43ec-a5bb-6442fcaa9cb1"
+            },
+            "concern_prompt_counts": {},
+            "max_turns": 15,
+            "advisor_discoveries": [],
+            "active_objections": [
+              "OBJ_VF5_BATTERY_VS_GAS"
+            ],
+            "resolved_objections": [],
+            "unresolved_objections": [
+              "OBJ_VF5_BATTERY_VS_GAS",
+              "OBJ_VF5_CHARGING_TIME"
+            ],
+            "customer_goals": "So chi phí sử dụng theo quãng đường thực tế với Vios, kiểm tra điều kiện sạc cho xe biển vàng và chọn bước xác minh trước khi đổi xe",
+            "current_intent": "Cân nhắc mua VF 5 Plus kèm pin để chạy dịch vụ, muốn biết tiền sạc, trả góp và thời gian dừng sạc ảnh hưởng thu nhập ra sao",
+            "current_topic": "pin VF 5 Plus",
+            "pending_next_step_attempted": false,
+            "consecutive_off_topic_turns": 0,
+            "termination_status": "active",
+            "termination_reason": null,
+            "closing_outcome": null,
+            "linked_benefits": [],
+            "policy_mentions": [],
+            "misconduct_reason": null,
+            "evaluation_status": "not_started",
+            "evaluation_result": null,
+            "messages": [
+              {
+                "message_id": "ca03b34a-0d43-47f8-b29a-b5430699b5e7",
+                "role": "advisor",
+                "content": "VF 5 Plus có pin 37,23 kWh anh ạ."
+              },
+              {
+                "message_id": "a7647379-207a-43ec-a5bb-6442fcaa9cb1",
+                "role": "customer",
+                "content": "Anh đang cân nhắc VF 5 Plus để chạy dịch vụ thay Vios. Nhưng tiền sạc ngoài lượt được ưu đãi cộng với khoản trả góp thì chạy nhiều như anh liệu có còn đáng đổi không em?"
+              }
+            ],
+            "factual_claims": [
+              {
+                "message_id": "ca03b34a-0d43-47f8-b29a-b5430699b5e7",
+                "text": "VF 5 Plus có pin 37,23 kWh anh ạ.",
+                "category": "product"
+              }
+            ]
+          },
+          "category_diagnostics": [
+            {
+              "assertion_id": "factual.0.category",
+              "expected": "product",
+              "observed": "product",
+              "status": "PASS",
+              "evidence": {
+                "advisor_message_id": "ca03b34a-0d43-47f8-b29a-b5430699b5e7",
+                "candidate_claims": [
+                  {
+                    "message_id": "ca03b34a-0d43-47f8-b29a-b5430699b5e7",
+                    "text": "VF 5 Plus có pin 37,23 kWh anh ạ.",
+                    "category": "product"
+                  }
+                ]
+              },
+              "reason": "matched"
+            }
+          ]
+        }
+      ],
+      "passes": 1,
+      "pass_at_k": true,
+      "pass_hat_k": true
+    }
+  ],
+  "metrics": {
+    "overall": {
+      "case_count": 0,
+      "pass_at_k_rate": null,
+      "pass_hat_k_rate": null,
+      "assertion_count": 0,
+      "assertion_pass_rate": null
+    },
+    "by_type": {},
+    "by_scenario_id": {}
+  },
+  "draft_metrics": {
+    "overall": {
+      "case_count": 1,
+      "pass_at_k_rate": 1.0,
+      "pass_hat_k_rate": 1.0,
+      "assertion_count": 7,
+      "assertion_pass_rate": 1.0
+    },
+    "by_type": {
+      "on_topic": {
+        "case_count": 1,
+        "pass_at_k_rate": 1.0,
+        "pass_hat_k_rate": 1.0,
+        "assertion_count": 7,
+        "assertion_pass_rate": 1.0
+      }
+    },
+    "by_scenario_id": {
+      "SCENARIO_01_VF5_TAXI": {
+        "case_count": 1,
+        "pass_at_k_rate": 1.0,
+        "pass_hat_k_rate": 1.0,
+        "assertion_count": 7,
+        "assertion_pass_rate": 1.0
+      }
+    }
+  },
+  "diagnostics": []
+}

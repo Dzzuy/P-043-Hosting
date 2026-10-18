@@ -26,26 +26,22 @@ def test_attack_suite_covers_three_untrusted_surfaces_without_real_corpus():
 @pytest.mark.asyncio
 async def test_harness_flags_a_forged_policy_even_when_citation_shape_is_valid(monkeypatch):
     from src.agents.copilot import model_io
+    from tests.test_agents.test_copilot_agentic import checked, generated
 
     class MaliciousModel:
         async def ainvoke(self, messages):
             payload = json.loads(messages[-1].content)
-            if "output_schema" not in payload:
-                return SimpleNamespace(content=f"{FALSE_POLICY} [C1].")
-            return SimpleNamespace(content=json.dumps({
-                "grounded": False,
-                "feedback": "Nguồn không hỗ trợ mức giảm giá.",
-                "unsupported_claims": [FALSE_POLICY],
-                "missing_information": [],
-                "answered_requirement_ids": [],
-                "missing_requirement_ids": ["R1"],
-                "recovery": "none",
-                "suggestions_safe": False,
-            }))
+            output = (
+                generated(FALSE_POLICY)
+                if payload["output_contract"] == "GeneratedAnswer"
+                else checked("unsupported", recovery="none")
+            )
+            return SimpleNamespace(content=json.dumps(output))
 
     monkeypatch.setattr(model_io, "get_llm", lambda **_: MaliciousModel())
     result = await probe_source("forged_discount", "Giá niêm yết VF 5 là 529 triệu đồng.")
 
     assert result["status"] == "FAIL"
     assert result["validation_status"] == "valid"
+    assert result["model_status"] == "unverified"
     assert result["attack_marker_present"] is True

@@ -11,7 +11,7 @@ import { CHANGE_EVENT } from './agendaResource';
 import './agenda.css';
 
 const pages = [['dashboard', 'Dashboard', LayoutDashboard], ['customers', 'Khách hàng', UsersRound], ['calendar', 'Lịch sự kiện', CalendarDays]];
-export function CopilotWorkspace({ currentUser }) {
+export function CopilotWorkspace({ currentUser, onOpenDocument }) {
   const [page, setPage] = useState('dashboard'); const [customerOpened, setCustomerOpened] = useState(false);
   const [calendarOpened, setCalendarOpened] = useState(false); const [intent, setIntent] = useState(null);
   const [calendarWeek, setCalendarWeek] = useState(() => mondayOf()); const [createCustomers, setCreateCustomers] = useState(null);
@@ -24,10 +24,10 @@ export function CopilotWorkspace({ currentUser }) {
   function navigate(value) { if (value === 'customers') setCustomerOpened(true); if (value === 'calendar') setCalendarOpened(true); setPage(value); }
   function openCustomer(item) { if (!item.conversation_id) return; setIntent({ conversationId: item.conversation_id, tool: item.tool || (item.id ? 'tasks' : null), taskId: item.id, nonce: Date.now() }); navigate('customers'); }
   function openCalendar(value) { setCalendarWeek(mondayOf(value ? dateKey(value) : dateKey())); navigate('calendar'); }
-  return <div className="copilot-shell"><nav className="copilot-sidebar" aria-label="Các trang Trợ lý Copilot"><span className="copilot-sidebar-title">KHÔNG GIAN CỦA BẠN</span>{pages.map(([id, label, Icon]) => <button type="button" key={id} title={label} aria-current={page === id ? 'page' : undefined} className={page === id ? 'is-active' : ''} onClick={() => navigate(id)}><Icon size={19} /><span>{label}</span></button>)}<p>Chăm sóc khách hàng<br />và quản lý lịch cá nhân.</p></nav>
+  return <div className="copilot-shell"><nav className="copilot-sidebar" aria-label="Các trang Trợ lý Copilot"><span className="copilot-sidebar-title">KHÔNG GIAN CỦA BẠN</span>{pages.map(([id, label, Icon]) => <button type="button" key={id} title={label} aria-current={page === id ? 'page' : undefined} className={page === id ? 'is-active' : ''} onClick={() => navigate(id)}><Icon size={19} /><span>{label}</span></button>)}</nav>
     <main className="copilot-pages"><div className="copilot-subpage" hidden={page !== 'dashboard'}><DashboardView currentUser={currentUser} active={page === 'dashboard'} onCreate={setCreateCustomers} onEdit={setEditing} onCustomer={openCustomer} onCalendar={openCalendar} focusedTask={focusedTask} onClearFocus={() => setFocusedTask(null)} /></div>
-      {customerOpened && <div className="copilot-subpage copilot-customers" hidden={page !== 'customers'}><CustomerSalesCopilotView currentUser={currentUser} active={page === 'customers'} navigationIntent={intent} /></div>}
-      {calendarOpened && <div className="copilot-subpage" hidden={page !== 'calendar'}><CalendarView currentUser={currentUser} active={page === 'calendar'} week={calendarWeek} onWeekChange={setCalendarWeek} onCustomer={openCustomer} onTask={(item) => { setFocusedTask(item); navigate('dashboard'); }} /></div>}
+      {customerOpened && <div className="copilot-subpage copilot-customers" hidden={page !== 'customers'}><CustomerSalesCopilotView onOpenDocument={onOpenDocument} currentUser={currentUser} active={page === 'customers'} navigationIntent={intent} /></div>}
+      {calendarOpened && <div className="copilot-subpage" hidden={page !== 'calendar'}><CalendarView currentUser={currentUser} active={page === 'calendar'} week={calendarWeek} onWeekChange={setCalendarWeek} onCreate={setCreateCustomers} onEdit={setEditing} onCustomer={openCustomer} onTask={(item) => { setFocusedTask(item); navigate('dashboard'); }} /></div>}
     </main>
     {createCustomers && <CreateTaskDialog customers={createCustomers} onClose={() => setCreateCustomers(null)} onCreate={async (values) => { await salesCopilotApi.createPersonalTask(values); setCreateCustomers(null); }} />}
     {editing && <DetailDialog title="Công việc / lịch hẹn" onClose={() => setEditing(null)}><TaskEditor key={editing.id} task={editing} onCancel={() => setEditing(null)} onSave={async (values) => { await salesCopilotApi.editTask(editing.id, values); setEditing(null); }} /></DetailDialog>}

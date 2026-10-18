@@ -19,7 +19,6 @@ from sqlalchemy import (
     CheckConstraint,
     Column,
     DateTime,
-    Float,
     ForeignKey,
     Index,
     Integer,
@@ -77,7 +76,6 @@ class SQLSalesCopilotRepository:
             self.metadata,
             Column("id", String(64), primary_key=True),
             Column("customer_id", String(64), ForeignKey("copilot_customers.id"), nullable=False, index=True),
-            Column("channel", String(50), default="zalo_oa", nullable=False),
             Column("last_analyzed_at", DateTime(timezone=True), nullable=True),
             Column("analysis_version", Integer, default=0, nullable=False),
             Column("created_at", DateTime(timezone=True), nullable=False),
@@ -93,20 +91,6 @@ class SQLSalesCopilotRepository:
             Column("content", Text, nullable=False),
             Column("seq", Integer, nullable=False),
             Column("sent_at", DateTime(timezone=True), nullable=False),
-        )
-
-        self.facts = Table(
-            "copilot_customer_facts",
-            self.metadata,
-            Column("id", String(64), primary_key=True),
-            Column("customer_id", String(64), nullable=False, index=True),
-            Column("field", String(100), nullable=False),
-            Column("value_json", Text, nullable=False),
-            Column("verification_status", String(30), default="reported", nullable=False),
-            Column("confidence", Float, default=0.9, nullable=False),
-            Column("source_message_ids_json", Text, default="[]", nullable=False),
-            Column("note", Text, nullable=True),
-            Column("updated_at", DateTime(timezone=True), nullable=False),
         )
 
         self.snapshots = Table(
@@ -189,6 +173,8 @@ class SQLSalesCopilotRepository:
             Column("created_at", DateTime(timezone=True), nullable=False),
         )
 
+        from src.integrations.customer_intelligence_store import define_tables
+        self.intelligence_tables = define_tables(self.metadata)
         self._ready = False
         self._lock = Lock()
 
@@ -197,6 +183,8 @@ class SQLSalesCopilotRepository:
             with self._lock:
                 if not self._ready:
                     self.metadata.create_all(self.engine)
+                    from src.integrations.intelligence_migration import migrate_appointment_stages
+                    migrate_appointment_stages(self)
                     self._ready = True
 
     # -------------------------------------------------------------
@@ -250,9 +238,7 @@ class SQLSalesCopilotRepository:
                 score_row = conn.execute(
                     select(self.lead_scores).where(self.lead_scores.c.customer_id == cid)
                 ).mappings().first()
-                lead_stage = LeadStage(score_row["stage"]) if score_row else LeadStage.NEW
-                lead_score = score_row["score"] if score_row else 0
-                priority = score_row["action_priority"] if score_row else "medium"
+                lead_stage = (LeadStage(score_row["stage"]) if score_row["stage"] in LeadStage._value2member_map_ else None) if score_row else LeadStage.NEW
 
                 # get pending tasks count
                 pending_count = conn.execute(
@@ -285,8 +271,6 @@ class SQLSalesCopilotRepository:
                         created_at=r["created_at"],
                         updated_at=r["updated_at"],
                         lead_stage=lead_stage,
-                        lead_score=lead_score,
-                        action_priority=priority,
                         pending_tasks_count=len(pending_count),
                         interested_models=interested,
                     )
@@ -296,7 +280,7 @@ class SQLSalesCopilotRepository:
     # -------------------------------------------------------------
     # Conversation & Message Operations
     # -------------------------------------------------------------
-    def get_or_create_conversation(self, customer_id: str, channel: str = "zalo_oa") -> str:
+    def get_or_create_conversation(self, customer_id: str) -> str:
         self.ensure_schema()
         with self.engine.begin() as conn:
             existing = conn.execute(
@@ -311,7 +295,6 @@ class SQLSalesCopilotRepository:
                 insert(self.conversations).values(
                     id=conv_id,
                     customer_id=customer_id,
-                    channel=channel,
                     analysis_version=0,
                     created_at=now,
                     updated_at=now,
@@ -424,6 +407,12 @@ class SQLSalesCopilotRepository:
 
         return response_items
 
+    def customer_override_scope(self, outer=None):
+        outer = outer if outer is not None else self.conversations
+        scope = self.conversations.alias("override_customer_conversations")
+        return self.recommendations.c.conversation_id.in_(select(scope.c.id).where(
+            scope.c.customer_id == outer.c.customer_id).correlate(outer))
+
     def get_conversation_metadata(self, conversation_id: str, *, connection: Connection) -> dict[str, Any] | None:
         """Read one-to-one sections together, without multiplying messages or tasks."""
         self.ensure_schema()
@@ -433,7 +422,7 @@ class SQLSalesCopilotRepository:
                 order.append(self.recommendations.c.id.desc())
             return (
                 select(self.recommendations.c.payload_json)
-                .where(self.recommendations.c.conversation_id == self.conversations.c.id,
+                .where(self.customer_override_scope() if kind in ("profile_overrides", "lead_stage_override") else self.recommendations.c.conversation_id == self.conversations.c.id,
                        self.recommendations.c.type == kind)
                 .order_by(*order).limit(1).correlate(self.conversations).scalar_subquery()
             )
@@ -534,25 +523,9 @@ class SQLSalesCopilotRepository:
     ) -> None:
         self.ensure_schema()
         now = datetime.now(UTC)
+        if facts and not snapshot.facts:
+            snapshot = snapshot.model_copy(update={"facts": list(facts)})
         with self.engine.begin() as conn:
-            # delete existing facts and insert new ones
-            conn.execute(delete(self.facts).where(self.facts.c.customer_id == customer_id))
-            for f in facts:
-                conn.execute(
-                    insert(self.facts).values(
-                        id=uuid4().hex,
-                        customer_id=customer_id,
-                        field=f.field,
-                        value_json=json.dumps(f.value, ensure_ascii=False),
-                        verification_status=f.verification_status,
-                        confidence=f.confidence,
-                        source_message_ids_json=json.dumps(f.source_message_ids),
-                        note=f.note,
-                        updated_at=now,
-                    )
-                )
-
-            # upsert snapshot
             conn.execute(delete(self.snapshots).where(self.snapshots.c.customer_id == customer_id))
             conn.execute(
                 insert(self.snapshots).values(
@@ -649,6 +622,7 @@ class SQLSalesCopilotRepository:
         return {
             "customer_intelligence": metadata.get("customer_intelligence") if metadata.get("version") == row["version"] else None,
             "analyzed_through_seq": metadata.get("through_seq") if metadata.get("version") == row["version"] else None,
+            "stage": metadata.get("stage") if metadata.get("version") == row["version"] else None,
             "quick_summary": row["quick_summary"], "detailed_summary": row["detailed_summary"],
             "timeline": json.loads(row["timeline_json"]), "pending_items": json.loads(row["pending_items_json"]),
             "key_promises": json.loads(row["key_promises_json"]), "version": row["version"],
@@ -702,8 +676,9 @@ class SQLSalesCopilotRepository:
     def list_tasks_for_customer(self, customer_id: str, *, connection: Connection | None = None) -> list[dict[str, Any]]:
         self.ensure_schema()
         with nullcontext(connection) if connection is not None else self.engine.connect() as conn:
+            details = self.intelligence_tables["activity_details"]
             rows = conn.execute(
-                select(self.tasks)
+                select(self.tasks, details.c.location).outerjoin(details, details.c.task_id == self.tasks.c.id)
                 .where(self.tasks.c.customer_id == customer_id)
                 .order_by(self.tasks.c.created_at.desc())
             ).mappings().all()
@@ -722,6 +697,7 @@ class SQLSalesCopilotRepository:
                 "starts_at": (r["starts_at"].replace(tzinfo=UTC) if r["starts_at"].tzinfo is None else r["starts_at"]).isoformat() if r["starts_at"] else None,
                 "ends_at": (r["ends_at"].replace(tzinfo=UTC) if r["ends_at"].tzinfo is None else r["ends_at"]).isoformat() if r["ends_at"] else None,
                 "item_type": r["item_type"],
+                "location": r["location"] or "",
                 "priority": r["priority"],
                 "status": r["status"],
                 "source_message_ids": json.loads(r["source_message_ids_json"]),
@@ -763,10 +739,12 @@ class SQLSalesCopilotRepository:
     def save_profile_override(self, conversation_id: str, field: str, value: Any, advisor_id: str) -> None:
         """Serialize field edits and preserve confirmations across future AI analyses."""
         self.ensure_schema()
+        customer_id = self.owned_conversation(conversation_id, advisor_id)["customer_id"]
         with self.engine.begin() as conn:
-            conn.execute(select(self.conversations.c.id).where(self.conversations.c.id == conversation_id).with_for_update())
+            conn.execute(select(self.customers.c.id).where(self.customers.c.id == select(
+                self.conversations.c.customer_id).where(self.conversations.c.id == conversation_id).scalar_subquery()).with_for_update()).first()
             previous = conn.execute(select(self.recommendations.c.payload_json).where(
-                self.recommendations.c.conversation_id == conversation_id,
+                self.recommendations.c.conversation_id.in_(select(self.conversations.c.id).where(self.conversations.c.customer_id == customer_id)),
                 self.recommendations.c.type == "profile_overrides",
             ).order_by(self.recommendations.c.created_at.desc(), self.recommendations.c.id.desc()).limit(1)).scalar_one_or_none()
             overrides = json.loads(previous or "{}")
@@ -788,10 +766,10 @@ class SQLSalesCopilotRepository:
                 insert(self.lead_scores).values(
                     customer_id=status.customer_id,
                     stage=status.stage.value if hasattr(status.stage, "value") else str(status.stage),
-                    score=status.score,
-                    action_priority=status.action_priority,
+                    score=0,
+                    action_priority="medium",
                     rationale=status.rationale,
-                    breakdown_json=json.dumps([b.model_dump(mode="json") for b in status.score_breakdown], ensure_ascii=False, default=str),
+                    breakdown_json="[]",
                     updated_at=now,
                 )
             )
@@ -809,9 +787,8 @@ class SQLSalesCopilotRepository:
     @staticmethod
     def _lead_data(row) -> dict[str, Any]:
         return {
-            "customer_id": row["customer_id"], "stage": row["stage"], "score": row["score"],
-            "action_priority": row["action_priority"], "rationale": row["rationale"],
-            "breakdown": json.loads(row["breakdown_json"]),
+            "customer_id": row["customer_id"], "stage": row["stage"] if row["stage"] in LeadStage._value2member_map_ else None,
+            "rationale": row["rationale"],
             "updated_at": row["updated_at"].isoformat() if row["updated_at"] else None,
         }
 
@@ -827,11 +804,10 @@ class SQLSalesCopilotRepository:
             if row:
                 return SalesPreferences(
                     advisor_id=row["advisor_id"],
-                    nba_enabled=row["nba_enabled"],
                     draft_enabled=row["draft_enabled"],
                     notifications_enabled=row["notifications_enabled"],
                 )
-        return SalesPreferences(advisor_id=advisor_id, nba_enabled=False, draft_enabled=False, notifications_enabled=True)
+        return SalesPreferences(advisor_id=advisor_id, draft_enabled=False, notifications_enabled=True)
 
     def update_preferences(self, prefs: SalesPreferences) -> SalesPreferences:
         self.ensure_schema()
@@ -841,7 +817,7 @@ class SQLSalesCopilotRepository:
             conn.execute(
                 insert(self.preferences).values(
                     advisor_id=prefs.advisor_id,
-                    nba_enabled=prefs.nba_enabled,
+                    nba_enabled=False,
                     draft_enabled=prefs.draft_enabled,
                     notifications_enabled=prefs.notifications_enabled,
                     updated_at=now,
@@ -862,6 +838,9 @@ class SQLSalesCopilotRepository:
         now = datetime.now(UTC)
         rid = uuid4().hex
         with self.engine.begin() as conn:
+            if rec_type == "lead_stage_override":
+                conn.execute(select(self.customers.c.id).where(self.customers.c.id == select(
+                    self.conversations.c.customer_id).where(self.conversations.c.id == conversation_id).scalar_subquery()).with_for_update()).first()
             conn.execute(
                 insert(self.recommendations).values(
                     id=rid,

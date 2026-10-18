@@ -3,18 +3,13 @@
 
 $ErrorActionPreference = 'Stop'
 
-$HookFile = '.git/hooks/pre-push'
-
-# Git on Windows runs hooks via Git Bash, so the hook body must be bash.
-$HookBody = @'
-#!/usr/bin/env bash
-# Pre-push: sweep recent Antigravity / Gemini prompts, then submit AI logs.
-bash scripts/_pyrun.sh scripts/log_antigravity.py --auto || true
-bash scripts/_pyrun.sh scripts/submit_log.py || true
-exit 0
-'@
-
-Set-Content -Path $HookFile -Value $HookBody -Encoding UTF8 -NoNewline
+$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+Set-Location -LiteralPath $RepoRoot
+$HookFile = git -c "safe.directory=$($RepoRoot.Replace('\', '/'))" rev-parse --git-path hooks/pre-push
+if ($LASTEXITCODE -ne 0) { throw 'Cannot resolve Git hooks directory.' }
+$HookBody = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'hooks/pre-push')).Replace("`r`n", "`n")
+[IO.Directory]::CreateDirectory((Split-Path ([IO.Path]::GetFullPath($HookFile)))) | Out-Null
+[IO.File]::WriteAllText([IO.Path]::GetFullPath($HookFile), $HookBody, [Text.UTF8Encoding]::new($false))
 Write-Host "[ai-log] Git pre-push hook installed."
 
 if (-not (Test-Path .ai-log)) { New-Item -ItemType Directory -Path .ai-log | Out-Null }

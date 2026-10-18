@@ -43,7 +43,7 @@ export function CustomerProfile({ customer, onSourceClick, onConfirmFact }) {
       </div>;
     })}</dl>
     {!!customer.concerns.length && <div className="sw-intelligence-concerns"><h4>Mối quan tâm của khách</h4><ul>{customer.concerns.map((text, index) => <li key={index}>{text}</li>)}</ul></div>}
-    <details className="sw-intelligence-contact"><summary>Thông tin liên hệ</summary><p className="sw-profile-contact">{customer.phone}<br />{customer.location}<br />{customer.source}</p></details>
+    <details className="sw-intelligence-contact"><summary>Thông tin liên hệ</summary><p className="sw-profile-contact">{customer.phone}<br />{customer.location}</p></details>
     <p className="sw-info-note"><Info size={14} />Dữ kiện sales xác nhận được giữ khi AI phân tích lại.</p>
   </div>;
 }

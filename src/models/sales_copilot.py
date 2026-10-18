@@ -1,8 +1,6 @@
 """Data models and schemas for the AI Sales Copilot module.
 
-Supports F01 (Customer Understanding), F02 (Conversation Memory),
-F03 (Next Best Action), F04 (AI Message Drafting), F05 (Smart Follow-up),
-and F06 (Lead Classification & Scoring).
+Customer facts, versioned consultation memory, requested drafts and activities.
 """
 
 from datetime import UTC, datetime
@@ -24,7 +22,6 @@ class LeadStage(StrEnum):
     QUALIFIED = "qualified"
     CONSIDERING = "considering"
     NEGOTIATING = "negotiating"
-    APPOINTMENT = "appointment"
     DEPOSIT_PROCESS = "deposit_process"
     WON = "won"
     LOST = "lost"
@@ -66,9 +63,7 @@ class CustomerResponse(CustomerBase):
     id: str
     created_at: datetime
     updated_at: datetime | None = None
-    lead_stage: LeadStage = LeadStage.NEW
-    lead_score: int = Field(default=0, ge=0, le=100)
-    action_priority: str = "medium"
+    lead_stage: LeadStage | None = LeadStage.NEW
     pending_tasks_count: int = 0
     interested_models: list[str] = Field(default_factory=list)
 
@@ -97,7 +92,6 @@ class ConversationResponse(BaseModel):
     customer_id: str
     customer_name: str
     customer_location: str | None = None
-    channel: str = "zalo_oa"
     last_analyzed_at: datetime | None = None
     analysis_version: int = 0
     messages: list[ChatMessageResponse] = Field(default_factory=list)
@@ -107,6 +101,7 @@ class ConversationResponse(BaseModel):
     profile: dict[str, Any] = Field(default_factory=dict)
     memory: dict[str, Any] = Field(default_factory=dict)
     tasks: list[dict[str, Any]] = Field(default_factory=list)
+    milestones: list[dict[str, Any]] = Field(default_factory=list)
     lead_status: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -199,46 +194,17 @@ class FollowupTask(BaseModel):
 # F06: Lead Classification & Scoring
 # -------------------------------------------------------------
 
-class ScoreBreakdown(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    criterion: str
-    points: int
-    max_points: int
-    evidence: str
-
-
 class LeadStatus(BaseModel):
     model_config = ConfigDict(extra="ignore")
     customer_id: str
     stage: LeadStage = LeadStage.DISCOVERY
     stage_name: str = "Tìm hiểu nhu cầu"
-    score: int = Field(default=0, ge=0, le=100)
-    action_priority: Literal["low", "medium", "high", "urgent"] = "medium"
     rationale: str = ""
-    score_breakdown: list[ScoreBreakdown] = Field(default_factory=list)
 
 
 # -------------------------------------------------------------
 # F03 & F04: Next Best Action & Message Drafting
 # -------------------------------------------------------------
-
-class NextBestActionItem(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    action_type: str  # calculate_finance, schedule_test_drive, compare_products, answer_concern, wait
-    title: str
-    reason: str
-    priority: Literal["high", "medium", "low"] = "high"
-    source_message_ids: list[str] = Field(default_factory=list)
-    suggested_content: str | None = None
-    product_reference: str | None = None
-
-
-class NextBestActionResponse(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    conversation_id: str
-    actions: list[NextBestActionItem] = Field(default_factory=list)
-    generated_at: datetime = Field(default_factory=datetime.utcnow)
-
 
 class MessageDraftResponse(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -260,6 +226,5 @@ class MessageDraftResponse(BaseModel):
 class SalesPreferences(BaseModel):
     model_config = ConfigDict(extra="ignore")
     advisor_id: str
-    nba_enabled: bool = False
     draft_enabled: bool = False
     notifications_enabled: bool = True

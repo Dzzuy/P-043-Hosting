@@ -16,6 +16,15 @@ env/
 .env
 .env.local
 .env.production
+.env*
+!.env.example
+!.env.*.example
+
+# Local diagnostics, screenshots and disposable caches
+.tmp/
+/tmp/
+.pytest_cache/
+.ruff_cache/
 
 # IDE
 .vscode/
@@ -66,3 +75,18 @@ BUILD_PHASE_RULE.md
 sales-research.zip
 docs/guide/
 .neon
+.venv-eval/
+
+# Local evaluation artifacts. Version code, rubrics and calibration fixtures instead.
+/eval/results/copilot-*/
+/eval/results/p043-copilot-*/
+/eval/provenance/
+
+# Local database handoff, SQL dumps, and local migration scripts
+/db_handoff/
+/scripts/migrations/002_*.sql
+/scripts/migrations/003_*.sql
+/scripts/migrations/004_*.sql
+/scripts/migrations/005_*.sql
+/.agents/
+

@@ -1,17 +1,17 @@
 {
-  "version": "1.0",
   "hooks": {
     "UserPromptSubmit": [
       {
         "hooks": [
           {
-            "name": "log-prompt",
             "type": "command",
-            "command": "bash scripts/_pyrun.sh scripts/log_hook.py --tool=codex",
-            "timeout": 10
+            "command": "p=\"$PWD\"; while [ ! -f \"$p/scripts/_pyrun.sh\" ]; do [ \"$p\" != / ] || exit 1; p=\"$(dirname \"$p\")\"; done; bash \"$p/scripts/_pyrun.sh\" \"$p/scripts/log_hook.py\" --tool=codex",
+            "timeout": 10,
+            "commandWindows": "powershell -NoProfile -ExecutionPolicy Bypass -EncodedCommand JABwAD0AKABHAGUAdAAtAEwAbwBjAGEAdABpAG8AbgApAC4AUABhAHQAaAA7ACAAdwBoAGkAbABlACAAKAAtAG4AbwB0ACAAKABUAGUAcwB0AC0AUABhAHQAaAAgAC0ATABpAHQAZQByAGEAbABQAGEAdABoACAAKABKAG8AaQBuAC0AUABhAHQAaAAgACQAcAAgACcAcwBjAHIAaQBwAHQAcwAvAGwAbwBnAF8AYwBvAGQAZQB4AC4AcABzADEAJwApACkAKQAgAHsAIAAkAHAAYQByAGUAbgB0AD0AUwBwAGwAaQB0AC0AUABhAHQAaAAgACQAcAAgAC0AUABhAHIAZQBuAHQAOwAgAGkAZgAgACgALQBuAG8AdAAgACQAcABhAHIAZQBuAHQAKQAgAHsAIAB0AGgAcgBvAHcAIAAnAEEASQAgAGwAbwBnACAAbABhAHUAbgBjAGgAZQByACAAbgBvAHQAIABmAG8AdQBuAGQAJwAgAH0AOwAgACQAcAA9ACQAcABhAHIAZQBuAHQAIAB9ADsAIAAmACAAKABKAG8AaQBuAC0AUABhAHQAaAAgACQAcAAgACcAcwBjAHIAaQBwAHQAcwAvAGwAbwBnAF8AYwBvAGQAZQB4AC4AcABzADEAJwApAA=="
           }
         ]
       }
     ]
-  }
+  },
+  "description": "Record user prompts locally for AI log submission on Git push."
 }

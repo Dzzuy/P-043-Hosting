@@ -52,6 +52,19 @@ Import the same Git repository as a separate Vercel project. Set Root Directory 
 
 The browser calls `/api/v1` on the Vercel domain; the rewrite forwards to Render and keeps the auth cookie on the frontend origin. Preview deployments need deliberate `CORS_ORIGINS` and environment settings.
 
+## Sample data for the demo
+
+After deploying, make sure `DEMO_ADVISOR_PASSWORD` and `DEMO_MANAGER_PASSWORD` are set (they create `advisor.demo` / `manager.demo` if missing), then run once against the hosted database:
+
+```bash
+python scripts/seed_practice_showcase.py          # dry run
+python scripts/seed_practice_showcase.py --apply  # writes the sample data
+python scripts/seed_practice_showcase.py --reset  # previews a refresh without writing
+python scripts/seed_practice_showcase.py --reset --apply  # refreshes sample rows and dates
+```
+
+The script reads `DATABASE_URL` through the app settings, uses deterministic `showcase1_` ids so repeated `--apply` runs insert nothing, and has no production guard. The data is fictional and must never be used as evaluation evidence. It does not refresh dates on re-run; use `--reset --apply` to re-anchor times. Reset deletes only rows whose primary id starts with the script’s exact seed prefix from attempts, checkpoints, manager reviews, assignments, assignment links, and todos before reinserting them. It preserves all users and non-seed rows; without `--apply`, it only reports planned deletions and insertions.
+
 ## Practice Room voice mode
 
 The optional voice endpoints run in the same Render backend and use the same Neon `DATABASE_URL` as Practice sessions. The backend creates the additional `practice_voice_usage` table on first voice use; no recording or transcript text is stored in it. Back up Neon before the first deployment because this project does not have a schema migration framework.

@@ -7,7 +7,9 @@ from types import SimpleNamespace
 
 import httpx
 import pytest
+from cryptography.fernet import Fernet
 from fastapi import FastAPI, HTTPException
+from pydantic import SecretStr
 from sqlalchemy import create_engine, select, update
 from sqlalchemy.exc import OperationalError
 from starlette.requests import Request
@@ -37,6 +39,7 @@ def final_response():
 
 @pytest.fixture
 def lookup(tmp_path, monkeypatch):
+    monkeypatch.setattr(get_settings(), "sales_pii_key", SecretStr(Fernet.generate_key().decode()))
     engine = create_engine(f"sqlite:///{tmp_path / 'lookup.db'}", connect_args={"check_same_thread": False})
     sales = SQLSalesCopilotRepository("sqlite://", engine=engine)
     sales.ensure_schema()

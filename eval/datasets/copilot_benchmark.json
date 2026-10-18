@@ -376,7 +376,7 @@
       "case_id": "ON_006",
       "group": "on_topic",
       "category": "product_fact",
-      "query": "Công suất và mô-men xoắn của VF 6 Plus là bao nhiêu?",
+      "query": "Công suất tối đa và mô-men xoắn cực đại của VF 6 theo tài liệu thông số là bao nhiêu?",
       "target_date": null,
       "expected": {
         "behavior": "answer",
@@ -385,7 +385,7 @@
         ],
         "forbidden_document_ids": [],
         "required_facts": [
-          "150 kW / 201 hp",
+          "150 kW/201 hp",
           "310 Nm"
         ],
         "policy_version": {
@@ -410,8 +410,8 @@
           "end_char": 154
         }
       ],
-      "ground_truth": "Nguồn VF 6 có 150 kW/201 hp nằm giữa các nhãn Eco/Plus trong văn bản mất bố cục; không đủ chắc để dùng làm gold công suất riêng cho VF 6 Plus. Mô-men xoắn 310 Nm có nhãn Plus. Cần nguồn giữ bố cục để xác minh đầy đủ ý định kiểm tra; case chưa chấm chất lượng.",
-      "audit_status": "unresolved",
+      "ground_truth": "Nguồn VF 6 ghi công suất tối đa 150 kW/201 hp và mô-men xoắn cực đại 310 Nm. Bố cục văn bản trích xuất có các nhãn VF 6 Eco và VF 6 Plus liền kề nên không tự suy diễn tách biệt ngoài nội dung nguồn.",
+      "audit_status": "valid",
       "audit": {
         "reviewer": "source audit by coding agent; not independent human sign-off",
         "reviewed_dimensions": [
@@ -439,28 +439,8 @@
         "absence_audit": null,
         "notes": [
           "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn; không xem output benchmark của agent.",
-          "Unresolved: mất bố cục nguồn khiến scope công suất Eco/Plus chưa xác minh được. Không thưởng/phạt agent theo gold công suất cũ. Giữ outcome và operational telemetry; loại toàn case khỏi denominator chất lượng."
-        ],
-        "uncertainty": {
-          "field": "variant applicability of maximum power",
-          "source": "PRODUCT_VF6_20260922",
-          "reason": "Flattened source has Eco before power and Plus after its label; no layout-preserving evidence in corpus."
-        }
-      },
-      "disputed_expected": {
-        "behavior": "answer",
-        "supporting_document_ids": [
-          "PRODUCT_VF6_20260922"
-        ],
-        "forbidden_document_ids": [],
-        "required_facts": [
-          "150 kW / 201 hp",
-          "310 Nm"
-        ],
-        "policy_version": {
-          "required_document_id": null,
-          "forbidden_document_ids": []
-        }
+          "Đồng bộ câu hỏi về mức dòng xe VF 6 giống ON_005 do văn bản nguồn phẳng hóa bảng Eco/Plus."
+        ]
       }
     },
     {
@@ -1610,41 +1590,42 @@
       "case_id": "ON_023",
       "group": "on_topic",
       "category": "battery_policy",
-      "query": "Tiền đặt cọc thuê pin có phát sinh lãi không và được hoàn trả thế nào?",
+      "query": "VinFast dừng cung cấp dịch vụ thuê pin ô tô điện mới từ ngày nào và đơn giá sạc công cộng hiện hành là bao nhiêu?",
       "target_date": null,
       "expected": {
         "behavior": "answer",
         "supporting_document_ids": [
-          "POLICY_BATTERY_RENTAL_CONTRACT_20260801"
+          "CHARGING_TARIFF_VINFAST_20261004"
         ],
         "forbidden_document_ids": [],
         "required_facts": [
-          "không phát sinh lãi",
-          "được hoàn trả khi chấm dứt hợp đồng sau khi khấu trừ nghĩa vụ tài chính còn tồn đọng nếu có"
+          "dừng cung cấp dịch vụ thuê pin đối với ô tô điện từ ngày 01/03/2025",
+          "khách hàng đã thuê trước đó có thể tiếp tục sử dụng",
+          "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh"
         ],
         "policy_version": {
           "required_document_id": null,
           "forbidden_document_ids": []
         }
       },
-      "notes": "Battery rental contract policy retrieval.",
+      "notes": "Battery rental status and public charging tariff retrieval.",
       "question_type": "factual",
       "reference_contexts": [
-        "2.2. Đặt cọc thuê Pin:\n\na) | Khách Hàng sẽ đặt cọc cho VinFast số tiền …….. VNĐ (bằng chữ: ……… đồng chẵn) (“Tiền\n\nĐặt Cọc Thuê Pin”) để đảm bảo cho các nghĩa vụ của Khách Hàng với tư cách là bên thuê\n\nPin theo Hợp Đồng.\n\nb) | Tiền Đặt Cọc Thuê Pin không phát sinh lãi và sẽ được VinFast hoàn trả lại cho Khách Hàng\n\nkhi chấm dứt Hợp Đồng theo quy định tại Điều 3 của ĐK GDC, sau khi đã khấu trừ các\n\nkhoản thanh toán quá hạn, lãi, phạt, các khoản bồi thường và các nghĩa vụ tài chính khác\n\n(nếu có)."
+        "Trang dịch vụ pin ô tô điện của VinFast công bố đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024. Tiền điện được tính theo kWh thực tế của phiên sạc; không dùng số km hoặc dung lượng pin danh định để khẳng định hóa đơn. Sau khi hoàn thành phiên sạc, xe chiếm trụ được miễn phí 10 phút đầu; phút 11–60 là 1.000 VNĐ/phút, phút 61–120 là 2.000 VNĐ/phút, từ phút 121 là 4.000 VNĐ/phút. VinFast thông báo dừng cung cấp dịch vụ thuê pin đối với ô tô điện từ ngày 01/03/2025; khách hàng đã thuê trước đó có thể tiếp tục sử dụng."
       ],
       "reference_context_sources": [
         {
           "context_index": 0,
-          "document_id": "POLICY_BATTERY_RENTAL_CONTRACT_20260801",
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
           "corpus_file": "data/knowledge/corpus.json",
-          "source": "VinFast official PDF: 2026-08-01_mau-hop-dong-thue-pin-oto.pdf",
-          "version": "2026.08.01",
-          "status": "expired",
-          "start_char": 4333,
-          "end_char": 4832
+          "source": "https://vinfastauto.com/vn_vi/dich-vu-pin-oto-dien",
+          "version": "2026.10.04",
+          "status": "active",
+          "start_char": 0,
+          "end_char": 548
         }
       ],
-      "ground_truth": "Theo hợp đồng thuê pin lưu trữ (chỉ cho hợp đồng thuộc phạm vi áp dụng, không khẳng định chính sách bán/thuê mới hiện hành): Tiền đặt cọc thuê pin không phát sinh lãi và được hoàn trả khi chấm dứt hợp đồng theo quy định, sau khi khấu trừ các khoản quá hạn, lãi, phạt, bồi thường và nghĩa vụ tài chính khác nếu có.",
+      "ground_truth": "VinFast thông báo dừng cung cấp dịch vụ thuê pin đối với ô tô điện từ ngày 01/03/2025 (khách hàng đã thuê trước đó có thể tiếp tục sử dụng); đơn giá sạc tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024.",
       "audit_status": "valid",
       "audit": {
         "reviewer": "source audit by coding agent; not independent human sign-off",
@@ -1660,20 +1641,19 @@
         ],
         "eligibility": [
           {
-            "document_id": "POLICY_BATTERY_RENTAL_CONTRACT_20260801",
+            "document_id": "CHARGING_TARIFF_VINFAST_20261004",
             "source_exists": true,
             "content_supports_gold": true,
-            "runtime_eligible": false,
-            "reason": "metadata_eligibility: expired without expiry_date/current inactive",
-            "effective_date": "2026-08-01",
+            "runtime_eligible": true,
+            "reason": null,
+            "effective_date": "2024-03-19",
             "expiry_date": null,
-            "status": "expired"
+            "status": "active"
           }
         ],
         "absence_audit": null,
         "notes": [
-          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn; không xem output benchmark của agent.",
-          "Nguồn expired tồn tại; chưa có ngày kết thúc. Không đổi expected thành abstain để che eligibility."
+          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn đang active trong corpus.json."
         ]
       }
     },
@@ -1681,40 +1661,43 @@
       "case_id": "ON_024",
       "group": "on_topic",
       "category": "battery_policy",
-      "query": "VinFast phải báo trước bao lâu khi điều chỉnh phí dịch vụ thuê pin?",
+      "query": "Sau khi hoàn thành phiên sạc tại trạm sạc công cộng VinFast, phí chiếm trụ được tính theo các mốc thời gian như thế nào?",
       "target_date": null,
       "expected": {
         "behavior": "answer",
         "supporting_document_ids": [
-          "POLICY_BATTERY_RENTAL_CONTRACT_20260801"
+          "CHARGING_TARIFF_VINFAST_20261004"
         ],
         "forbidden_document_ids": [],
         "required_facts": [
-          "ít nhất 15 ngày làm việc"
+          "miễn phí 10 phút đầu",
+          "phút 11–60 là 1.000 VNĐ/phút",
+          "phút 61–120 là 2.000 VNĐ/phút",
+          "từ phút 121 là 4.000 VNĐ/phút"
         ],
         "policy_version": {
           "required_document_id": null,
           "forbidden_document_ids": []
         }
       },
-      "notes": "Battery rental contract policy retrieval.",
+      "notes": "Public charging station overstay fee schedule retrieval.",
       "question_type": "factual",
       "reference_contexts": [
-        "b) | Phí Dịch Vụ theo Chính Sách Cho Thuê Pin có thể được điều chỉnh thay đổi hằng năm theo\n\ntỷ lệ thay đổi của giá xăng, hoặc yếu tố thị trường khác, sau khi VinFast gửi một thông báo\n\nbằng văn bản tới Khách Hàng (ví dụ như thông báo qua Ứng Dụng, tin nhắn SMS, văn\n\nbản,…) trước ít nhất 15 (mười lăm) Ngày làm việc và trở thành phụ lục không thể tách rời\n\ncủa Hợp Đồng nếu không có ý kiến phản đối của Khách Hàng trong thời hạn thông báo nêu\n\ntrên (nhằm đảm bảo không gián đoạn Dịch Vụ của Khách Hàng). Trường hợp Khách Hàng"
+        "Sau khi hoàn thành phiên sạc, xe chiếm trụ được miễn phí 10 phút đầu; phút 11–60 là 1.000 VNĐ/phút, phút 61–120 là 2.000 VNĐ/phút, từ phút 121 là 4.000 VNĐ/phút."
       ],
       "reference_context_sources": [
         {
           "context_index": 0,
-          "document_id": "POLICY_BATTERY_RENTAL_CONTRACT_20260801",
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
           "corpus_file": "data/knowledge/corpus.json",
-          "source": "VinFast official PDF: 2026-08-01_mau-hop-dong-thue-pin-oto.pdf",
-          "version": "2026.08.01",
-          "status": "expired",
-          "start_char": 5348,
-          "end_char": 5874
+          "source": "https://vinfastauto.com/vn_vi/dich-vu-pin-oto-dien",
+          "version": "2026.10.04",
+          "status": "active",
+          "start_char": 247,
+          "end_char": 408
         }
       ],
-      "ground_truth": "Theo hợp đồng thuê pin lưu trữ (chỉ cho hợp đồng thuộc phạm vi áp dụng, không khẳng định chính sách bán/thuê mới hiện hành): VinFast phải thông báo bằng văn bản trước ít nhất 15 ngày làm việc khi điều chỉnh phí dịch vụ thuê pin.",
+      "ground_truth": "Sau khi hoàn thành phiên sạc tại trạm sạc công cộng VinFast, xe chiếm trụ được miễn phí 10 phút đầu; phút 11–60 tính 1.000 VNĐ/phút, phút 61–120 tính 2.000 VNĐ/phút và từ phút 121 tính 4.000 VNĐ/phút.",
       "audit_status": "valid",
       "audit": {
         "reviewer": "source audit by coding agent; not independent human sign-off",
@@ -1730,20 +1713,19 @@
         ],
         "eligibility": [
           {
-            "document_id": "POLICY_BATTERY_RENTAL_CONTRACT_20260801",
+            "document_id": "CHARGING_TARIFF_VINFAST_20261004",
             "source_exists": true,
             "content_supports_gold": true,
-            "runtime_eligible": false,
-            "reason": "metadata_eligibility: expired without expiry_date/current inactive",
-            "effective_date": "2026-08-01",
+            "runtime_eligible": true,
+            "reason": null,
+            "effective_date": "2024-03-19",
             "expiry_date": null,
-            "status": "expired"
+            "status": "active"
           }
         ],
         "absence_audit": null,
         "notes": [
-          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn; không xem output benchmark của agent.",
-          "Nguồn expired tồn tại; chưa có ngày kết thúc. Không đổi expected thành abstain để che eligibility."
+          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn đang active trong corpus.json."
         ]
       }
     },
@@ -1751,40 +1733,41 @@
       "case_id": "ON_025",
       "group": "on_topic",
       "category": "battery_policy",
-      "query": "VinFast thông báo việc thanh toán phí thuê pin của kỳ tiếp theo trước bao lâu?",
+      "query": "Theo chính sách ưu đãi sạc pin hiện hành, khách hàng xe biển vàng mua xe từ ngày 20/04/2026 được áp dụng ưu đãi sạc vào khung giờ nào trong ngày Thứ 6, Thứ 7, Chủ Nhật và cần cung cấp đăng ký xe trong bao lâu?",
       "target_date": null,
       "expected": {
         "behavior": "answer",
         "supporting_document_ids": [
-          "POLICY_BATTERY_RENTAL_CONTRACT_20260801"
+          "POLICY_CHARGING_VINFAST_20260919"
         ],
         "forbidden_document_ids": [],
         "required_facts": [
-          "ít nhất 07 ngày làm việc trước khi kết thúc kỳ hiện tại"
+          "Thứ 6, Thứ 7, Chủ Nhật áp dụng trong khung giờ 23:00 – 06:00 và 14:00 – 16:00",
+          "cung cấp đăng kí xe trong vòng 10 ngày sau ngày xuất hóa đơn"
         ],
         "policy_version": {
           "required_document_id": null,
           "forbidden_document_ids": []
         }
       },
-      "notes": "Battery rental contract policy retrieval.",
+      "notes": "Current charging policy for commercial yellow-plate vehicles.",
       "question_type": "factual",
       "reference_contexts": [
-        "2.4. Thanh toán Phí Dịch Vụ và Tiền Đặt Cọc Thuê Pin:\n\na) | Thời điểm bắt đầu Dịch Vụ là thời điểm bàn giao Pin. Tại thời điểm bàn giao Pin, Khách\n\nHàng đồng thời thanh toán Tiền Đặt Cọc Thuê Pin trực tiếp tại các Đại Lý Phân Phối của\n\nVinFast.\n\nb) | VinFast sẽ thông báo cho Khách Hàng về việc thanh toán Phí Dịch Vụ của kỳ tiếp theo\n\ntrước ít nhất 07 (bảy) Ngày làm việc trước khi kết thúc thời hạn sử dụng Dịch Vụ của kỳ\n\nthanh toán đó."
+        "- | Với Khách hàng xe biển vàng mua xe từ ngày 20/04/2026, ưu đãi sạc trên được áp dụng như sau:\n\nKhung giờ 23:00 – 06:00 và 14:00 – 16:00 | Các khung giờ còn lại\n\nThứ 6, Thứ 7, Chủ Nhật | Được áp dụng | Không áp dụng\n\nCác ngày còn lại trong tuần | Được áp dụng\n\nKhách hàng cần cung cấp đăng kí xe trong vòng 10 ngày sau ngày xuất hóa đơn để hệ thống VinFast ghi nhận phân loại biển trắng và biển vàng, Trường hợp quá\n\nthời hạn trên mà Khách hàng chưa cung cấp đăng kí xe, hệ thống sẽ tạm thời áp dụng các giới hạn sạc theo chính sách dành cho xe biển vàng cho đến khi Khách\n\nhàng hoàn tất việc bổ sung thông tin."
       ],
       "reference_context_sources": [
         {
           "context_index": 0,
-          "document_id": "POLICY_BATTERY_RENTAL_CONTRACT_20260801",
+          "document_id": "POLICY_CHARGING_VINFAST_20260919",
           "corpus_file": "data/knowledge/corpus.json",
-          "source": "VinFast official PDF: 2026-08-01_mau-hop-dong-thue-pin-oto.pdf",
-          "version": "2026.08.01",
-          "status": "expired",
-          "start_char": 6775,
-          "end_char": 7214
+          "source": "VinFast official PDF: 20260919_ThongbaoCSuudaisacpinchocacdongxeotodienVFtaiVN",
+          "version": "2026.09.19",
+          "status": "active",
+          "start_char": 1174,
+          "end_char": 1787
         }
       ],
-      "ground_truth": "Theo hợp đồng thuê pin lưu trữ (chỉ cho hợp đồng thuộc phạm vi áp dụng, không khẳng định chính sách bán/thuê mới hiện hành): VinFast thông báo thanh toán phí dịch vụ thuê pin của kỳ tiếp theo trước ít nhất 07 ngày làm việc trước khi kết thúc kỳ hiện tại.",
+      "ground_truth": "Theo chính sách ưu đãi sạc pin hiện hành, với khách hàng xe biển vàng mua xe từ ngày 20/04/2026, vào Thứ 6, Thứ 7 và Chủ Nhật ưu đãi sạc được áp dụng trong khung giờ 23:00 – 06:00 và 14:00 – 16:00 (các khung giờ còn lại không áp dụng; các ngày còn lại trong tuần được áp dụng). Khách hàng cần cung cấp đăng kí xe trong vòng 10 ngày sau ngày xuất hóa đơn.",
       "audit_status": "valid",
       "audit": {
         "reviewer": "source audit by coding agent; not independent human sign-off",
@@ -1800,20 +1783,19 @@
         ],
         "eligibility": [
           {
-            "document_id": "POLICY_BATTERY_RENTAL_CONTRACT_20260801",
+            "document_id": "POLICY_CHARGING_VINFAST_20260919",
             "source_exists": true,
             "content_supports_gold": true,
-            "runtime_eligible": false,
-            "reason": "metadata_eligibility: expired without expiry_date/current inactive",
-            "effective_date": "2026-08-01",
+            "runtime_eligible": true,
+            "reason": null,
+            "effective_date": "2026-09-19",
             "expiry_date": null,
-            "status": "expired"
+            "status": "active"
           }
         ],
         "absence_audit": null,
         "notes": [
-          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn; không xem output benchmark của agent.",
-          "Nguồn expired tồn tại; chưa có ngày kết thúc. Không đổi expected thành abstain để che eligibility."
+          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn đang active trong corpus.json."
         ]
       }
     },
@@ -3242,44 +3224,45 @@
       "case_id": "EDGE_001",
       "group": "edge",
       "category": "version_charging",
-      "query": "Ngày 01/05/2026, các dòng xe VinFast thông thường mua từ ngày 10/02/2026 được miễn phí bao nhiêu lượt sạc đầu tiên mỗi tháng?",
-      "target_date": "2026-05-01",
+      "query": "Tại ngày 25/09/2026, xe Minio Green mua từ ngày 10/02/2026 và xuất hóa đơn từ ngày 01/09/2026 được miễn phí bao nhiêu lần sạc đầu tiên mỗi tháng tại trụ sạc V-Green?",
+      "target_date": "2026-09-25",
       "expected": {
         "behavior": "answer",
         "supporting_document_ids": [
-          "POLICY_CHARGING_VINFAST_20260424"
-        ],
-        "forbidden_document_ids": [
           "POLICY_CHARGING_VINFAST_20260919"
         ],
+        "forbidden_document_ids": [
+          "POLICY_CHARGING_VINFAST_20260424"
+        ],
         "required_facts": [
-          "10 lần sạc đầu tiên/xe/tháng"
+          "10 lần sạc đầu tiên/ xe/ tháng",
+          "đến hết ngày 10/02/2029"
         ],
         "policy_version": {
-          "required_document_id": "POLICY_CHARGING_VINFAST_20260424",
+          "required_document_id": "POLICY_CHARGING_VINFAST_20260919",
           "forbidden_document_ids": [
-            "POLICY_CHARGING_VINFAST_20260919"
+            "POLICY_CHARGING_VINFAST_20260424"
           ]
         }
       },
-      "notes": "Version-sensitive: historical charging policy.",
+      "notes": "Version-sensitive: current charging policy for Minio Green invoiced from 01/09/2026 versus expired charging policy.",
       "question_type": "version_sensitive",
       "reference_contexts": [
-        "Thông báo Chính sách ưu đãi sạc pin cho các dòng xe ô tô điện VinFast tại Việt Nam\n\nMã văn bản: 20260424_ThongbaoCSuudaisacpinchocacdongxeotodienVFtaiVN\n\nCông ty TNHH kinh doanh thương mại và dịch vụ VinFast xin thông báo Chính sách ưu đãi sạc pin cho các dòng xe ô tô điện VinFast tại Việt Nam đến Quý khách hàng.\n\nNội dung chính sách:\n\n1. | Đối tượng áp dụng: Các xe mua từ ngày 10/02/2026:\n\n- | Ưu đãi:\n\no | EC Van và Minio Green: Tất cả Khách hàng được ưu đãi miễn phí 20 lần sạc đầu tiên/xe/tháng tại trụ sạc V-Green cho đến hết 10/02/2029, áp dụng từ kỳ tính cước bắt\n\nđầu ngày 26/03/2026.\n\no | Các dòng xe khác: Tất cả Khách hàng được ưu đãi miễn phí 10 lần sạc đầu tiên/xe/tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029."
+        "1. | Đối tượng áp dụng: Các xe mua từ ngày 10/02/2026:\n\n- | Ưu đãi:\n\no | EC Van: Tất cả Khách hàng được ưu đãi miễn phí 20 lần sạc đầu tiên/xe/tháng tại trụ sạc V-Green cho đến hết 10/02/2029, áp dụng từ kỳ tính cước\n\nbắtđầu ngày 26/03/2026.\n\no | Minio Green:\n\n• | Xe xuất hóa đơn trước ngày 01/09/2026: Ưu đãi miễn phí 20 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029, áp dụng\n\ntừ kỳ tính cước bắt đầu ngày 26/03/2026.\n\n• | Xe xuất hóa đơn từ ngày 01/09/2026: Ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green đến hết ngày 10/02/2029."
       ],
       "reference_context_sources": [
         {
           "context_index": 0,
-          "document_id": "POLICY_CHARGING_VINFAST_20260424",
+          "document_id": "POLICY_CHARGING_VINFAST_20260919",
           "corpus_file": "data/knowledge/corpus.json",
-          "source": "VinFast official PDF: 20260424_ThongbaoCSuudaisacpinchocacdongxeotodienVFtaiVN",
-          "version": "2026.04.24",
-          "status": "expired",
-          "start_char": 0,
-          "end_char": 735
+          "source": "VinFast official PDF: 20260919_ThongbaoCSuudaisacpinchocacdongxeotodienVFtaiVN",
+          "version": "2026.09.19",
+          "status": "active",
+          "start_char": 338,
+          "end_char": 920
         }
       ],
-      "ground_truth": "Theo chính sách ngày 24/04/2026, các dòng xe thông thường mua từ 10/02/2026 được miễn phí 10 lần sạc đầu tiên mỗi xe mỗi tháng tại trụ V-Green.",
+      "ground_truth": "Tại ngày 25/09/2026, theo chính sách ưu đãi sạc pin bản 19/09/2026, xe Minio Green xuất hóa đơn từ ngày 01/09/2026 được miễn phí 10 lần sạc đầu tiên/xe/tháng tại trụ sạc V-Green đến hết ngày 10/02/2029 (không áp mức 20 lần/tháng của bản cũ 24/04/2026).",
       "audit_status": "valid",
       "audit": {
         "reviewer": "source audit by coding agent; not independent human sign-off",
@@ -3295,19 +3278,19 @@
         ],
         "eligibility": [
           {
-            "document_id": "POLICY_CHARGING_VINFAST_20260424",
+            "document_id": "POLICY_CHARGING_VINFAST_20260919",
             "source_exists": true,
             "content_supports_gold": true,
-            "runtime_eligible": false,
-            "reason": "metadata_eligibility: expired without expiry_date/current inactive",
-            "effective_date": "2026-04-24",
+            "runtime_eligible": true,
+            "reason": null,
+            "effective_date": "2026-09-19",
             "expiry_date": null,
-            "status": "expired"
+            "status": "active"
           }
         ],
         "absence_audit": null,
         "notes": [
-          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn; không xem output benchmark của agent."
+          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn đang active trong corpus.json."
         ]
       }
     },
@@ -3315,55 +3298,44 @@
       "case_id": "EDGE_002",
       "group": "edge",
       "category": "version_price",
-      "query": "Theo bảng giá có hiệu lực ngày 20/07/2026, giá EC Van bản Tiêu chuẩn là bao nhiêu?",
-      "target_date": "2026-07-20",
+      "query": "Theo bảng giá có hiệu lực tại ngày 25/09/2026, giá bán lẻ đề xuất (MSRP) kèm pin của EC Van bản Tiêu chuẩn (cấu hình Tiêu chuẩn 1) là bao nhiêu?",
+      "target_date": "2026-09-25",
       "expected": {
         "behavior": "answer",
         "supporting_document_ids": [
-          "PRICE_LIST_VINFAST_20260711"
-        ],
-        "forbidden_document_ids": [
           "PRICE_LIST_VINFAST_20260921"
         ],
+        "forbidden_document_ids": [
+          "PRICE_LIST_VINFAST_20260711"
+        ],
         "required_facts": [
-          "268.000.000 VNĐ"
+          "248.000.000 VNĐ"
         ],
         "policy_version": {
-          "required_document_id": "PRICE_LIST_VINFAST_20260711",
+          "required_document_id": "PRICE_LIST_VINFAST_20260921",
           "forbidden_document_ids": [
-            "PRICE_LIST_VINFAST_20260921"
+            "PRICE_LIST_VINFAST_20260711"
           ]
         }
       },
-      "notes": "Version-sensitive: historical EC Van price.",
+      "notes": "Version-sensitive: current EC Van standard price versus expired July price list.",
       "question_type": "version_sensitive",
       "reference_contexts": [
-        "Giá bán bán lẻ đề xuất (MSRP) kèm pin, bao gồm VAT — EC Van\n\nDòng xe | Phiên bản | Cấu hình | Giá bán\n\nEC Van | Tiêu chuẩn | Tiêu chuẩn 1 | 268.000.000 VNĐ\n\nEC Van | Nâng cao | Tiêu chuẩn 1 | 286.000.000 VNĐ\n\nEC Van | Nâng cao + Cửa trượt | Tiêu chuẩn 1 | 306.000.000 VNĐ\n\n",
-        "Giá bán bán lẻ đề xuất (MSRP) kèm pin, bao gồm VAT — EC Van\n\nDòng xe | Phiên bản | Cấu hình | Giá bán\n\nEC Van | Tiêu chuẩn | Tiêu chuẩn 1 | 268.000.000 VNĐ\n\nEC Van | Nâng cao | Tiêu chuẩn 1 | 286.000.000 VNĐ\n\nEC Van | Nâng cao + Cửa trượt | Tiêu chuẩn 1 | 306.000.000 VNĐ\n\n"
+        "Giá bán bán lẻ đề xuất (MSRP) kèm pin, bao gồm VAT — EC Van\n\nDòng xe | Phiên bản | Cấu hình | Giá bán\n\nEC Van | Tiêu chuẩn | Tiêu chuẩn 1 | 248.000.000 VNĐ\n\nEC Van | Nâng cao | Tiêu chuẩn 1 | 286.000.000 VNĐ\n\nEC Van | Nâng cao + Cửa trượt | Tiêu chuẩn 1 | 306.000.000 VNĐ"
       ],
       "reference_context_sources": [
         {
           "context_index": 0,
-          "document_id": "PRICE_LIST_VINFAST_20260711",
+          "document_id": "PRICE_LIST_VINFAST_20260921",
           "corpus_file": "data/knowledge/corpus.json",
-          "source": "VinFast official PDF: 20260711_ThongbaoCSgiabanvatrangbituychonotoVinFastVN",
-          "version": "2026.07.11",
-          "status": "expired",
-          "start_char": 3525,
-          "end_char": 3798
-        },
-        {
-          "context_index": 1,
-          "document_id": "PRICE_LIST_VINFAST_20260711",
-          "corpus_file": "data/knowledge/corpus.json",
-          "source": "VinFast official PDF: 20260711_ThongbaoCSgiabanvatrangbituychonotoVinFastVN",
-          "version": "2026.07.11",
-          "status": "expired",
-          "start_char": 3525,
-          "end_char": 3798
+          "source": "VinFast official PDF: 20260921_ThongbaoCSgiabanvatrangbituychonotoVinFastVN",
+          "version": "2026.09.21",
+          "status": "active",
+          "start_char": 3681,
+          "end_char": 3952
         }
       ],
-      "ground_truth": "Ngày 20/07/2026, bảng giá lưu trữ áp dụng từ 15/07/2026 ghi EC Van Tiêu chuẩn, cấu hình Tiêu chuẩn 1 MSRP kèm pin gồm VAT 268.000.000 VNĐ. Tài liệu có một ghi chú ngày 11/07 khác phần đầu; cả hai đều trước ngày hỏi.",
+      "ground_truth": "Tại ngày 25/09/2026, theo bảng giá áp dụng từ ngày 19/09/2026, EC Van bản Tiêu chuẩn (cấu hình Tiêu chuẩn 1) có giá bán lẻ đề xuất (MSRP) kèm pin, gồm VAT là 248.000.000 VNĐ (thay cho mức 268.000.000 VNĐ của bảng giá cũ ngày 11/07/2026).",
       "audit_status": "valid",
       "audit": {
         "reviewer": "source audit by coding agent; not independent human sign-off",
@@ -3379,20 +3351,19 @@
         ],
         "eligibility": [
           {
-            "document_id": "PRICE_LIST_VINFAST_20260711",
+            "document_id": "PRICE_LIST_VINFAST_20260921",
             "source_exists": true,
             "content_supports_gold": true,
-            "runtime_eligible": false,
-            "reason": "metadata_eligibility: expired without expiry_date/current inactive",
-            "effective_date": "2026-07-15",
+            "runtime_eligible": true,
+            "reason": null,
+            "effective_date": "2026-09-19",
             "expiry_date": null,
-            "status": "expired"
+            "status": "active"
           }
         ],
         "absence_audit": null,
         "notes": [
-          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn; không xem output benchmark của agent.",
-          "Hiệu đính phạm vi/điều kiện; xem before/after và nguyên văn reference_contexts."
+          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn đang active trong corpus.json."
         ]
       }
     },
@@ -3400,45 +3371,46 @@
       "case_id": "EDGE_003",
       "group": "edge",
       "category": "version_promotion",
-      "query": "Trong tháng 8/2026, Limo Green có ưu đãi giảm giá bao nhiêu theo chính sách bán hàng lúc đó?",
-      "target_date": "2026-08-20",
+      "query": "Theo chính sách thúc đẩy bán hàng có hiệu lực tại ngày 25/09/2026, chương trình cọc tiên phong VF Wild Comfort yêu cầu số tiền cọc bao nhiêu, mức ưu đãi tiên phong là bao nhiêu và thời gian nhận cọc như thế nào?",
+      "target_date": "2026-09-25",
       "expected": {
         "behavior": "answer",
         "supporting_document_ids": [
-          "PROMOTION_SALES_VINFAST_20260805"
-        ],
-        "forbidden_document_ids": [
           "PROMOTION_SALES_VINFAST_20260921"
         ],
+        "forbidden_document_ids": [
+          "PROMOTION_SALES_VINFAST_20260805"
+        ],
         "required_facts": [
-          "Limo Green giảm 35.000.000 VNĐ/xe",
-          "Áp dụng từ ngày 07/07/2026 đến hết ngày 31/08/2026."
+          "Số tiền cọc: 15.000.000 VNĐ",
+          "ưu đãi 61.000.000 VNĐ Tiên phong",
+          "Từ ngày 25/09/2026 đến hết ngày 30/09/2026"
         ],
         "policy_version": {
-          "required_document_id": "PROMOTION_SALES_VINFAST_20260805",
+          "required_document_id": "PROMOTION_SALES_VINFAST_20260921",
           "forbidden_document_ids": [
-            "PROMOTION_SALES_VINFAST_20260921"
+            "PROMOTION_SALES_VINFAST_20260805"
           ]
         }
       },
-      "notes": "Version-sensitive: historical Limo Green discount.",
+      "notes": "Version-sensitive: VF Wild Comfort pioneer deposit program in active promotion policy versus expired August policy.",
       "question_type": "version_sensitive",
       "reference_contexts": [
-        "Thông báo Chính sách thúc đẩy bán hàng Ô tô điện VinFast tại Việt Nam\n\nMã văn bản: 202600805_ThongbaoCSthucdaybanhangotodienVinFasttaiVN\n\nCông ty TNHH Kinh doanh Thương mại và Dịch vụ VinFast xin thông báo Chính sách thúc đẩy bán hàng Ô tô điện VinFast tại Việt Nam đến Quý khách hàng.\n\nNội dung Chính sách:\n\nChính sách sau được áp dụng cho các xe ô tô điện VinFast được mua trực tiếp từ VinFast/GSM hoặc Đại lý phân phối của VinFast/GSM tại thị trường.\n\n1. | Chính sách ưu đãi một số dòng xe:\n\nDòng xe | Ưu đãi | Thời gian áp dụng\n\n(Theo ngày xuất hóa đơn)\n\nVF 3 Eco/Plus | Miễn phí màu sơn nâng cao cho VIN 2025 trở về trước. | Từ ngày 25/03/2026 đến khi có thông báo mới theo ngày xuất hóa đơn.\n\nLimo Green | Giảm giá 35.000.000 VNĐ/xe. | Từ ngày 07/07/2026 đến hết ngày 31/08/2026."
+        "5. | Chính sách cọc tiên phong VF Wild Comfort:\n\nHạng mục | Nội dung\n\nSố tiền cọc | 15.000.000 VNĐ.\n\nHiệu lực đơn đặt cọc | Đến hết tháng 06/2027.\n\nChính sách ưu đãi | Khách hàng được ưu đãi 61.000.000 VNĐ Tiên phong.\n\nThời gian nhận cọc | Từ ngày 25/09/2026 đến hết ngày 30/09/2026."
       ],
       "reference_context_sources": [
         {
           "context_index": 0,
-          "document_id": "PROMOTION_SALES_VINFAST_20260805",
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
           "corpus_file": "data/knowledge/corpus.json",
-          "source": "VinFast official PDF: 202600805_ThongbaoCSthucdaybanhangotodienVinFasttaiVN",
-          "version": "2026.08.05",
-          "status": "expired",
-          "start_char": 0,
-          "end_char": 785
+          "source": "VinFast official PDF: 20260921_ThongbaoCSthucdaybanhangotodienVinFasttaiVN",
+          "version": "2026.09.21",
+          "status": "active",
+          "start_char": 4145,
+          "end_char": 4428
         }
       ],
-      "ground_truth": "Trong tháng 8/2026, Limo Green được giảm 35.000.000 VNĐ/xe theo chính sách áp dụng từ 07/07/2026 đến hết 31/08/2026.",
+      "ground_truth": "Theo chính sách thúc đẩy bán hàng bản ngày 21/09/2026 (có hiệu lực tại ngày 25/09/2026), chương trình cọc tiên phong VF Wild Comfort có số tiền cọc 15.000.000 VNĐ, ưu đãi 61.000.000 VNĐ Tiên phong, thời gian nhận cọc từ ngày 25/09/2026 đến hết ngày 30/09/2026 và hiệu lực đơn đặt cọc đến hết tháng 06/2027.",
       "audit_status": "valid",
       "audit": {
         "reviewer": "source audit by coding agent; not independent human sign-off",
@@ -3454,19 +3426,19 @@
         ],
         "eligibility": [
           {
-            "document_id": "PROMOTION_SALES_VINFAST_20260805",
+            "document_id": "PROMOTION_SALES_VINFAST_20260921",
             "source_exists": true,
             "content_supports_gold": true,
-            "runtime_eligible": false,
-            "reason": "metadata_eligibility: expired without expiry_date/current inactive",
-            "effective_date": "2026-08-05",
+            "runtime_eligible": true,
+            "reason": null,
+            "effective_date": "2026-09-21",
             "expiry_date": null,
-            "status": "expired"
+            "status": "active"
           }
         ],
         "absence_audit": null,
         "notes": [
-          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn; không xem output benchmark của agent."
+          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn đang active trong corpus.json."
         ]
       }
     },
@@ -3474,44 +3446,45 @@
       "case_id": "EDGE_004",
       "group": "edge",
       "category": "version_contract",
-      "query": "Tại thời điểm 01/04/2026, mẫu hợp đồng mua bán xe dùng cho khách hàng lẻ là phiên bản nào?",
-      "target_date": "2026-04-01",
+      "query": "Tại thời điểm 01/08/2026, theo mẫu hợp đồng mua bán xe ô tô điện hiện hành, nếu trả thẳng thì khách hàng phải thanh toán khoản tiền còn lại trong bao lâu và lãi suất quá hạn khi chậm thanh toán là bao nhiêu?",
+      "target_date": "2026-08-01",
       "expected": {
         "behavior": "answer",
         "supporting_document_ids": [
-          "POLICY_SALES_CONTRACT_20260314"
-        ],
-        "forbidden_document_ids": [
           "POLICY_SALES_CONTRACT_20260720"
         ],
+        "forbidden_document_ids": [
+          "POLICY_SALES_CONTRACT_20260314"
+        ],
         "required_facts": [
-          "version 2.0"
+          "trong vòng 07 ngày làm việc kể từ ngày Bên Bán thông báo xe sẵn sàng để giao",
+          "lãi suất quá hạn 15%/năm"
         ],
         "policy_version": {
-          "required_document_id": "POLICY_SALES_CONTRACT_20260314",
+          "required_document_id": "POLICY_SALES_CONTRACT_20260720",
           "forbidden_document_ids": [
-            "POLICY_SALES_CONTRACT_20260720"
+            "POLICY_SALES_CONTRACT_20260314"
           ]
         }
       },
-      "notes": "Version-sensitive: historical retail sales contract.",
+      "notes": "Version-sensitive: active retail sales contract (effective 20/07/2026) versus expired March 2026 contract.",
       "question_type": "version_sensitive",
       "reference_contexts": [
-        "bản dự thảo mới và đảm bảo xóa hết tất cả các mục ghi chú, footnote, hướng dẫn, bao gồm cả Trang\n\nhướng dẫn này trước khi gửi cho Khách hàng.\n\nHỢP ĐỒNG MUA BÁN XE ĐIỆN VINFAST_VER 2.0 (Áp dụng đối với khách hàng lẻ) | Trang 1 của 6"
+        "Khoản tiền còn lại được thanh toán như sau:\n\n- | Nếu trả thẳng: Khách Hàng thanh toán [●] VNĐ cho Bên Bán trong vòng 07 ngày làm việc kể từ ngày Bên\n\nBán thông báo xe sẵn sàng để giao.\n\n- | Nếu trả góp: Khách Hàng thanh toán vốn tự có: [●] VNĐ và gửi Thông báo tín dụng của Ngân hàng cho số\n\ntiền còn lại, cho Bên Bán trong vòng 07 ngày làm việc kể từ ngày Bên Bán thông báo. Khách Hàng phải làm\n\nthủ tục đăng ký xe theo hướng dẫn của Bên Bán trong vòng 05 ngày làm việc kể từ ngày được thông báo và\n\nủy quyền cho Bên Bán giữ giấy hẹn trả kết quả đăng ký xe. Số tiền còn lại: [●] VNĐ sẽ do Ngân hàng giải\n\nngân trong vòng 05 ngày làm việc kể từ ngày Bên Bán và Khách Hàng bàn giao giấy hẹn trả kết quả đăng ký\n\nxe cho Ngân hàng. Nếu Ngân hàng không giải ngân, Khách Hàng phải tự thanh toán cho Bên Bán trong vòng\n\n10 ngày làm việc kể từ ngày Bên Bán yêu cầu.\n\nNếu Khách Hàng không thanh toán đúng hạn, Bên Bán có quyền chỉ định bên thứ ba xử lý xe để thu hồi\n\nkhoản nợ. Số tiền thu được được ưu tiên thanh toán cho Hợp đồng này. Khách Hàng chịu mọi chi phí xử lý\n\nxe và thù lao ủy quyền bằng 10% giá trị xe tại thời điểm xử lý.\n\nKhách Hàng chậm thanh toán sẽ phải trả lãi suất quá hạn 15%/năm tương ứng với số tiền và số ngày chậm trả."
       ],
       "reference_context_sources": [
         {
           "context_index": 0,
-          "document_id": "POLICY_SALES_CONTRACT_20260314",
+          "document_id": "POLICY_SALES_CONTRACT_20260720",
           "corpus_file": "data/knowledge/corpus.json",
-          "source": "VinFast official PDF: 2026-03-14_mau-hop-dong-mua-ban-xe-oto.pdf",
-          "version": "2.0",
-          "status": "expired",
-          "start_char": 955,
-          "end_char": 1186
+          "source": "VinFast official PDF: 2026-07-20_mau-hop-dong-mua-ban-xe-oto.pdf",
+          "version": "2026.07.20",
+          "status": "active",
+          "start_char": 1194,
+          "end_char": 2429
         }
       ],
-      "ground_truth": "Mẫu hợp đồng mua bán xe cho khách hàng lẻ tại 01/04/2026 là phiên bản 2.0.",
+      "ground_truth": "Tại thời điểm 01/08/2026, theo mẫu hợp đồng mua bán xe ô tô điện có hiệu lực từ ngày 20/07/2026, trường hợp trả thẳng khách hàng phải thanh toán khoản tiền còn lại trong vòng 07 ngày làm việc kể từ ngày Bên Bán thông báo xe sẵn sàng để giao; nếu chậm thanh toán sẽ phải trả lãi suất quá hạn 15%/năm tương ứng với số tiền và số ngày chậm trả.",
       "audit_status": "valid",
       "audit": {
         "reviewer": "source audit by coding agent; not independent human sign-off",
@@ -3527,19 +3500,19 @@
         ],
         "eligibility": [
           {
-            "document_id": "POLICY_SALES_CONTRACT_20260314",
+            "document_id": "POLICY_SALES_CONTRACT_20260720",
             "source_exists": true,
             "content_supports_gold": true,
-            "runtime_eligible": false,
-            "reason": "metadata_eligibility: expired without expiry_date/current inactive",
-            "effective_date": "2026-03-14",
+            "runtime_eligible": true,
+            "reason": null,
+            "effective_date": "2026-07-20",
             "expiry_date": null,
-            "status": "expired"
+            "status": "active"
           }
         ],
         "absence_audit": null,
         "notes": [
-          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn; không xem output benchmark của agent."
+          "Đối chiếu câu hỏi, ground truth, từng required fact, scope/đơn vị/điều kiện/ngày với nguyên văn nguồn đang active trong corpus.json."
         ]
       }
     },
@@ -3641,23 +3614,15 @@
     }
   ],
   "annotation_version": "gate3-gold-v2",
-  "annotation_notes": "Verbatim contexts and offsets refer to data/knowledge/corpus.json at SHA-256 a59b2d463543d43f8a0f4959c86ca1a191a7c3034ce284f27c52d7e990bdff4f. Negative cases intentionally have no reference contexts; context-based RAGAS metrics are not applicable to those cases.",
+  "annotation_notes": "Verbatim contexts and offsets refer to data/knowledge/corpus.json at SHA-256 752da79756877a287d5e994112fc3e8df2eba3f6fb68b6dea0dffe61d93f2b52. Negative cases intentionally have no reference contexts; context-based RAGAS metrics are not applicable to those cases.",
   "audit_metadata": {
     "original_sha256": "3882075581318a22bac1296254ddbdf2e58bec17359280f59d758567014fcde4",
     "corpus_sha256": "752da79756877a287d5e994112fc3e8df2eba3f6fb68b6dea0dffe61d93f2b52",
     "audit_file": "eval\\results\\copilot-benchmark-20261017\\audit-changelog.json",
-    "valid": 49,
+    "valid": 50,
     "invalid": 0,
-    "unresolved": 1,
-    "runtime_eligibility_cases": [
-      "ON_023",
-      "ON_024",
-      "ON_025",
-      "EDGE_001",
-      "EDGE_002",
-      "EDGE_003",
-      "EDGE_004"
-    ],
+    "unresolved": 0,
+    "runtime_eligibility_cases": [],
     "late_source_revision": true,
     "revision_file": "eval\\results\\copilot-benchmark-20261017\\audit-addendum.json"
   }

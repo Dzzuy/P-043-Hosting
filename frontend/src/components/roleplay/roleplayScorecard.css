@@ -1,0 +1,110 @@
+.evaluation-page { font-family: 'Be Vietnam Pro', system-ui, sans-serif; width: 100%; max-width: 1160px; margin: 0 auto; padding: 22px 28px 48px; color: #0c1e49; }
+.evaluation-header { position: relative; margin: -22px -28px 28px; padding: 22px 28px 30px; background: linear-gradient(120deg, #edf5ff 0%, #f8fbff 68%, #e8f2ff 100%); }
+.evaluation-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.evaluation-toolbar button, .evaluation-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 0; cursor: pointer; font-weight: 700; }
+.evaluation-toolbar svg, .evaluation-actions svg { width: 17px; height: 17px; }
+.evaluation-back { padding: 9px 2px; background: transparent; color: #214672; font-size: .83rem; }
+.evaluation-back:hover { color: #0b69db; }
+.evaluation-download { padding: 10px 16px; border-radius: 999px; background: #fff; color: #112a5c; font-size: .82rem; box-shadow: 0 5px 16px rgba(25, 77, 142, .08); }
+.evaluation-download:hover { background: #e8f2ff; }
+.evaluation-eyebrow { display: inline-block; padding: 6px 12px; border-radius: 999px; background: #dcecff; color: #245aa9; font-size: .72rem; font-weight: 750; }
+.evaluation-header h1 { margin-top: 13px; font-size: clamp(1.5rem, 3vw, 2.1rem); line-height: 1.22; font-weight: 800; }
+.evaluation-header p { margin-top: 10px; color: #60728e; font-size: .87rem; line-height: 1.5; }
+.evaluation-header p strong { color: #172d56; }
+.evaluation-header p span { margin: 0 5px; }
+.evaluation-overview { display: grid; grid-template-columns: 230px 1fr; gap: 34px; padding: 27px; border: 1px solid #dce9f9; border-radius: 16px; background: #fff; box-shadow: 0 10px 30px rgba(37, 80, 133, .07); }
+.evaluation-score-side { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding-right: 28px; border-right: 1px solid #e3eaf4; }
+.evaluation-score-ring { display: grid; place-items: center; width: 170px; height: 170px; border-radius: 50%; background: conic-gradient(#458ff4 var(--score-progress), #e6eef7 0); }
+.evaluation-score-ring > div { display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; width: 148px; height: 148px; padding-top: 45px; border-radius: 50%; background: #fff; text-align: center; }
+.evaluation-score-ring strong { font-size: 2.7rem; line-height: 1; }
+.evaluation-score-ring span { margin-left: 4px; color: #566582; font-size: 1rem; }
+.evaluation-score-ring small { display: block; width: 100%; margin-top: -30px; color: #60718d; font-size: .78rem; }
+.evaluation-status { padding: 7px 12px; border-radius: 999px; background: #E8EFFF; color: #1646C8; font-size: .7rem; font-weight: 800; text-align: center; }
+.evaluation-status.approved { background: #E8EFFF; color: #1646C8; }
+.evaluation-overview-body h2 { font-size: 1.13rem; font-weight: 800; }
+.evaluation-overview-body > p { margin-top: 9px; color: #52617b; font-size: .87rem; line-height: 1.55; }
+.evaluation-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.evaluation-summary-card { min-height: 120px; padding: 16px; border-radius: 12px; }
+.evaluation-summary-card.strengths { background: #f1faf6; }
+.evaluation-summary-card.weaknesses { background: #fffbf1; }
+.evaluation-summary-card h3 { display: flex; align-items: center; gap: 10px; font-size: .85rem; font-weight: 800; }
+.evaluation-summary-card h3 span { display: grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 50%; color: #fff; background: #23ad73; }
+.evaluation-summary-card.weaknesses h3 span { background: #ffe69b; color: #df4920; font-size: 1.1rem; }
+.evaluation-summary-card h3 svg { width: 17px; height: 17px; }
+.evaluation-summary-card p, .evaluation-summary-card li { color: #596680; font-size: .79rem; line-height: 1.48; }
+.evaluation-summary-card p, .evaluation-summary-card ul { margin: 8px 0 0 40px; }
+.evaluation-summary-card ul { padding-left: 14px; }
+.evaluation-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 30px 0 16px; }
+.evaluation-section-heading h2 { font-size: 1.16rem; font-weight: 800; }
+.evaluation-section-heading > span { display: inline-flex; align-items: center; gap: 6px; padding: 7px 11px; border-radius: 999px; background: #edf4fc; color: #2f4c78; font-size: .74rem; white-space: nowrap; }
+.evaluation-section-heading svg { width: 15px; height: 15px; }
+.evaluation-criteria { display: flex; flex-direction: column; gap: 16px; }
+.evaluation-criterion { overflow: hidden; border: 1px solid #dce9fa; border-radius: 16px; background: #fff; box-shadow: 0 7px 22px rgba(31, 75, 132, .06); }
+.evaluation-criterion-toggle { display: flex; align-items: center; gap: 18px; width: 100%; padding: 17px 20px; border: 0; background: transparent; color: #102450; text-align: left; }
+.evaluation-criterion-toggle:hover { background: #f6faff; }
+.evaluation-criterion-number { display: grid; place-items: center; flex: none; width: 38px; height: 38px; border: 5px solid #dbeaff; border-radius: 50%; background: #2261b3; color: #fff; font-size: .85rem; font-weight: 800; box-sizing: content-box; }
+.evaluation-criterion-name { flex: 1; font-size: .94rem; font-weight: 800; }
+.evaluation-criterion-score { padding: 6px 13px; border-radius: 999px; background: #FFEBDB; color: #8A3D00; font-size: .82rem; white-space: nowrap; }
+.evaluation-criterion-score.unassessed { background: #F4F7FE; color: #566176; }
+.evaluation-criterion-score strong { font-size: 1rem; }
+.evaluation-chevron { font-size: 1.6rem; line-height: .7; transform: rotate(0); transition: transform .2s; }
+.evaluation-chevron.open { transform: rotate(180deg); }
+.evaluation-criterion-detail { display: flex; flex-direction: column; gap: 15px; margin: 0 16px 16px; padding: 18px; border: 1px solid #edf1f7; border-radius: 12px; }
+.evaluation-criterion-detail h3 { font-size: .82rem; font-weight: 800; }
+.evaluation-criterion-detail p { margin-top: 6px; color: #53627d; font-size: .82rem; line-height: 1.6; }
+.evaluation-reason { display: flex; align-items: flex-start; gap: 16px; }
+.evaluation-reason > svg { flex: none; width: 19px; height: 19px; color: #102958; }
+.evaluation-evidence { padding: 13px; border: 1px dashed #d2ddeb; border-radius: 10px; }
+.evaluation-evidence h3 { display: flex; align-items: center; gap: 11px; margin-bottom: 9px; }
+.evaluation-evidence h3 span { color: #2c83e8; font-size: 2rem; line-height: .5; }
+.evaluation-quote { margin: 6px 0 0 30px; border-radius: 12px; background: #F4F7FE; color: #56627a; font-size: .78rem; font-style: italic; }
+.evaluation-quote a, .evaluation-quote button, .evaluation-quote > span { display: flex; justify-content: space-between; gap: 12px; width: 100%; padding: 8px 12px; border: 0; background: transparent; color: inherit; text-align: left; text-decoration: none; }
+.evaluation-quote a:hover, .evaluation-quote button:hover { color: #0a65cf; }
+.evaluation-improvement { display: flex; align-items: flex-start; gap: 15px; padding: 14px; border-radius: 10px; background: #edf4ff; }
+.evaluation-improvement > svg { flex: none; width: 20px; height: 20px; color: #1266dd; }
+.evaluation-extra { margin-top: 18px; padding: 20px; border: 1px solid #dce9fa; border-radius: 14px; background: #fff; }
+.evaluation-extra h2 { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 1rem; }
+.evaluation-extra h2 svg { width: 18px; height: 18px; }
+.evaluation-extra p { color: #566582; font-size: .84rem; }
+.evaluation-finding { display: flex; justify-content: space-between; gap: 15px; padding: 12px 0; border-top: 1px solid #edf1f7; font-size: .85rem; }
+.evaluation-finding span { flex: none; font-weight: 700; color: #245da4; }
+.evaluation-actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
+.evaluation-actions button { padding: 10px 15px; border-radius: 999px; background: #eaf3ff; color: #1359ad; font-size: .84rem; }
+.evaluation-actions button:last-child { background: #166eec; color: #fff; }
+.evaluation-actions button:hover { filter: brightness(.94); }
+.evaluation-pending { max-width: 700px; margin: 50px auto; padding: 45px; border: 1px solid #dce9fa; border-radius: 16px; background: #fff; text-align: center; }
+.evaluation-pending > svg { width: 42px; height: 42px; color: #307be5; }
+.evaluation-pending h2 { margin-top: 14px; font-size: 1.2rem; }
+.evaluation-pending p { margin: 10px 0 20px; color: #60718c; }
+.evaluation-pending button { padding: 10px 18px; border: 1px solid #c6daf4; border-radius: 999px; background: #fff; color: #145bb8; }
+
+@media (max-width: 760px) {
+  .evaluation-page { padding: 16px 14px 30px; }
+  .evaluation-header { margin: -16px -14px 20px; padding: 16px 14px 22px; }
+  .evaluation-overview { grid-template-columns: 1fr; gap: 20px; padding: 20px; }
+  .evaluation-score-side { padding: 0 0 20px; border-right: 0; border-bottom: 1px solid #e3eaf4; }
+  .evaluation-summary-grid { grid-template-columns: 1fr; }
+  .evaluation-section-heading { align-items: flex-start; flex-direction: column; }
+  .evaluation-criterion-toggle { gap: 8px; padding: 12px; }
+  .evaluation-criterion-name { font-size: .83rem; }
+  .evaluation-criterion-score { font-size: .72rem; padding: 5px 7px; }
+  .evaluation-criterion-detail { margin: 0 10px 10px; padding: 12px; }
+  .evaluation-quote { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .evaluation-chevron { transition: none; }
+}
+
+.evaluation-status { display: inline-flex; align-items: center; justify-content: center; gap: 8px; line-height: 1.5; }
+.evaluation-status svg { flex: none; width: 16px; height: 16px; }
+.evaluation-criterion-score.band-3 { background: #E8EFFF; color: #1646C8; }
+.evaluation-criterion-score.band-2 { background: #EEF2FA; color: #33405A; }
+.evaluation-criterion-score.band-1 { background: #FFEBDB; color: #8A3D00; }
+.evaluation-highlight { margin-bottom: 20px; padding: 20px 24px; background: #FFF7F0; border: 1px solid #F3D3B5; border-radius: 18px; }
+.evaluation-highlight h2 { margin: 0; font-size: 17px; font-weight: 700; }
+.evaluation-highlight p { margin: 10px 0; color: #33405A; font-size: 15px; line-height: 1.6; }
+.evaluation-highlight a { display: inline-flex; align-items: center; min-height: 32px; color: #1646C8; font-size: 14px; font-weight: 600; }
+.evaluation-criterion { scroll-margin-top: 24px; }
+.evaluation-page button { font-family: inherit; }
+.evaluation-page button:focus-visible, .evaluation-page a:focus-visible { outline: 2px solid #2F6BFF; outline-offset: 3px; }
+.evaluation-pending { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }

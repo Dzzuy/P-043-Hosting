@@ -73,21 +73,18 @@ class SalesConversationService:
                 "customer_name": "Anh Minh Tuấn",
                 "phone": "0912 345 678",
                 "location": "Long Biên, Hà Nội",
-                "channel": "zalo_oa",
                 "default_model": "VF 6 Eco",
             },
             {
                 "customer_name": "Anh Quang Huy",
                 "phone": "0988 765 432",
                 "location": "Hà Đông, Hà Nội",
-                "channel": "zalo_oa",
                 "default_model": "VF 8",
             },
             {
                 "customer_name": "Anh Đức Trọng",
                 "phone": "0904 112 233",
                 "location": "Nam Từ Liêm, Hà Nội",
-                "channel": "messenger",
                 "default_model": "VF 3",
             },
         ]
@@ -101,7 +98,6 @@ class SalesConversationService:
                 "customer_name": f"Khách hàng {i+1}",
                 "phone": f"0900 000 00{i+1}",
                 "location": "Hà Nội",
-                "channel": "zalo_oa",
                 "default_model": "VinFast",
             }
 
@@ -111,7 +107,7 @@ class SalesConversationService:
 
             if target_customer:
                 customer_id = target_customer.id
-                conv_id = self.repository.get_or_create_conversation(customer_id, channel=cfg["channel"])
+                conv_id = self.repository.get_or_create_conversation(customer_id)
                 seeded_conversations.append({
                     "customer_id": customer_id,
                     "conversation_id": conv_id,
@@ -127,7 +123,7 @@ class SalesConversationService:
                 phone=cfg["phone"],
                 location=cfg["location"],
             )
-            conv_id = self.repository.get_or_create_conversation(customer_id, channel=cfg["channel"])
+            conv_id = self.repository.get_or_create_conversation(customer_id)
 
             # Ingest messages in batch
             msg_time = base_time + timedelta(hours=i * 6)
@@ -180,15 +176,26 @@ class SalesConversationService:
             customer = metadata["customer"]
             messages = self.repository.list_messages(conversation_id, limit=message_limit, connection=conn)
             tasks = self.repository.list_tasks_for_customer(customer_id, connection=conn)
+            from src.integrations.customer_intelligence_store import IntelligenceStore, active_milestones
+            milestones = active_milestones(IntelligenceStore(self.repository).milestone_history(customer_id, conn))
+            if metadata["memory"].get("stage"):
+                metadata["memory"]["timeline"] = [{"id": m["id"], "title": m["action"], "description": m["action"],
+                    "event_type": m["event_type"], "occurred_at": m.get("occurred_at") or m["created_at"],
+                    "source_message_id": (m.get("evidence") or [{}])[0].get("message_id") or next(iter(m.get("source_message_ids", [])), None)} for m in milestones]
         lead_status = metadata["lead"]
+        if metadata["memory"].get("stage"):
+            lead_status = {**lead_status, **metadata["memory"]["stage"]}
         override = metadata["override"]
         lead_status = {
             **lead_status,
-            "ai_stage": lead_status.get("stage"),
-            "stage_source": "ai" if lead_status else "unknown",
+            "ai_stage": lead_status.get("ai_stage", lead_status.get("stage")),
+            "stage_source": lead_status.get("stage_source", "ai" if lead_status else "unknown"),
         }
-        if override.get("stage"):
+        if override.get("stage") in LeadStage._value2member_map_:
             lead_status.update(stage=override["stage"], stage_source="sales", override=override)
+        elif lead_status.get("stage_source") == "sales":
+            lead_status.update(stage=lead_status.get("ai_stage"), stage_source="rules")
+            lead_status.pop("override", None)
 
         profile = dict(metadata["profile"])
         for field, override_fact in metadata.get("profile_overrides", {}).items():
@@ -204,7 +211,6 @@ class SalesConversationService:
             customer_id=customer_id,
             customer_name=customer["name"] if customer else "Khách hàng",
             customer_location=customer.get("location") if customer else None,
-            channel=row["channel"],
             last_analyzed_at=row["last_analyzed_at"],
             analysis_version=row["analysis_version"],
             messages=messages,
@@ -214,6 +220,7 @@ class SalesConversationService:
             profile=profile,
             memory=metadata["memory"],
             tasks=tasks,
+            milestones=milestones,
             lead_status=lead_status,
         )
 
@@ -233,6 +240,9 @@ class SalesConversationService:
         from sqlalchemy import select
 
         repo = self.repository
+        repo.owned_conversation(conversation_id, advisor_id)
+        if stage in (LeadStage.WON, LeadStage.LOST) and not reason.strip():
+            raise ValueError("Cần lý do và xác nhận hợp đồng đã ký / đóng cơ hội.")
         repo.ensure_schema()
         with repo.engine.connect() as conn:
             exists = conn.execute(select(repo.conversations.c.id)
@@ -325,25 +335,50 @@ class SalesConversationService:
             conversations = {}
             stage_override = (
                 select(repo.recommendations.c.payload_json)
-                .where(repo.recommendations.c.conversation_id == repo.conversations.c.id,
+                .where(repo.customer_override_scope(),
                        repo.recommendations.c.type == "lead_stage_override")
                 .order_by(repo.recommendations.c.created_at.desc(), repo.recommendations.c.id.desc())
                 .limit(1).correlate(repo.conversations).scalar_subquery()
             )
             profile_override = (
                 select(repo.recommendations.c.payload_json)
-                .where(repo.recommendations.c.conversation_id == repo.conversations.c.id,
+                .where(repo.customer_override_scope(),
                        repo.recommendations.c.type == "profile_overrides")
                 .order_by(repo.recommendations.c.created_at.desc(), repo.recommendations.c.id.desc())
                 .limit(1).correlate(repo.conversations).scalar_subquery()
+            )
+            analysis_context = (
+                select(repo.recommendations.c.payload_json)
+                .where(repo.recommendations.c.conversation_id == repo.conversations.c.id,
+                       repo.recommendations.c.type == "analysis_context")
+                .order_by(repo.recommendations.c.created_at.desc(), repo.recommendations.c.id.desc())
+                .limit(1).correlate(repo.conversations).scalar_subquery()
+            )
+            message_total = (
+                select(func.count())
+                .where(repo.messages.c.conversation_id == repo.conversations.c.id)
+                .correlate(repo.conversations).scalar_subquery()
+            )
+            unprocessed_after_analysis = (
+                select(func.count())
+                .where(
+                    repo.messages.c.conversation_id == repo.conversations.c.id,
+                    repo.messages.c.sent_at > repo.conversations.c.last_analyzed_at,
+                )
+                .correlate(repo.conversations).scalar_subquery()
             )
             for row in conn.execute(
                 select(
                     repo.conversations.c.id,
                     repo.conversations.c.customer_id,
-                    repo.conversations.c.channel,
+                    repo.conversations.c.analysis_version,
+                    repo.conversations.c.last_analyzed_at,
                     stage_override.label("stage_override"),
                     profile_override.label("profile_override"),
+                    analysis_context.label("analysis_context"),
+                    message_total.label("message_total"),
+                    unprocessed_after_analysis.label("unprocessed_after_analysis"),
+                    last_message.c.seq.label("last_message_seq"),
                     last_message.c.content,
                     last_message.c.sent_at,
                     last_message.c.sender_role,
@@ -371,16 +406,33 @@ class SalesConversationService:
             last_content = last_content or ""
             sent_at = conversation["sent_at"] if conversation else None
             override = json.loads(conversation["stage_override"] or "{}") if conversation else {}
+            analysis_version = (conversation["analysis_version"] or 0) if conversation else 0
+            last_analyzed_at = conversation["last_analyzed_at"] if conversation else None
+            msg_total = int(conversation["message_total"] or 0) if conversation else 0
+            last_seq = int(conversation["last_message_seq"] or 0) if conversation else 0
+            ctx = json.loads(conversation["analysis_context"] or "{}") if conversation else {}
+            through_seq = ctx.get("through_seq") if ctx.get("version") == analysis_version else None
+            pending_analysis_count = (
+                max(0, last_seq - through_seq)
+                if isinstance(through_seq, int)
+                else (
+                    msg_total
+                    if analysis_version == 0 or not last_analyzed_at
+                    else int(conversation["unprocessed_after_analysis"] or 0)
+                )
+            )
             result.append({
                 "conversation_id": conv_id,
                 "customer_id": cid,
                 "customer_name": customer["name"],
                 "phone": customer["phone"],
                 "location": customer["location"],
-                "channel": conversation["channel"] if conversation else "zalo_oa",
-                "lead_stage": override.get("stage") or score.get("stage", "new"),
-                "lead_score": score.get("score", 0),
-                "action_priority": score.get("action_priority", "medium"),
+                "lead_stage": (override.get("stage") or score.get("stage", "new")) if (override.get("stage") or score.get("stage", "new")) in LeadStage._value2member_map_ else None,
+                "analysis_version": analysis_version,
+                "last_analyzed_at": last_analyzed_at.isoformat() if last_analyzed_at else None,
+                "message_total": msg_total,
+                "last_message_seq": last_seq,
+                "pending_analysis_count": pending_analysis_count,
                 "pending_tasks_count": task_stats.get(cid, (0, 0))[0],
                 "important_overdue_count": task_stats.get(cid, (0, 0))[1],
                 "last_sender_role": conversation["sender_role"] if conversation else None,

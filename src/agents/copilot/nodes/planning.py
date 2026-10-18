@@ -7,7 +7,7 @@ from src.agents.copilot import prompts
 from src.agents.copilot.errors import CopilotModelOutputError
 from src.agents.copilot.model_io import _invoke_json
 from src.agents.copilot.nodes._shared import _requirements, observed
-from src.agents.copilot.state import SearchPlan
+from src.agents.copilot.state import PlannedSearch, SearchPlan
 from src.config import get_settings
 from src.knowledge.index_readiness import load_snapshot
 
@@ -40,7 +40,9 @@ def validate_plan(plan, state):
             *[m.get("content", "") for m in state.get("history", [])],
         ]
     )
-    observed_models = {"VF " + v for v in re.findall(r"\bVF[\s-]*(\d+)\b", text, re.I)}
+    observed_models = {"VF " + v for v in re.findall(r"\bVF[\s-]*(\d+)\b", text, re.I)} | {
+        m for m in catalog["product_model"] if m != "ALL" and m.casefold() in text.casefold()
+    }
     signatures = set(state.get("search_signatures", []))
     req_map = _requirements(state)
     all_req_ids = set(req_map.keys())
@@ -61,6 +63,14 @@ def validate_plan(plan, state):
         if state.get("recovery_requirement_ids") and not search_reqs <= set(state["recovery_requirement_ids"]):
             raise ValueError("corrective query outside missing requirements")
         union_search_req_ids |= search_reqs
+        if (
+            search.product_model
+            and search.product_model not in catalog["product_model"]
+            and search.product_model.casefold() in text.casefold()
+        ):
+            if search.product_model.casefold() not in search.query.casefold():
+                search.query = f"{search.product_model} {search.query}"[:1000]
+            search.product_model = None
         for key in ("product_model", "document_type", "policy_type"):
             value = getattr(search, key)
             if value and value not in catalog[key]:
@@ -81,6 +91,41 @@ def validate_plan(plan, state):
 
     if target_factual_ids and not (target_factual_ids <= union_search_req_ids):
         raise ValueError("search plan does not cover all target factual requirements")
+
+
+def _fallback_plan(state):
+    """Compile typed goals into bounded searches if the model's plan is invalid.
+
+    Query linkage is a retrieval intention, never a claim of evidence coverage.
+    Only intake-approved entities become filters; mixed groups use no filter.
+    """
+    limit = available_searches(state)
+    recovery = set(state.get("recovery_requirement_ids", []))
+    goals = [r for r in state["requirements"] if r.kind == "fact" and (not recovery or r.requirement_id in recovery)]
+    if not limit or not goals:
+        return None
+    grouped = {}
+    for goal in goals:
+        grouped.setdefault(goal.product_model, []).append(goal)
+    buckets = [[] for _ in range(min(limit, len(grouped)))]
+    for group in grouped.values():
+        min(buckets, key=len).extend(group)
+    searches = []
+    for bucket in buckets:
+        models = {r.product_model for r in bucket}
+        # Fit the SearchRequest limit without silently dropping a whole goal.
+        per_goal = max(20, 900 // len(bucket))
+        parts = [f"{r.product_model or ''} {r.variant or ''}: {r.description}"[:per_goal] for r in bucket]
+        searches.append(
+            PlannedSearch(
+                query=("Bổ sung nguồn: " if recovery else "Tra cứu: ") + "; ".join(parts),
+                product_model=next(iter(models)) if len(models) == 1 else None,
+                requirement_ids=[r.requirement_id for r in bucket],
+            )
+        )
+    plan = SearchPlan(searches=searches)
+    validate_plan(plan, state)
+    return plan
 
 
 @observed
@@ -112,14 +157,25 @@ async def plan_queries(state):
                     for r in state["requirements"]
                     if r.requirement_id in state.get("recovery_requirement_ids", [])
                 ],
+                "available_evidence": [
+                    {k: h.get(k) for k in ("citation_id", "product_model", "section", "content")}
+                    for h in state.get("selected_evidence", [])
+                ]
+                if state.get("recovery_requirement_ids")
+                else [],
             },
             SearchPlan,
             node="plan_queries",
             validator=lambda plan: validate_plan(plan, state),
         )
     except CopilotModelOutputError:
-        return {
-            "route": "finalize_response" if state.get("verified_snapshot") else "fallback_response",
-            "fallback_reason": "verification_failed",
-        }
-    return {"search_plan": plan, "retrieval_mode": "search", "route": "retrieve_documents"}
+        try:
+            plan = _fallback_plan(state)
+        except ValueError:
+            plan = None
+        if plan is None:
+            return {
+                "route": "finalize_response" if state.get("verified_snapshot") else "fallback_response",
+                "fallback_reason": "verification_failed",
+            }
+    return {"search_plan": plan, "route": "retrieve_documents"}

@@ -53,7 +53,7 @@ export function useCustomerWorkspace(currentUser, active = true) {
 
   const loadDetails = useCallback((id, force = false) => {
     if (!id) return Promise.resolve();
-    if (requests.current.has(`detail:${id}`)) return requests.current.get(`detail:${id}`);
+    if (!force && requests.current.has(`detail:${id}`)) return requests.current.get(`detail:${id}`);
     if (!force && detailCache.current[id] && Date.now() - detailFetchedAt.current[id] < 30000) return Promise.resolve(detailCache.current[id]);
     setPending((previous) => ({ ...previous, [id]: true }));
     setDetailErrors((previous) => ({ ...previous, [id]: '' }));
@@ -73,15 +73,15 @@ export function useCustomerWorkspace(currentUser, active = true) {
   useEffect(() => { if (active) void loadList(); }, [active, loadList]);
   useEffect(() => { if (active) void loadDetails(selectedId); }, [active, selectedId, loadDetails]);
   useEffect(() => {
-    const changed = () => { detailFetchedAt.current = {}; };
+    const changed = () => { detailFetchedAt.current = {}; if (active && selectedId) void loadDetails(selectedId, true); };
     window.addEventListener(CHANGE_EVENT, changed);
     return () => window.removeEventListener(CHANGE_EVENT, changed);
-  }, []);
+  }, [active, selectedId, loadDetails]);
   useEffect(() => {
     if (!replySuggestionsAvailable) return;
     if (!requests.current.has('preferences')) requests.current.set('preferences', salesCopilotApi.getPreferences());
     let cancelled = false;
-    requests.current.get('preferences').then((data) => { if (!cancelled) setPreferences(data); }).catch(() => { if (!cancelled) setPreferences({ advisor_id: currentUser?.user_id, nba_enabled: false, draft_enabled: false }); });
+    requests.current.get('preferences').then((data) => { if (!cancelled) setPreferences({ ...data, draft_enabled: true }); }).catch(() => { if (!cancelled) setPreferences({ advisor_id: currentUser?.user_id, draft_enabled: true }); });
     return () => { cancelled = true; };
   }, [currentUser?.user_id]);
   const loadSavedDraft = useCallback((id, force = false) => {
@@ -94,7 +94,7 @@ export function useCustomerWorkspace(currentUser, active = true) {
     requests.current.set(`draft:${id}`, request);
     return request;
   }, []);
-  useEffect(() => { if (replySuggestionsAvailable && preferences?.draft_enabled) void loadSavedDraft(selectedId); }, [selectedId, loadSavedDraft, preferences?.draft_enabled]);
+  useEffect(() => { if (replySuggestionsAvailable) void loadSavedDraft(selectedId); }, [selectedId, loadSavedDraft]);
 
   function updateDetail(id, update) {
     const previous = detailCache.current[id];
@@ -176,12 +176,15 @@ export function useCustomerWorkspace(currentUser, active = true) {
   }
 
   async function generateDraft(id) {
-    if (!preferences?.draft_enabled || mutations.current.has(`generate:${id}`)) return;
+    if (!id || mutations.current.has(`generate:${id}`)) return;
     mutations.current.add(`generate:${id}`);
     setDraftBusyIds((previous) => ({ ...previous, [id]: true }));
-    try { const data = await salesCopilotApi.generateDraft(id, false); setSavedDrafts((previous) => ({ ...previous, [id]: data })); }
+    try { const data = await salesCopilotApi.generateDraft(id, true); setSavedDrafts((previous) => ({ ...previous, [id]: data })); }
     finally { mutations.current.delete(`generate:${id}`); setDraftBusyIds((previous) => ({ ...previous, [id]: false })); }
   }
+
+  const [batchProgress, setBatchProgress] = useState(null);
+  const batchCancelRef = useRef(false);
 
   async function analyze(id) {
     if (mutations.current.has(`analysis:${id}`)) return;
@@ -192,6 +195,16 @@ export function useCustomerWorkspace(currentUser, active = true) {
       const result = await salesCopilotApi.analyzeConversation(id);
       const after = await loadDetails(id, true);
       if (!after) throw new Error('Phân tích xong nhưng chưa tải được dữ liệu mới. Hãy làm mới tin nhắn.');
+      setItems((previous) => previous.map((item) => item.conversation_id === id ? {
+        ...item,
+        interested_models: after.profile?.interested_models || item.interested_models,
+        budget_vnd: after.profile?.budget_vnd ?? item.budget_vnd,
+        budget_notes: after.profile?.budget_notes ?? item.budget_notes,
+        lead_stage: after.lead_status?.stage ?? item.lead_stage,
+        analysis_version: after.analysis_version || item.analysis_version || 1,
+        last_analyzed_at: after.last_analyzed_at || new Date().toISOString(),
+        pending_analysis_count: 0,
+      } : item));
       const changes = [];
       for (const [field, label] of [['interested_models', 'Xe quan tâm'], ['budget_vnd', 'Ngân sách'], ['payment_method', 'Hình thức mua'], ['usage_purpose', 'Nhu cầu'], ['charging_condition', 'Điều kiện sạc'], ['down_payment_vnd', 'Trả trước'], ['purchase_timeline', 'Thời điểm mua']]) {
         if (JSON.stringify(before?.profile?.[field]) !== JSON.stringify(after.profile?.[field])) changes.push(`${label}: ${String(before?.profile?.[field] ?? 'Chưa rõ')} → ${String(after.profile?.[field] ?? 'Chưa rõ')}`);
@@ -201,8 +214,56 @@ export function useCustomerWorkspace(currentUser, active = true) {
       const created = after.tasks.filter((task) => !before?.tasks?.some((old) => old.id === task.id)).length;
       changes.push(`${created} đề xuất công việc mới cần duyệt.`, result.status === 'no_messages' ? 'Chưa có tin nhắn để phân tích.' : 'Đã cập nhật tóm tắt; dữ kiện sales xác nhận được giữ nguyên.');
       setAnalysisChanges((previous) => ({ ...previous, [id]: changes }));
+      return after;
     }
     finally { mutations.current.delete(`analysis:${id}`); setAnalysisIds((previous) => ({ ...previous, [id]: false })); }
+  }
+
+  async function analyzeBatch(ids) {
+    const queue = [...new Set(ids)].filter(Boolean);
+    if (!queue.length || batchProgress?.running) return { completed: 0, failed: 0, cancelled: false };
+    batchCancelRef.current = false;
+    const nameMap = Object.fromEntries(items.map((item) => [item.conversation_id, item.customer_name]));
+    let completed = 0;
+    let failed = 0;
+    let cursor = 0;
+    const activeNames = new Set();
+    const syncProgress = (running = true) => {
+      setBatchProgress({
+        running,
+        total: queue.length,
+        completed,
+        failed,
+        currentLabel: [...activeNames].join(', '),
+      });
+    };
+    syncProgress(true);
+    const concurrency = Math.min(2, queue.length);
+    const workers = Array.from({ length: concurrency }, async () => {
+      while (!batchCancelRef.current && cursor < queue.length) {
+        const id = queue[cursor++];
+        const name = nameMap[id] || 'Khách hàng';
+        activeNames.add(name);
+        syncProgress(true);
+        try {
+          await analyze(id);
+          completed += 1;
+        } catch {
+          failed += 1;
+        } finally {
+          activeNames.delete(name);
+          syncProgress(true);
+        }
+      }
+    });
+    await Promise.all(workers);
+    const cancelled = batchCancelRef.current;
+    setBatchProgress(null);
+    return { completed, failed, cancelled };
+  }
+
+  function cancelBatchAnalysis() {
+    batchCancelRef.current = true;
   }
 
   async function updateStage(id, stage, reason) {
@@ -212,7 +273,7 @@ export function useCustomerWorkspace(currentUser, active = true) {
     try {
       const lead = await salesCopilotApi.updateLeadStage(id, stage, reason);
       updateDetail(id, (detail) => ({ ...detail, lead_status: lead }));
-      setItems((previous) => previous.map((item) => item.conversation_id === id ? { ...item, lead_stage: lead.stage || 'new' } : item));
+      setItems((previous) => previous.map((item) => item.conversation_id === id ? { ...item, lead_stage: lead.stage ?? null } : item));
     } finally { mutations.current.delete(`stage:${id}`); setStageBusyIds((previous) => ({ ...previous, [id]: false })); }
   }
 
@@ -222,6 +283,7 @@ export function useCustomerWorkspace(currentUser, active = true) {
     detailError: detailErrors[selectedId], loadingDetail: Boolean(pending[selectedId]), sending: Boolean(sendingIds[selectedId]),
     taskBusy, createTask, toggleTask, editTask, confirmFact, sendMessage, loadMessages, ensureSource, loadingOlder: Boolean(pageBusy[selectedId]), analysisChanges: analysisChanges[selectedId], draftEnabled: Boolean(preferences?.draft_enabled), preferenceBusy: preferenceBusy || !preferences,
     toggleDraft, generateDraft, draftBusy: Boolean(draftBusyIds[selectedId]), analyze, analyzing: Boolean(analysisIds[selectedId]),
+    analysisIds, batchProgress, analyzeBatch, cancelBatchAnalysis,
     updateStage, stageBusy: Boolean(stageBusyIds[selectedId]), searchKnowledge: lookup.ask, knowledge: lookup.state,
     loadKnowledge: lookup.load, setKnowledgeQuery: lookup.setQuery };
 }

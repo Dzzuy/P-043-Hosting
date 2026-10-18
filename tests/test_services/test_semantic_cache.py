@@ -2,28 +2,15 @@
 
 from datetime import date
 from unittest.mock import patch
+
 import pytest
 
 from src.agents.copilot.state import Citation, CopilotResponse
 from src.knowledge.index_readiness import load_snapshot
 from src.services.semantic_cache import (
     ExactCacheService,
-    SemanticCacheService,
-    cosine_similarity,
     normalize_query_text,
 )
-
-
-def test_cosine_similarity():
-    v1 = [1.0, 0.0, 0.0]
-    v2 = [1.0, 0.0, 0.0]
-    assert cosine_similarity(v1, v2) == pytest.approx(1.0)
-
-    v3 = [0.0, 1.0, 0.0]
-    assert cosine_similarity(v1, v3) == pytest.approx(0.0)
-
-    v4 = [1.0, 1.0, 0.0]
-    assert cosine_similarity(v1, v4) == pytest.approx(1.0 / (2**0.5))
 
 
 def test_normalize_query_text():

@@ -9,6 +9,7 @@ from src.agents.copilot.model_io import _invoke_json
 from src.agents.copilot.nodes import planning
 from src.agents.copilot.nodes._shared import observed
 from src.agents.copilot.state import CopilotResponse, IntakeDecision, PlannedSearch, Requirement, SearchPlan
+from src.config import get_settings
 from src.knowledge.validity import parse_target_date, today_in_vietnam
 from src.observability import allow_content, annotate
 
@@ -132,10 +133,46 @@ def resolve_date(query, supplied):
 
 
 def _validate_intake(decision, state, history):
+    if len(decision.requirements) > get_settings().copilot_max_requirements:
+        raise ValueError("intake exceeds requirement budget")
+    models = set(planning._catalog(state)["product_model"])
+    text = " ".join(
+        [
+            state["query"],
+            state.get("customer_context", ""),
+            state.get("memory_summary") or "",
+            *[m.get("content", "") for m in history],
+        ]
+    ).casefold()
+    decision.product_models = [
+        m for m in decision.product_models if m in models or m.casefold() not in text
+    ]
+    for requirement in decision.requirements:
+        if (
+            requirement.product_model is not None
+            and requirement.product_model not in models
+            and requirement.product_model.casefold() in text
+        ):
+            if requirement.product_model.casefold() not in requirement.description.casefold():
+                requirement.description = f"{requirement.product_model}: {requirement.description}"[:500]
+            requirement.product_model = None
+        if requirement.product_model is not None and (
+            requirement.product_model not in models
+            or requirement.product_model not in {*decision.product_models, "ALL"}
+        ):
+            raise ValueError("requirement model outside intake scope")
     if decision.guard_decision.decision != "allow" or decision.route != "simple":
         return
     if decision.simple_search is None:
         return
+    if (
+        decision.simple_search.product_model is not None
+        and decision.simple_search.product_model not in models
+        and decision.simple_search.product_model.casefold() in text
+    ):
+        if decision.simple_search.product_model.casefold() not in decision.simple_search.query.casefold():
+            decision.simple_search.query = f"{decision.simple_search.product_model} {decision.simple_search.query}"[:1000]
+        decision.simple_search.product_model = None
     search = PlannedSearch(
         **decision.simple_search.model_dump(), requirement_ids=[r.requirement_id for r in decision.requirements]
     )
@@ -145,70 +182,12 @@ def _validate_intake(decision, state, history):
     )
 
 
-def atomic_requirements(decision):
-    """Separate direct vehicle metrics so coverage cannot conflate price and range, preserving conditions."""
-    normalized = []
-    for requirement in decision.requirements:
-        text = requirement.description
-        if requirement.kind != "fact":
-            normalized.append(requirement)
-            continue
-        attributes = []
-        if re.search(r"giá|msrp", text, re.I):
-            if re.search(r"thuê pin", text, re.I):
-                attributes.append("Giá niêm yết (thuê pin)")
-            elif re.search(r"kèm pin", text, re.I):
-                attributes.append("Giá niêm yết (kèm pin)")
-            else:
-                attributes.append("Giá niêm yết")
-            if re.search(r"vat", text, re.I):
-                attributes[-1] += " (giữ đúng điều kiện VAT trong yêu cầu)"
-        if re.search(r"quãng đường|nedc|wltp", text, re.I):
-            standard = "NEDC" if "nedc" in text.lower() else "WLTP" if "wltp" in text.lower() else "chuẩn công bố"
-            attributes.append(f"Quãng đường di chuyển theo {standard}")
-        if re.search(r"dung lượng|kwh", text, re.I):
-            attributes.append("Dung lượng pin khả dụng, đúng đơn vị nguồn")
-        entities = list(dict.fromkeys(re.findall(r"\bVF[\s-]*\d+(?:\s+(?:Plus|Eco))?", text, re.I)))
-        if len(attributes) > 1 and entities:
-            # Extract any qualifiers like dates, customer segments, or conditions present in text
-            qualifiers = []
-            date_m = re.findall(
-                r"(?:vào\s+|tại\s+|tính đến\s+|áp dụng\s+(?:từ\s+)?|tháng\s+|năm\s+)\d{1,2}(?:[/-]\d{1,2})?(?:[/-]\d{2,4})?",
-                text,
-                re.I,
-            )
-            if date_m:
-                qualifiers.extend(date_m)
-            cust_m = re.findall(
-                r"(?:cho\s+|đối với\s+)(?:khách(?: hàng)?\s+[^,.;]+|doanh nghiệp[^,.;]*|xe dịch vụ[^,.;]*)",
-                text,
-                re.I,
-            )
-            if cust_m:
-                qualifiers.extend(cust_m)
-            qualifier_str = f" ({', '.join(dict.fromkeys(q.strip() for q in qualifiers))})" if qualifiers else ""
-
-            normalized.extend(
-                Requirement(requirement_id="R1", description=f"{attribute} của {entity}{qualifier_str}.")
-                for entity in entities
-                for attribute in attributes
-            )
-        else:
-            normalized.append(requirement)
-    # Preserve all original requirements when expansion cannot fit the approved cap.
-    if len(normalized) > 6:
-        return decision
-    return decision.model_copy(
-        update={"requirements": [r.model_copy(update={"requirement_id": f"R{i}"}) for i, r in enumerate(normalized, 1)]}
-    )
-
-
 @observed
 async def analyze_and_route(state):
     # Check for pure conversational greetings first (0 LLM, 0 searches)
     greeting_reply = _check_pure_greeting(state["query"])
     if greeting_reply is not None:
-        annotate(route="greeting", workflow_version="2")
+        annotate(route="greeting", workflow_version="9-evidence-review")
         request_id = state.get("request_id") or uuid4().hex
         final = CopilotResponse(
             status="answered",
@@ -250,12 +229,18 @@ async def analyze_and_route(state):
             "domain": state.get("domain", "all"),
             "lookup_date": str(target or today_in_vietnam()),
             "catalog": planning._catalog(state),
+            "max_requirements": get_settings().copilot_max_requirements,
         },
         IntakeDecision,
         node="analyze_and_route",
         validator=lambda decision: _validate_intake(decision, state, history),
     )
-    decision = atomic_requirements(decision)
+    if decision.answer_kind == "coaching" and not decision.requirements:
+        # No factual interpretation: retain the user's requested coaching task
+        # verbatim as its coverage target when the model omits an advice goal.
+        decision = decision.model_copy(
+            update={"requirements": [Requirement(requirement_id="R1", kind="advice", description=state["query"][:500])]}
+        )
     if decision.route == "simple" and (
         len([r for r in decision.requirements if r.kind == "fact"]) > 2
         or decision.task == "comparison"
@@ -279,9 +264,7 @@ async def analyze_and_route(state):
     result = {
         "history": history,
         "analysis": decision,
-        "product_models": [m for m in decision.product_models if m.upper() != "ALL"],
         "requirements": decision.requirements,
-        "task": decision.task,
         "answer_kind": answer_kind,
         "target_date": target,
         "resolved_date": str(target or today_in_vietnam()),
@@ -294,18 +277,16 @@ async def analyze_and_route(state):
         "evidence_registry": [],
         "candidate_evidence": [],
         "selected_evidence": [],
-        "selected_anchor_ids": [],
-        "evidence_query_provenance": {},
-        "evidence_query_references": {},
         "rejected_evidence_ids": [],
         "evidence_selection_diagnostics": [],
         "retrieval_errors": 0,
         "parent_context_cache": {},
         "feedback": "",
+        "generated_answer": None,
+        "grounding_review": None,
         "fallback_reason": "insufficient_evidence",
         "clarification_question": None,
         "profile_name": "simple",
-        "retrieval_mode": "search",
     }
     if decision.guard_decision.decision == "block" or decision.route == "blocked":
         return {**result, "route": "fallback_response", "fallback_reason": "input_blocked"}
@@ -326,7 +307,7 @@ async def analyze_and_route(state):
 
     # Direct coaching path: advice / call prep / message drafting without factual lookup requirements
     if answer_kind == "coaching" and not any(r.kind == "fact" for r in decision.requirements):
-        annotate(route="coaching", workflow_version="2")
+        annotate(route="coaching", workflow_version="9-evidence-review")
         return {**result, "route": "generate_answer"}
 
     simple = (
@@ -336,7 +317,7 @@ async def analyze_and_route(state):
         and len(decision.requirements) <= 2
         and decision.simple_search is not None
     )
-    annotate(route="simple" if simple else "complex", workflow_version="2")
+    annotate(route="simple" if simple else "complex", workflow_version="9-evidence-review")
     if simple and decision.simple_search is not None:
         search = PlannedSearch(
             **decision.simple_search.model_dump(), requirement_ids=[r.requirement_id for r in decision.requirements]

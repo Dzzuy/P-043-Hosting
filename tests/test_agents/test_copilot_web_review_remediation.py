@@ -3,8 +3,6 @@
 import pytest
 
 from src.agents.copilot.insights import (
-    _clean_model,
-    _clean_summary,
     build_complementary_insights,
     build_product_insights,
 )
@@ -13,53 +11,18 @@ from src.agents.copilot.nodes import guard as guard_nodes
 from src.agents.copilot.state import (
     Citation,
     CopilotResponse,
-    GeneratedAnswer,
-    IntakeDecision,
-    Requirement,
     SelfCheckVerdict,
     VerifiedAnswerSnapshot,
 )
 
 
-def test_clean_summary_preserves_essential_conditions_and_warnings():
-    """Verify P1: _clean_summary does NOT strip (*) Lưu ý or warnings regarding features/delivery."""
-    raw = "Tính năng X thông minh. (*) Lưu ý: Một số tính năng sẽ chưa có sẵn tại thời điểm giao xe."
-    cleaned = _clean_summary(raw, title="Chi tiết tính năng")
-    assert "(*) Lưu ý" in cleaned
-    assert "Một số tính năng sẽ chưa có sẵn tại thời điểm giao xe" in cleaned
-
-
-def test_clean_model_preserves_scope_all():
-    """Verify P1: _clean_model preserves scope ALL instead of coercing to the first model in state."""
-    model = _clean_model("ALL", ["VF 5", "VF 6"])
-    assert model == "ALL"
-
-    model_lower = _clean_model("all", ["VF 5"])
-    assert model_lower == "ALL"
-
-    model_specific = _clean_model("VF 7", ["VF 5"])
-    assert model_specific == "VF 7"
-
-
-def test_atomic_requirements_preserves_qualifiers_and_avoids_synthetic_assumptions():
-    """Verify P2: atomic_requirements retains date and customer qualifiers without adding false pin/VAT assumptions."""
-    req = Requirement(
-        requirement_id="R1",
-        description="Giá niêm yết và quãng đường của VF 5 áp dụng tháng 10/2026 cho khách dịch vụ.",
-        kind="fact",
-    )
-    decision = IntakeDecision(
-        guard_decision={"decision": "allow", "reason": "none"},
-        route="complex",
-        requirements=[req],
-    )
-    atomized = guard_nodes.atomic_requirements(decision)
-    descriptions = [r.description for r in atomized.requirements]
-    assert len(descriptions) >= 2
-    # Verify date and customer qualifiers were preserved
-    assert any("tháng 10/2026" in d or "khách dịch vụ" in d for d in descriptions)
-    # Verify we didn't inject synthetic "kèm pin/VAT và cấu hình áp dụng" when not mentioned
-    assert not any("kèm pin/VAT và cấu hình áp dụng" in d for d in descriptions)
+def test_cards_preserve_full_source_including_warnings_and_group_scope():
+    raw = "Tính năng X thông minh. (*) Lưu ý: Một số tính năng chưa có sẵn lúc giao xe."
+    citation = Citation(citation_id="C1", chunk_id="c1", document_id="d1", title="Tính năng",
+                        product_model="ALL", document_type="product_specs", excerpt=raw)
+    card = build_product_insights({}, existing_citations=[citation])[0]
+    assert card.summary == raw
+    assert card.product_model == "ALL" and card.applicability == "conditional"
 
 
 @pytest.mark.asyncio
@@ -134,9 +97,6 @@ async def test_snapshot_strictly_owns_published_suggestions():
     )
     snapshot = VerifiedAnswerSnapshot(
         answer="VF 5 giá 468 triệu [C1]",
-        draft_hash="hash1",
-        context_hash="ctx1",
-        requirements_hash="req1",
         resolved_date="2026-10-14",
         citations=[citation],
         answered_requirement_ids=["R1"],
@@ -151,7 +111,7 @@ async def test_snapshot_strictly_owns_published_suggestions():
         "resolved_date": "2026-10-14",
         "suggested_message": "Leak suggestion that should never be published!",
         "suggested_next_question": "Leak question?",
-        "self_check": SelfCheckVerdict(grounded=False, suggestions_safe=True),
+        "self_check": SelfCheckVerdict(grounded=False),
     }
 
     result = await answer_nodes.finalize_response(state)

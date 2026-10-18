@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
-import { BookOpen, ChevronRight, RefreshCw, Search } from 'lucide-react';
+import { BookOpen, ChevronRight, RefreshCw, Send } from 'lucide-react';
 import { renderMarkdownWithCitations } from '../markdownRenderer';
+import { groupCitations } from '../citationGroups';
 import { copilotReason } from '../../../lib/copilotStatus';
 
 const STATUS = {
   answered: 'Đã trả lời', partial: 'Trả lời một phần', needs_clarification: 'Cần làm rõ', abstained: 'Chưa đủ căn cứ trả lời',
 };
 
-export function CustomerKnowledgeTool({ lookup, onSearch, onLoadHistory, onQueryChange }) {
+export function CustomerKnowledgeTool({ lookup, onSearch, onLoadHistory, onQueryChange, onOpenDocument }) {
   const [citation, setCitation] = useState(null);
   const log = useRef(null);
+  const citationDetail = useRef(null);
+  useEffect(() => { citationDetail.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, [citation]);
   const nearBottom = useRef(true);
   const messages = lookup.messages || [];
   const query = lookup.query || '';
@@ -18,12 +21,11 @@ export function CustomerKnowledgeTool({ lookup, onSearch, onLoadHistory, onQuery
     if (nearBottom.current && log.current) log.current.scrollTop = log.current.scrollHeight;
   }, [messages.length, lookup.pendingQuery, lookup.progress]);
   function submit(event) {
-    event.preventDefault();
+    event?.preventDefault();
     if (query.trim().length >= 2 && !busy) { nearBottom.current = true; void onSearch(query.trim()); }
   }
   function showCitation(source, turnId) { setCitation({ ...source, turnId }); }
   return <div className="sw-knowledge-tool">
-    <p className="sw-secondary sw-lookup-intro">Kiến thức xe, giá và chính sách dùng chung khi tư vấn mọi khách hàng. Lịch sử lưu riêng theo tài khoản sales. Không gửi cho khách.</p>
     <div className="sw-knowledge-log" ref={log} role="log" aria-label="Lịch sử tra cứu xe" onScroll={() => {
       const node = log.current; nearBottom.current = node.scrollHeight - node.scrollTop - node.clientHeight < 80;
     }}>
@@ -37,7 +39,7 @@ export function CustomerKnowledgeTool({ lookup, onSearch, onLoadHistory, onQuery
       </div>}
       {messages.map((message) => {
         const result = message.response_data || message;
-        const sources = result.citations || [];
+        const sources = groupCitations(result.citations || []);
         const activeCitation = citation?.turnId === message.id ? citation : null;
         return <section key={message.id} className={`sw-lookup-turn sw-lookup-${message.role}`} aria-label={message.role === 'user' ? 'Câu hỏi của sales' : 'Kết quả tra cứu'}>
           <div className="sw-lookup-turn-heading"><strong>{message.role === 'user' ? 'Bạn' : 'Copilot'}</strong>{message.role === 'assistant' && <span className={`sw-lookup-status sw-lookup-status-${result.status}`}>{STATUS[result.status] || result.status}</span>}</div>
@@ -45,17 +47,41 @@ export function CustomerKnowledgeTool({ lookup, onSearch, onLoadHistory, onQuery
             {renderMarkdownWithCitations(message.content, sources, (source) => showCitation(source, message.id))}
             {copilotReason(result.reason_code) && <p className="sw-freshness">{copilotReason(result.reason_code)}</p>}
             {!!result.missing_information?.length && <ul className="sw-lookup-missing">{result.missing_information.map((item, index) => <li key={index}>{item}</li>)}</ul>}
-            {!!sources.length && <details className="sw-knowledge-citations"><summary>Nguồn tham khảo · {sources.length}</summary>{sources.map((source, index) => <button type="button" className="sw-source-button" key={source.citation_id || index} onClick={() => showCitation(source, message.id)}><BookOpen size={14} /><span>{source.title || source.document_id || source.citation_id}</span><ChevronRight size={12} /></button>)}</details>}
+            {!!sources.length && <details className="sw-knowledge-citations"><summary>Nguồn tham khảo · {sources.length} tài liệu</summary>{sources.map((source) => <button type="button" className="sw-source-button" key={source.group_key} onClick={() => showCitation(source, message.id)}><BookOpen size={14} /><span>[{source.display_number}] {source.title || source.document_id || source.citation_id}{source.version && <small>Phiên bản: {source.version}</small>}{source.effective_from && <small>Hiệu lực từ {source.effective_from}{source.effective_to && ` đến ${source.effective_to}`}</small>}</span><ChevronRight size={12} /></button>)}</details>}
             {result.suggested_next_question && <button type="button" disabled={busy} className="sw-text-button sw-lookup-followup" onClick={() => onQueryChange(result.suggested_next_question)}>{result.suggested_next_question}<ChevronRight size={12} /></button>}
             {result.request_id && <small className="sw-lookup-request-id">Mã tra cứu: {result.request_id}</small>}
           </>}
-          {activeCitation && <section className="sw-citation-detail" aria-label="Chi tiết nguồn"><div className="sw-inline-heading"><strong>{activeCitation.title || activeCitation.document_id || activeCitation.citation_id}</strong><button type="button" className="sw-text-button" onClick={() => setCitation(null)}>Đóng nguồn</button></div><small>{activeCitation.version && `Phiên bản: ${activeCitation.version} · `}{activeCitation.effective_from ? `Hiệu lực từ ${activeCitation.effective_from}` : 'Nguồn chưa cung cấp ngày hiệu lực'}{activeCitation.effective_to && ` đến ${activeCitation.effective_to}`}</small><p>{activeCitation.content || activeCitation.excerpt || 'Chưa có đoạn trích để hiển thị.'}</p></section>}
+          {activeCitation && <section ref={citationDetail} className="sw-citation-detail" aria-label="Chi tiết nguồn"><div className="sw-inline-heading"><strong>[{activeCitation.display_number}] {activeCitation.title || activeCitation.document_id || activeCitation.citation_id}</strong><button type="button" className="sw-text-button" onClick={() => setCitation(null)}>Đóng nguồn</button></div><small>{activeCitation.version && `Phiên bản: ${activeCitation.version} · `}{activeCitation.effective_from ? `Hiệu lực từ ${activeCitation.effective_from}` : 'Nguồn chưa cung cấp ngày hiệu lực'}{activeCitation.effective_to && ` đến ${activeCitation.effective_to}`}</small>{onOpenDocument && activeCitation.document_id && <button type="button" className="sw-text-button sw-open-full-source" onClick={() => onOpenDocument(activeCitation.document_id, activeCitation)}>Mở tài liệu đầy đủ trong Kho kiến thức<ChevronRight size={12} /></button>}{activeCitation.chunks.map((chunk, index) => <div className="sw-citation-excerpt" key={`${chunk.citation_id}-${index}`}><small>Đoạn nguồn {chunk.citation_id}</small><p>{chunk.content || chunk.excerpt || 'Chưa có đoạn trích để hiển thị.'}</p></div>)}</section>}
         </section>;
       })}
       {lookup.pendingQuery && <section className="sw-lookup-turn sw-lookup-user"><strong>Bạn</strong><p className="sw-lookup-question">{lookup.pendingQuery}</p></section>}
       {lookup.busy && <p className="sw-tool-status" role="status"><RefreshCw size={14} className="sw-spin" />{lookup.progress || 'Đang kiểm tra tài liệu và nguồn dẫn…'}</p>}
     </div>
     {(lookup.syncError || lookup.error) && <div className="sw-lookup-error" role="alert"><p>{lookup.syncError || lookup.error}</p>{lookup.errorRequestId && <small className="sw-lookup-request-id">Mã tra cứu: {lookup.errorRequestId}</small>}{lookup.needsSync ? <p>Cần tải lại lịch sử để xác nhận kết quả lượt trước khi hỏi tiếp.</p> : lookup.syncError && !lookup.accessDenied && <p>Bạn vẫn có thể tra cứu khi chưa tải được lịch sử.</p>}{(lookup.needsSync || lookup.syncError) && <button type="button" className="sw-text-button" disabled={lookup.loading} onClick={() => { void onLoadHistory().catch(() => {}); }}>Tải lại lịch sử</button>}</div>}
-    <form onSubmit={submit} className="sw-knowledge-form"><label htmlFor="sw-knowledge-query">{messages.length ? 'Hỏi tiếp về xe và chính sách' : 'Câu hỏi về xe và chính sách'}</label><textarea id="sw-knowledge-query" value={query} maxLength={4000} rows={2} placeholder="Hỏi về giá, phiên bản, pin, bảo hành…" onChange={(event) => onQueryChange(event.target.value)} /><div className="sw-lookup-composer-actions"><small>Mặc định tra tất cả theo ngày hiện tại. Nêu ngày trong câu hỏi khi cần đối chiếu.</small><button type="submit" className="sw-primary-button" disabled={Boolean(busy) || query.trim().length < 2}><Search size={14} />{lookup.busy ? 'Đang tra cứu…' : 'Tra cứu'}</button></div></form>
+    <form onSubmit={submit} className="sw-knowledge-form">
+      <div className="sw-composer-box">
+        <textarea
+          id="sw-knowledge-query"
+          aria-label={messages.length ? 'Hỏi tiếp về xe và chính sách' : 'Câu hỏi về xe và chính sách'}
+          value={query}
+          maxLength={4000}
+          rows={1}
+          placeholder="Hỏi về giá, phiên bản, pin, bảo hành…"
+          disabled={Boolean(busy)}
+          onChange={(event) => onQueryChange(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+              event.preventDefault();
+              submit(event);
+            }
+          }}
+        />
+        <div className="sw-composer-tools">
+          <button className="sw-primary-button sw-send-button" type="submit" aria-label={lookup.busy ? 'Đang tra cứu' : 'Tra cứu'} disabled={Boolean(busy) || query.trim().length < 2}>
+            <Send size={15} />
+          </button>
+        </div>
+      </div>
+    </form>
   </div>;
 }

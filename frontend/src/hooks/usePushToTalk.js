@@ -14,6 +14,7 @@ export function usePushToTalk(onRecorded) {
   const timerRef = useRef(null);
   const pendingStopRef = useRef(false);
   const failedRef = useRef(false);
+  const stopReasonRef = useRef('release');
   const mountedRef = useRef(true);
   const onRecordedRef = useRef(onRecorded);
 
@@ -28,7 +29,8 @@ export function usePushToTalk(onRecorded) {
     recorderRef.current = null;
   };
 
-  const stop = () => {
+  const stop = (reason = 'release') => {
+    if (reason === 'limit') stopReasonRef.current = 'limit';
     pendingStopRef.current = true;
     if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
   };
@@ -57,6 +59,7 @@ export function usePushToTalk(onRecorded) {
         stream.getTracks().forEach((track) => track.stop());
         return;
       }
+      stopReasonRef.current = 'release';
       streamRef.current = stream;
       const mimeType = FORMATS.find((format) => MediaRecorder.isTypeSupported?.(format));
       const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
@@ -81,7 +84,7 @@ export function usePushToTalk(onRecorded) {
         if (!mountedRef.current || failedRef.current) return;
         setRecordingState('idle');
         if (blob.size && durationSeconds >= 0.1) {
-          onRecordedRef.current(blob, Math.min(durationSeconds, MAX_RECORDING_MS / 1000));
+          onRecordedRef.current(blob, Math.min(durationSeconds, MAX_RECORDING_MS / 1000), stopReasonRef.current);
         } else {
           setRecordingError('Không có âm thanh. Giữ nút nói lâu hơn rồi thử lại.');
         }
@@ -89,7 +92,7 @@ export function usePushToTalk(onRecorded) {
       startedAtRef.current = Date.now();
       recorder.start();
       setRecordingState('recording');
-      timerRef.current = setTimeout(stop, MAX_RECORDING_MS);
+      timerRef.current = setTimeout(() => stop('limit'), MAX_RECORDING_MS);
       if (pendingStopRef.current) stop();
     } catch (error) {
       release();

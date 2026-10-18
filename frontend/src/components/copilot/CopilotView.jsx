@@ -29,7 +29,7 @@ const STORAGE_KEY_PREFIX = 'vinfast_copilot_chat_';
 export function CopilotView(props) {
   return import.meta.env.VITE_STANDALONE_COPILOT_ENABLED === 'true'
     ? <LegacyCopilotView {...props} />
-    : <CopilotWorkspace key={props.currentUser?.user_id} currentUser={props.currentUser} />;
+    : <CopilotWorkspace key={props.currentUser?.user_id} currentUser={props.currentUser} onOpenDocument={props.onOpenDocument} />;
 }
 
 import { renderMarkdownWithCitations } from './markdownRenderer';

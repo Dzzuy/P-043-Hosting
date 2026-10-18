@@ -23,12 +23,11 @@ from src.models.sales_copilot import (
     CustomerProfileSnapshot,
     LeadStage,
     MessageDraftResponse,
-    NextBestActionResponse,
     SalesPreferences,
 )
 from src.services.copilot_query import customer_lookup_history, run_copilot_request
-from src.services.sales_conversation_service import SalesConversationService
 from src.services.sales_agenda_service import SalesAgendaService, validate_interval
+from src.services.sales_conversation_service import SalesConversationService
 from src.services.sales_copilot_analyzer import SalesCopilotAnalyzer
 from src.services.sales_copilot_assistant import SalesCopilotAssistant
 
@@ -60,6 +59,98 @@ class SalesChatRequest(BaseModel):
     query: QueryText
 
 
+class HistoryChatRequest(SalesChatRequest):
+    analysis_id: str = Field(min_length=1, max_length=64)
+
+
+class ProposalChanges(BaseModel):
+    model_config = {"extra": "forbid"}
+    title: str | None = Field(default=None, min_length=1, max_length=200, pattern=r"\S")
+    priority: Literal["low", "medium", "high"] | None = None
+    starts_at: AwareDatetime | None = None
+    ends_at: AwareDatetime | None = None
+    location: str | None = Field(default=None, max_length=1000)
+    description: str | None = Field(default=None, max_length=4000)
+    item_type: Literal["task", "appointment"] | None = None
+
+    @model_validator(mode="after")
+    def no_empty_values(self):
+        if any(getattr(self, f) is None for f in self.model_fields_set - {"starts_at", "ends_at"}):
+            raise ValueError("Thay đổi cần có giá trị hợp lệ.")
+        return self
+
+
+class ProposalReviewRequest(BaseModel):
+    approve: bool
+    changes: ProposalChanges = Field(default_factory=ProposalChanges)
+
+
+class MilestoneConfirmation(BaseModel):
+    revoke: bool = False
+
+
+def intelligence_store(request, customer_id, user):
+    from src.integrations.customer_intelligence_store import IntelligenceStore
+    store = IntelligenceStore(request.app.state.sales_copilot_repository)
+    try:
+        store.authorize(customer_id, user.user_id)
+    except LookupError:
+        raise HTTPException(404, "Không tìm thấy khách hàng.") from None
+    return store
+
+
+@router.get("/customers/{customer_id}/intelligence")
+async def customer_intelligence(customer_id: str, request: Request, user=Depends(get_current_user)):
+    store = intelligence_store(request, customer_id, user)
+    return {**store.status(customer_id), "proposals": store.proposals(customer_id),
+            "milestones": store.milestone_history(customer_id), "stage_history": store.stage_history(customer_id), "chat": store.chats(customer_id)}
+
+
+@router.post("/customers/{customer_id}/history-chat")
+async def history_chat(customer_id: str, payload: HistoryChatRequest, request: Request, user=Depends(get_current_user)):
+    from src.services.intelligence_engine import IntelligenceEngine
+    intelligence_store(request, customer_id, user)
+    try:
+        return await IntelligenceEngine(request.app.state.sales_copilot_repository).chat(customer_id, user.user_id, payload.analysis_id, payload.query)
+    except LookupError:
+        raise HTTPException(404, "Không tìm thấy phiên phân tích.") from None
+    except ValueError:
+        raise HTTPException(409, "Chưa trả lời được. Cần phiên phân tích hợp lệ và cấu hình PII.") from None
+
+
+@router.get("/customers/{customer_id}/analyses/{analysis_id}/messages/{message_id}")
+async def analyzed_source(customer_id: str, analysis_id: str, message_id: str, request: Request, user=Depends(get_current_user)):
+    store = intelligence_store(request, customer_id, user)
+    try:
+        analysis = store.analysis(customer_id, analysis_id)
+        message = next((m for m in (analysis or {}).get("messages", []) if m["id"] == message_id), None)
+        if message:
+            return message
+    except LookupError:
+        pass
+    raise HTTPException(404, "Tin không thuộc phạm vi phiên phân tích.")
+
+
+@router.post("/customers/{customer_id}/proposals/{proposal_id}/review")
+async def review_proposal(customer_id: str, proposal_id: str, payload: ProposalReviewRequest, request: Request, user=Depends(get_current_user)):
+    store = intelligence_store(request, customer_id, user)
+    try:
+        return await run_in_threadpool(store.review, customer_id, user.user_id, proposal_id, payload.approve, payload.changes.model_dump(exclude_unset=True))
+    except LookupError:
+        raise HTTPException(404, "Không tìm thấy đề xuất hoặc công việc.") from None
+    except (ValueError, TypeError):
+        raise HTTPException(422, "Dữ liệu duyệt chưa hợp lệ; lịch hẹn cần thời gian và địa điểm.") from None
+
+
+@router.post("/customers/{customer_id}/milestones/{event_id}/confirm")
+async def confirm_milestone(customer_id: str, event_id: str, payload: MilestoneConfirmation, request: Request, user=Depends(get_current_user)):
+    store = intelligence_store(request, customer_id, user)
+    try:
+        return await run_in_threadpool(store.confirm_milestone, customer_id, user.user_id, event_id, payload.revoke)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from None
+
+
 class UpdateTaskStatusRequest(BaseModel):
     status: Literal["pending", "in_progress", "completed", "cancelled", "needs_review"] | None = None
     title: str | None = Field(default=None, min_length=1, max_length=200, pattern=r"\S")
@@ -67,12 +158,13 @@ class UpdateTaskStatusRequest(BaseModel):
     due_at: datetime | None = None
     starts_at: AwareDatetime | None = None
     ends_at: AwareDatetime | None = None
+    location: str | None = Field(default=None, max_length=1000)
     item_type: Literal["task", "appointment"] | None = None
     description: str | None = Field(default=None, max_length=4000)
 
     @model_validator(mode="after")
     def validate_edit(self):
-        if not self.model_fields_set or any(getattr(self, field) is None for field in self.model_fields_set - {"due_at"}):
+        if not self.model_fields_set or any(getattr(self, field) is None for field in self.model_fields_set - {"due_at", "starts_at", "ends_at"}):
             raise ValueError("Cần ít nhất một thay đổi hợp lệ.")
         return self
 
@@ -95,14 +187,18 @@ class ProfileFactRequest(BaseModel):
 class CreateFollowupTaskRequest(BaseModel):
     title: str = Field(min_length=1, max_length=200, pattern=r"\S")
     priority: Literal["low", "medium", "high"] = "medium"
-    starts_at: AwareDatetime
-    ends_at: AwareDatetime
+    starts_at: AwareDatetime | None = None
+    ends_at: AwareDatetime | None = None
+    location: str = Field(default="", max_length=1000)
     item_type: Literal["task", "appointment"] = "task"
     description: str = Field(default="", max_length=4000)
+    source_message_ids: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_schedule(self):
-        validate_interval(self.starts_at, self.ends_at, required=True)
+        validate_interval(self.starts_at, self.ends_at, required=self.item_type == "appointment")
+        if self.item_type == "appointment" and not self.location.strip():
+            raise ValueError("Lịch hẹn cần địa điểm.")
         return self
 
 
@@ -154,6 +250,8 @@ async def create_personal_task(payload: CreatePersonalTaskRequest, request: Requ
                                       user.user_id, payload.model_dump() | {"title": payload.title.strip()})
     except LookupError as exc:
         raise HTTPException(status_code=404, detail="Không tìm thấy khách hàng.") from exc
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from None
 
 @router.get("/conversations", response_model=list[dict[str, Any]])
 async def list_conversations(
@@ -228,16 +326,15 @@ async def trigger_conversation_analysis(
     request: Request,
     user: AuthenticatedUser = Depends(get_current_user),
 ):
-    """Action button: '⚡ Phân tích hội thoại' - Triggers F01, F02, F05, F06."""
+    """Publish a versioned customer analysis after evidence checks."""
     analyzer: SalesCopilotAnalyzer = request.app.state.sales_copilot_analyzer
     try:
         result = await analyzer.analyze_conversation(conversation_id, user.user_id)
         return result
     except LookupError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
-    except Exception as exc:
-        logger.exception("Analysis error")
-        raise HTTPException(status_code=500, detail=f"Lỗi khi phân tích hội thoại: {exc}")
+    except Exception:
+        raise HTTPException(status_code=409, detail="Không thể công bố phân tích. Kiểm tra cấu hình hoặc thử lại; phiên cũ được giữ nguyên.") from None
 
 
 @router.get("/preferences", response_model=SalesPreferences)
@@ -245,7 +342,7 @@ async def get_preferences(
     request: Request,
     user: AuthenticatedUser = Depends(get_current_user),
 ):
-    """Get sales feature flags for F03 (NBA) and F04 (Drafting)."""
+    """Get drafting and notification preferences."""
     repo = request.app.state.sales_copilot_repository
     return await run_in_threadpool(repo.get_preferences, user.user_id)
 
@@ -262,19 +359,6 @@ async def update_preferences(
     return await run_in_threadpool(repo.update_preferences, payload)
 
 
-@router.post("/conversations/{conversation_id}/recommendations", response_model=NextBestActionResponse,
-             dependencies=[Depends(require_conversation_access)])
-async def get_next_best_actions(
-    conversation_id: str,
-    request: Request,
-    force: bool = False,
-    user: AuthenticatedUser = Depends(get_current_user),
-):
-    """F03 Next Best Action: Auto-triggered when toggle is ON."""
-    assistant: SalesCopilotAssistant = request.app.state.sales_copilot_assistant
-    return await assistant.generate_next_best_actions(conversation_id, user.user_id, force=force)
-
-
 @router.post("/conversations/{conversation_id}/draft", response_model=MessageDraftResponse,
              dependencies=[Depends(require_conversation_access)])
 async def generate_message_draft(
@@ -283,9 +367,12 @@ async def generate_message_draft(
     force: bool = False,
     user: AuthenticatedUser = Depends(get_current_user),
 ):
-    """F04 AI Message Drafting: Auto-triggered when toggle is ON."""
+    """Generate a draft only for this explicit request; sales reviews before use."""
     assistant: SalesCopilotAssistant = request.app.state.sales_copilot_assistant
-    return await assistant.generate_message_draft(conversation_id, user.user_id, force=force)
+    try:
+        return await assistant.generate_message_draft(conversation_id, user.user_id, force=force)
+    except Exception:
+        raise HTTPException(status_code=409, detail="Chưa tạo được nháp. Kiểm tra cấu hình hoặc thử lại.") from None
 
 
 @router.get("/conversations/{conversation_id}/draft", response_model=dict[str, Any] | None,
@@ -316,6 +403,30 @@ async def create_followup_task(
         )
     except LookupError as exc:
         raise HTTPException(status_code=404, detail="Không tìm thấy cuộc hội thoại.") from exc
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from None
+
+
+@router.post("/conversations/{conversation_id}/messages/{message_id}/suggest-tasks",
+             dependencies=[Depends(require_conversation_access)])
+async def suggest_tasks_from_message(
+    conversation_id: str,
+    message_id: str,
+    request: Request,
+    user: AuthenticatedUser = Depends(get_current_user),
+):
+    """Extract 1 or more suggested tasks/appointments from a specific chat message."""
+    from src.services.intelligence_engine import IntelligenceEngine
+    try:
+        return await IntelligenceEngine(request.app.state.sales_copilot_repository).suggest_tasks_from_message(
+            conversation_id, message_id, user.user_id
+        )
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from None
+    except Exception as exc:
+        logger.exception("Failed to suggest tasks from message %s", message_id)
+        raise HTTPException(status_code=409, detail="Chưa phân tích được công việc từ tin nhắn này. Vui lòng thử lại.") from exc
+
 
 
 @router.post("/conversations/{conversation_id}/copilot-chat")
@@ -363,6 +474,8 @@ async def update_lead_stage(
                                       payload.stage, payload.reason)
     except LookupError as exc:
         raise HTTPException(status_code=404, detail="Không tìm thấy cuộc hội thoại.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from None
 
 
 @router.patch("/tasks/{task_id}")

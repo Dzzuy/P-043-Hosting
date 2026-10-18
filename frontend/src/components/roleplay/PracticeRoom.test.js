@@ -131,7 +131,7 @@ for (const name of ['loadHistory', 'handleStartScenario', 'openAttempt']) {
         setNotice: (value) => { notice = value; },
         setHistoryError: (value) => { message = value; },
         setStartError: (value) => { message = value; },
-        setHistory() {}, setHistoryStatus() {}, setActiveScenario() {}, setStarting() {}, setLastMaxTurns() {},
+        setHistory() {}, setHistoryStatus() {}, setActiveScenario() {}, setStarting() {}, setLastMaxTurns() {}, setInitialMode() {},
         setActiveSession() {}, setViewMode() {}, setHistoryScenarioId() {}, setSelectedSessionId() {},
         setDetailStatus() {}, setAttemptDetail() {}, setRetryEvaluationError() {},
       };
@@ -166,3 +166,26 @@ for (const name of ['NotAllowedError', 'NotFoundError', 'NotReadableError']) {
     assert.equal(permission?.name || null, name === 'NotReadableError' ? null : name);
   });
 }
+
+test('retry evaluation keeps progress dialog visible until request settles', async () => {
+  const { state, scope } = room();
+  let dialogOpen = false;
+  let finishing = false;
+  let rejectRequest;
+  scope.setShowFinishConfirm = (value) => { dialogOpen = value; };
+  scope.setFinishing = (value) => { finishing = value; };
+  state.notice = apiErrorNotice({ code: 'evaluation_failed' });
+  scope.practiceApi.finishSession = () => new Promise((_, reject) => { rejectRequest = reject; });
+  scope.practiceApi.getSession = async () => ({ termination_status: 'advisor_ended', messages: [] });
+  scope.practiceApi.getAttempt = async () => ({ ai_evaluation: null });
+  scope.handleFinishSession = handler('handleFinishSession', scope);
+  const pending = handler('handleNoticeAction', scope)('retry_finish');
+  assert.equal(state.notice, null);
+  assert.equal(dialogOpen, true);
+  assert.equal(finishing, true);
+  rejectRequest({ code: 'evaluation_failed' });
+  await pending;
+  assert.equal(dialogOpen, false);
+  assert.equal(finishing, false);
+  assert.equal(state.notice.actions[0].id, 'retry_finish');
+});

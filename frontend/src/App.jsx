@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Header } from './components/layout/Header';
 import { NotificationDrawer } from './components/layout/NotificationDrawer';
-import { HomeView } from './components/home/HomeView';
 import { CopilotView } from './components/copilot/CopilotView';
 import { RoleplayView } from './components/roleplay/RoleplayView';
 import { KnowledgeView } from './components/knowledge/KnowledgeView';
@@ -15,11 +14,12 @@ import { practiceApi } from './api/practiceApi';
 export function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [authStatus, setAuthStatus] = useState('loading');
-  const [currentTab, setCurrentTab] = useState('home');
+  const [currentTab, setCurrentTab] = useState('copilot');
   const [scenarios, setScenarios] = useState([]);
   const [scenarioStatus, setScenarioStatus] = useState('loading');
   const [scenarioReloadToken, setScenarioReloadToken] = useState(0);
   const [sourceDocumentId, setSourceDocumentId] = useState(null);
+  const [sourceReference, setSourceReference] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [copilotQuery, setCopilotQuery] = useState('');
@@ -28,7 +28,12 @@ export function App() {
   useEffect(() => {
     async function restoreSession() {
       try {
-        setCurrentUser(await authApi.me());
+        const user = await authApi.me();
+        setCurrentUser(user);
+        if (user.role === 'advisor') {
+          setCurrentTab('copilot');
+          setCopilotOpened(true);
+        }
         setAuthStatus('authenticated');
       } catch {
         setCurrentUser(null);
@@ -67,7 +72,12 @@ export function App() {
     const user = await authApi.login(username, password);
     setCurrentUser(user);
     setAuthStatus('authenticated');
-    setCurrentTab(user.role === 'advisor' ? 'home' : 'manager');
+    if (user.role === 'advisor') {
+      setCurrentTab('copilot');
+      setCopilotOpened(true);
+    } else {
+      setCurrentTab('manager');
+    }
   };
 
   const handleLogout = async () => {
@@ -76,7 +86,7 @@ export function App() {
     } finally {
       setCurrentUser(null);
       setAuthStatus('anonymous');
-      setCurrentTab('home');
+      setCurrentTab('copilot');
       setScenarios([]);
       setScenarioStatus('loading');
       setCopilotOpened(false);
@@ -106,12 +116,6 @@ export function App() {
     }
   };
 
-  const handleConsultCopilot = (query) => {
-    setCopilotQuery(query);
-    setCopilotOpened(true);
-    setCurrentTab('copilot');
-  };
-
   if (authStatus === 'loading') {
     return <div className="auth-loading" role="status">Đang kiểm tra phiên đăng nhập…</div>;
   }
@@ -136,11 +140,12 @@ export function App() {
 
   const advisorProfile = {
     name: currentUser.display_name,
+    username: currentUser.username,
     role: 'Tư vấn viên',
   };
 
   return (
-    <div className={`app-container${currentTab === 'home' ? ' home-app-container' : ''}${currentTab === 'copilot' ? ' copilot-app-container' : ''}${currentTab === 'knowledge' ? ' knowledge-app-container' : ''}`}>
+    <div className={`app-container${currentTab === 'copilot' ? ' copilot-app-container' : ''}${currentTab === 'knowledge' ? ' knowledge-app-container' : ''}${currentTab === 'roleplay' ? ' roleplay-app-container' : ''}`}>
       {/* GLOBAL TOP HEADER */}
       <Header
         currentTab={currentTab}
@@ -150,36 +155,22 @@ export function App() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         unreadCount={unreadCount}
+        hasNotifications={notifications.length > 0}
         onOpenNotifications={() => setIsNotifOpen(true)}
         advisorProfile={advisorProfile}
         onLogout={handleLogout}
       />
 
       {/* MAIN CONTENT AREA */}
-      <main className={`main-content${currentTab === 'home' ? ' home-main-content' : ''}${currentTab === 'copilot' ? ' copilot-main-content' : ''}${currentTab === 'knowledge' ? ' knowledge-main-content' : ''}`}>
-        {currentTab === 'home' && (
-          <HomeView
-            scenarios={scenarios}
-            scenarioStatus={scenarioStatus}
-            onRetryScenarios={() => {
-              setScenarioStatus('loading');
-              setScenarioReloadToken((value) => value + 1);
-            }}
-            onNavigate={(tab) => {
-              setCurrentTab(tab);
-              if (tab === 'copilot') setCopilotOpened(true);
-            }}
-            onStartScenario={() => setCurrentTab('roleplay')}
-          />
-        )}
-
+      <main className={`main-content${currentTab === 'copilot' ? ' copilot-main-content' : ''}${currentTab === 'knowledge' ? ' knowledge-main-content' : ''}`}>
         {(currentTab === 'copilot' || copilotOpened) && (
           <div style={{ display: currentTab === 'copilot' ? 'flex' : 'none', flex: 1, minHeight: 0, height: '100%', flexDirection: 'column' }}>
           <CopilotView
             currentUser={currentUser}
             initialQuery={copilotQuery}
-            onOpenDocument={(documentId) => {
+            onOpenDocument={(documentId, reference = null) => {
               setSourceDocumentId(documentId);
+              setSourceReference(reference);
               setCurrentTab('knowledge');
             }}
           />
@@ -188,6 +179,11 @@ export function App() {
 
         {currentTab === 'roleplay' && (
           <RoleplayView
+            onOpenKnowledge={() => {
+              setSourceDocumentId(null);
+              setSourceReference(null);
+              setCurrentTab('knowledge');
+            }}
             scenarios={scenarios}
             scenarioStatus={scenarioStatus}
             onRetryScenarios={() => {
@@ -199,8 +195,8 @@ export function App() {
 
         {currentTab === 'knowledge' && (
           <KnowledgeView
-            onOpenCopilotQuery={handleConsultCopilot}
             sourceDocumentId={sourceDocumentId}
+            sourceReference={sourceReference}
           />
         )}
 

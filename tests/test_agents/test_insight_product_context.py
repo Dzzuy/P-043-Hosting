@@ -2,7 +2,7 @@
 
 from types import SimpleNamespace
 
-from src.agents.copilot.insights import _extract_sentences, build_complementary_insights, build_product_insights
+from src.agents.copilot.insights import build_complementary_insights, build_product_insights
 from src.agents.copilot.state import Citation
 from src.knowledge.chunking import chunk_document
 from src.knowledge.schemas import KnowledgeDocument
@@ -16,7 +16,7 @@ def document(identifier, model, kind, content, **overrides):
     )
 
 
-def test_highlights_supplement_a_price_answer_with_the_same_products_specs_and_current_policy():
+def test_insights_never_import_unselected_corpus_facts_after_grounding():
     documents = [
         document("specs", "VF 5", "product_specs", "Công suất tối đa\n134 hp\nDung lượng pin khả dụng\n37,23 kWh"),
         document("wrong-car", "VF 9", "product_specs", "VF 9 có công suất 300 kW."),
@@ -29,10 +29,8 @@ def test_highlights_supplement_a_price_answer_with_the_same_products_specs_and_c
         {"snapshot": snapshot, "product_models": ["VF 5"], "resolved_date": "2026-10-14"},
         "VF 5 Plus có giá 496 triệu đồng.",
     )
-    assert {card.citation.document_id for card in cards} == {"specs", "current"}
-    assert {card.category for card in cards} == {"highlight", "policy"}
-    assert "37,23 kWh" in next(card.summary for card in cards if card.category == "highlight")
-    assert "xe cá nhân" in next(card.essential_conditions for card in cards if card.category == "policy")
+    assert cards == []  # No verified citations: no independent corpus scan.
+
 
 
 def test_shared_price_table_never_publishes_other_cars_as_the_products_highlight():
@@ -42,16 +40,7 @@ def test_shared_price_table_never_publishes_other_cars_as_the_products_highlight
         excerpt="MSRP kèm pin (bao gồm VAT)\nVF 2 | 188.000.000 VNĐ\nVF 5 | Plus | 496.000.000 VNĐ",
     )
     cards = build_product_insights({"product_models": ["VF 5"]}, existing_citations=[citation])
-    assert len(cards) == 1
-    assert cards[0].category == "policy" and cards[0].product_model == "VF 5"
-    assert "496.000.000" in cards[0].summary and "188.000.000" not in cards[0].summary
-    assert cards[0].citation.excerpt == citation.excerpt
-
-
-def test_numeric_values_and_decimal_commas_survive_sentence_cleanup():
-    assert _extract_sentences("326,4 km mỗi lần sạc. Pin 37,23 kWh.") == [
-        "326,4 km mỗi lần sạc.", "Pin 37,23 kWh.",
-    ]
+    assert cards == []  # Keep complete shared tables in the citation panel, never infer rows.
 
 
 def test_policy_conditions_keep_the_complete_numeric_limit():

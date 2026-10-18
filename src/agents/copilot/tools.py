@@ -5,7 +5,7 @@ import re
 import unicodedata
 from datetime import date
 from pathlib import Path
-from typing import Any, Literal
+from typing import Literal
 
 from rank_bm25 import BM25Okapi
 
@@ -130,43 +130,17 @@ class BM25SearchEngine:
                     break
         return hits
 
-    def read_context(
-        self, chunk_id: str, target_date: date | None = None, *, include_header=False
-    ) -> list[RetrievalHit]:
-        """Verified section headers/conditions and neighbors, never arbitrary URLs."""
+    def read_context(self, chunk_id: str, target_date: date | None = None) -> list[RetrievalHit]:
+        """Read the same dependency bundle used by the verified snapshot path."""
+        from src.knowledge.source_context import source_context_chunks
+
         anchor = next((c for c in self._chunks if c.chunk_id == chunk_id), None)
         if anchor is None:
             return []
-        chunks = [
-            c
-            for c in self._chunks
-            if c.document_id == anchor.document_id
-            and c.metadata.version == anchor.metadata.version
-            and is_document_retrievable(c.metadata, target_date)
+        return [
+            _make_hit(c, 0, i + 1, "bm25")
+            for i, c in enumerate(source_context_chunks(anchor, self._chunks, target_date))
         ]
-        section = anchor.metadata.section_title or ""
-        parent = section.split(" > ")[0]
-        chosen = {anchor.chunk_id: anchor}
-        if include_header and chunks and anchor.metadata.document_type in {"price_list", "policy"}:
-            chosen[chunks[0].chunk_id] = chunks[0]  # Document-level effective date / applicability header.
-        same = [c for c in chunks if c.metadata.section_id == anchor.metadata.section_id]
-        if same and (anchor.metadata.context_prefix or anchor.metadata.requires_context):
-            chosen[same[0].chunk_id] = same[0]
-        for c in chunks:
-            title = c.metadata.section_title or ""
-            scope = re.search(r"đối tượng áp dụng|phạm vi áp dụng", title, re.I)
-            if scope and anchor.metadata.document_type == "policy":
-                # A dated audience subsection is local, not global scope for every audience.
-                scope = c.metadata.section_id == anchor.metadata.section_id or " > " not in title
-            condition = (
-                title.startswith(parent) and parent and re.search(r"lưu ý|ghi chú|điều kiện|ngoại lệ", title, re.I)
-            )
-            neighbor = (
-                anchor.metadata.requires_context and abs(c.metadata.chunk_index - anchor.metadata.chunk_index) <= 1
-            )
-            if scope or condition or neighbor:
-                chosen[c.chunk_id] = c
-        return [_make_hit(c, 0, i + 1, "bm25") for i, c in enumerate(chosen.values())]
 
 
 class DenseSearchEngine:
@@ -253,33 +227,6 @@ def build_evidence_context(hits: list[RetrievalHit]) -> tuple[str, list[Citation
             )
         )
     return "\n\n---\n\n".join(blocks), citations
-
-
-def parse_answer_citations(text: str, allowed_cids: set[str] | None = None) -> dict[str, Any]:
-    """Shared citation parser detecting valid markers, unknown IDs, and malformed markers.
-
-    Never silently invents or drops citation IDs.
-    """
-    if not text:
-        return {"cited_ids": [], "unknown_ids": [], "malformed": []}
-
-    # Valid markers [C1], [C2], etc. (1-indexed)
-    cited_ids = list(dict.fromkeys(re.findall(r"\[(C[1-9]\d*)\]", text)))
-
-    # Malformed markers inside brackets like [C], [C0], [Cabc]
-    potential_markers = re.findall(r"\[(C[^\]]*)\]", text)
-    malformed = [m for m in potential_markers if not re.match(r"^C[1-9]\d*$", m)]
-
-    unknown_ids = []
-    if allowed_cids is not None:
-        unknown_ids = [cid for cid in cited_ids if cid not in allowed_cids]
-
-    return {
-        "cited_ids": cited_ids,
-        "unknown_ids": unknown_ids,
-        "malformed": list(dict.fromkeys(malformed)),
-    }
-
 
 
 def matches_filters(

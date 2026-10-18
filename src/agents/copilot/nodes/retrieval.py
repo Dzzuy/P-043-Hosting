@@ -61,32 +61,6 @@ async def _search(search, state):
 async def retrieve_documents(state):
     snapshot = await _ensure_snapshot(state)
     current = {**state, "snapshot": snapshot}
-    runtime = _runtime(state)
-    if state.get("retrieval_mode") == "read_context":
-        registry = {h["citation_id"]: h for h in state["evidence_registry"]}
-        anchors = state.get("read_anchor_ids", [])
-        if not anchors or len(anchors) > 2 or any(cid not in registry for cid in anchors):
-            raise CopilotDependencyError("invalid read context anchor")
-        with span("retrieval.read_context", branch="bm25") as metadata:
-            hits = await bounded_io(
-                lambda: [
-                    h
-                    for cid in anchors
-                    for h in get_bm25_search_engine().read_context(
-                        registry[cid]["chunk_id"], _lookup_date(state), include_header=True
-                    )
-                ],
-                runtime.timeout(get_settings().retrieval_timeout_seconds, reserve_seconds=10),
-            )
-            metadata["result_count"] = len(hits)
-        if any(not any(h["chunk_id"] == registry[cid]["chunk_id"] for h in hits) for cid in anchors):
-            raise CopilotDependencyError("read context anchor missing")
-        return {
-            "snapshot": snapshot,
-            "new_hits": hits,
-            "raw_search_results": [],
-            "route": "select_evidence",
-        }
     if state.get("retrieval_rounds", 0) >= get_settings().copilot_max_retrieval_rounds:
         raise CopilotDependencyError("retrieval round limit")
     try:
@@ -104,7 +78,6 @@ async def retrieve_documents(state):
     return {
         "snapshot": snapshot,
         "raw_search_results": results,
-        "new_hits": [],
         "retrieval_rounds": state.get("retrieval_rounds", 0) + 1,
         "tool_calls": state.get("tool_calls", 0) + len(searches),
         "search_signatures": [*state.get("search_signatures", []), *map(_signature, searches)],

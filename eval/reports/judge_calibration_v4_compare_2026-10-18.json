@@ -1,0 +1,1149 @@
+{
+  "mode": "compare",
+  "runs": [
+    {
+      "mode": "compare",
+      "status": "INCOMPLETE",
+      "structural_valid": true,
+      "dataset_version": "gate4-judge-calibration-v4",
+      "rubric_version": "sales-rubric-v4",
+      "case_ids": [
+        "JC1_WEAK_DISCOVERY",
+        "JC2_ADEQUATE_RESPONSE",
+        "JC3_CONTEXT_ADAPTIVE",
+        "JC4_FACTUAL_ERROR",
+        "JC5_PARTIAL_OPPORTUNITY",
+        "JC6_VF6_PLUS_UPSELL"
+      ],
+      "transcript_count": 6,
+      "approved_label_count": 30,
+      "missing_expert_label_count": 0,
+      "label_statuses": {
+        "JC1_WEAK_DISCOVERY": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC2_ADEQUATE_RESPONSE": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC3_CONTEXT_ADAPTIVE": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC4_FACTUAL_ERROR": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC5_PARTIAL_OPPORTUNITY": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC6_VF6_PLUS_UPSELL": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        }
+      },
+      "evaluated_transcript_count": 5,
+      "comparable_criterion_pair_count": 14,
+      "metrics": {
+        "mae": 0.0,
+        "absolute_error_sum": 0,
+        "mae_denominator": 14,
+        "pooled_exact_matches": 14,
+        "pooled_exact_agreement_rate": 1.0,
+        "pooled_agreement_denominator": 14,
+        "applicability_matches": 18,
+        "applicability_pairs": 25,
+        "applicability_agreement_rate": 0.72,
+        "per_criterion": {
+          "need_discovery": {
+            "comparable_scored_pairs": 4,
+            "exact_matches": 4,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 4,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 2,
+            "applicability_pairs": 5,
+            "applicability_matches": 4,
+            "applicability_agreement_rate": 0.8
+          },
+          "product_knowledge": {
+            "comparable_scored_pairs": 1,
+            "exact_matches": 1,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 1,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 5,
+            "applicability_pairs": 5,
+            "applicability_matches": 1,
+            "applicability_agreement_rate": 0.2
+          },
+          "objection_handling": {
+            "comparable_scored_pairs": 4,
+            "exact_matches": 4,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 4,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 2,
+            "applicability_pairs": 5,
+            "applicability_matches": 4,
+            "applicability_agreement_rate": 0.8
+          },
+          "policy_accuracy": {
+            "comparable_scored_pairs": 1,
+            "exact_matches": 1,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 1,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 5,
+            "applicability_pairs": 5,
+            "applicability_matches": 4,
+            "applicability_agreement_rate": 0.8
+          },
+          "closing_next_step": {
+            "comparable_scored_pairs": 4,
+            "exact_matches": 4,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 4,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 2,
+            "applicability_pairs": 5,
+            "applicability_matches": 5,
+            "applicability_agreement_rate": 1.0
+          }
+        }
+      },
+      "diagnostics": [
+        "Fixed transcript live import is not supported by the public graph contract.",
+        "Missing predictions: JC6_VF6_PLUS_UPSELL"
+      ],
+      "provenance": {
+        "transcripts": "curated_synthetic",
+        "expert_labels": "per-criterion review records"
+      },
+      "prediction_provenance": "curated_synthetic JC1-JC5 transcripts; evaluation-only RoleplayState from scenario defaults; COMPLETED marks transcript end; no RoleplayGraph session, checkpoint, or runtime events",
+      "prediction_count": 5,
+      "missing_prediction_case_ids": [
+        "JC6_VF6_PLUS_UPSELL"
+      ]
+    },
+    {
+      "mode": "compare",
+      "status": "INCOMPLETE",
+      "structural_valid": true,
+      "dataset_version": "gate4-judge-calibration-v4",
+      "rubric_version": "sales-rubric-v4",
+      "case_ids": [
+        "JC1_WEAK_DISCOVERY",
+        "JC2_ADEQUATE_RESPONSE",
+        "JC3_CONTEXT_ADAPTIVE",
+        "JC4_FACTUAL_ERROR",
+        "JC5_PARTIAL_OPPORTUNITY",
+        "JC6_VF6_PLUS_UPSELL"
+      ],
+      "transcript_count": 6,
+      "approved_label_count": 30,
+      "missing_expert_label_count": 0,
+      "label_statuses": {
+        "JC1_WEAK_DISCOVERY": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC2_ADEQUATE_RESPONSE": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC3_CONTEXT_ADAPTIVE": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC4_FACTUAL_ERROR": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC5_PARTIAL_OPPORTUNITY": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC6_VF6_PLUS_UPSELL": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        }
+      },
+      "evaluated_transcript_count": 5,
+      "comparable_criterion_pair_count": 14,
+      "metrics": {
+        "mae": 0.07142857142857142,
+        "absolute_error_sum": 1,
+        "mae_denominator": 14,
+        "pooled_exact_matches": 13,
+        "pooled_exact_agreement_rate": 0.9285714285714286,
+        "pooled_agreement_denominator": 14,
+        "applicability_matches": 19,
+        "applicability_pairs": 25,
+        "applicability_agreement_rate": 0.76,
+        "per_criterion": {
+          "need_discovery": {
+            "comparable_scored_pairs": 4,
+            "exact_matches": 4,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 4,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 2,
+            "applicability_pairs": 5,
+            "applicability_matches": 4,
+            "applicability_agreement_rate": 0.8
+          },
+          "product_knowledge": {
+            "comparable_scored_pairs": 1,
+            "exact_matches": 1,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 1,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 5,
+            "applicability_pairs": 5,
+            "applicability_matches": 2,
+            "applicability_agreement_rate": 0.4
+          },
+          "objection_handling": {
+            "comparable_scored_pairs": 4,
+            "exact_matches": 3,
+            "exact_agreement_rate": 0.75,
+            "within_one_matches": 4,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 2,
+            "applicability_pairs": 5,
+            "applicability_matches": 4,
+            "applicability_agreement_rate": 0.8
+          },
+          "policy_accuracy": {
+            "comparable_scored_pairs": 1,
+            "exact_matches": 1,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 1,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 5,
+            "applicability_pairs": 5,
+            "applicability_matches": 4,
+            "applicability_agreement_rate": 0.8
+          },
+          "closing_next_step": {
+            "comparable_scored_pairs": 4,
+            "exact_matches": 4,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 4,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 2,
+            "applicability_pairs": 5,
+            "applicability_matches": 5,
+            "applicability_agreement_rate": 1.0
+          }
+        }
+      },
+      "diagnostics": [
+        "Fixed transcript live import is not supported by the public graph contract.",
+        "Missing predictions: JC6_VF6_PLUS_UPSELL"
+      ],
+      "provenance": {
+        "transcripts": "curated_synthetic",
+        "expert_labels": "per-criterion review records"
+      },
+      "prediction_provenance": "curated_synthetic JC1-JC5 transcripts; evaluation-only RoleplayState from scenario defaults; COMPLETED marks transcript end; no RoleplayGraph session, checkpoint, or runtime events",
+      "prediction_count": 5,
+      "missing_prediction_case_ids": [
+        "JC6_VF6_PLUS_UPSELL"
+      ]
+    },
+    {
+      "mode": "compare",
+      "status": "INCOMPLETE",
+      "structural_valid": true,
+      "dataset_version": "gate4-judge-calibration-v4",
+      "rubric_version": "sales-rubric-v4",
+      "case_ids": [
+        "JC1_WEAK_DISCOVERY",
+        "JC2_ADEQUATE_RESPONSE",
+        "JC3_CONTEXT_ADAPTIVE",
+        "JC4_FACTUAL_ERROR",
+        "JC5_PARTIAL_OPPORTUNITY",
+        "JC6_VF6_PLUS_UPSELL"
+      ],
+      "transcript_count": 6,
+      "approved_label_count": 30,
+      "missing_expert_label_count": 0,
+      "label_statuses": {
+        "JC1_WEAK_DISCOVERY": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC2_ADEQUATE_RESPONSE": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC3_CONTEXT_ADAPTIVE": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC4_FACTUAL_ERROR": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC5_PARTIAL_OPPORTUNITY": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        },
+        "JC6_VF6_PLUS_UPSELL": {
+          "need_discovery": "APPROVED",
+          "product_knowledge": "APPROVED",
+          "objection_handling": "APPROVED",
+          "policy_accuracy": "APPROVED",
+          "closing_next_step": "APPROVED"
+        }
+      },
+      "evaluated_transcript_count": 5,
+      "comparable_criterion_pair_count": 14,
+      "metrics": {
+        "mae": 0.0,
+        "absolute_error_sum": 0,
+        "mae_denominator": 14,
+        "pooled_exact_matches": 14,
+        "pooled_exact_agreement_rate": 1.0,
+        "pooled_agreement_denominator": 14,
+        "applicability_matches": 20,
+        "applicability_pairs": 25,
+        "applicability_agreement_rate": 0.8,
+        "per_criterion": {
+          "need_discovery": {
+            "comparable_scored_pairs": 4,
+            "exact_matches": 4,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 4,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 2,
+            "applicability_pairs": 5,
+            "applicability_matches": 4,
+            "applicability_agreement_rate": 0.8
+          },
+          "product_knowledge": {
+            "comparable_scored_pairs": 1,
+            "exact_matches": 1,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 1,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 5,
+            "applicability_pairs": 5,
+            "applicability_matches": 3,
+            "applicability_agreement_rate": 0.6
+          },
+          "objection_handling": {
+            "comparable_scored_pairs": 4,
+            "exact_matches": 4,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 4,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 2,
+            "applicability_pairs": 5,
+            "applicability_matches": 4,
+            "applicability_agreement_rate": 0.8
+          },
+          "policy_accuracy": {
+            "comparable_scored_pairs": 1,
+            "exact_matches": 1,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 1,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 5,
+            "applicability_pairs": 5,
+            "applicability_matches": 4,
+            "applicability_agreement_rate": 0.8
+          },
+          "closing_next_step": {
+            "comparable_scored_pairs": 4,
+            "exact_matches": 4,
+            "exact_agreement_rate": 1.0,
+            "within_one_matches": 4,
+            "within_one_rate": 1.0,
+            "excluded_or_incomplete_pairs": 2,
+            "applicability_pairs": 5,
+            "applicability_matches": 5,
+            "applicability_agreement_rate": 1.0
+          }
+        }
+      },
+      "diagnostics": [
+        "Fixed transcript live import is not supported by the public graph contract.",
+        "Missing predictions: JC6_VF6_PLUS_UPSELL"
+      ],
+      "provenance": {
+        "transcripts": "curated_synthetic",
+        "expert_labels": "per-criterion review records"
+      },
+      "prediction_provenance": "curated_synthetic JC1-JC5 transcripts; evaluation-only RoleplayState from scenario defaults; COMPLETED marks transcript end; no RoleplayGraph session, checkpoint, or runtime events",
+      "prediction_count": 5,
+      "missing_prediction_case_ids": [
+        "JC6_VF6_PLUS_UPSELL"
+      ]
+    }
+  ],
+  "mean_metrics": {
+    "mae": 0.023809523809523808,
+    "absolute_error_sum": 0.3333333333333333,
+    "mae_denominator": 14.0,
+    "pooled_exact_matches": 13.666666666666666,
+    "pooled_exact_agreement_rate": 0.9761904761904763,
+    "pooled_agreement_denominator": 14.0,
+    "applicability_matches": 19.0,
+    "applicability_pairs": 25.0,
+    "applicability_agreement_rate": 0.7600000000000001,
+    "per_criterion": {
+      "need_discovery": {
+        "comparable_scored_pairs": 4.0,
+        "exact_matches": 4.0,
+        "exact_agreement_rate": 1.0,
+        "within_one_matches": 4.0,
+        "within_one_rate": 1.0,
+        "excluded_or_incomplete_pairs": 2.0,
+        "applicability_pairs": 5.0,
+        "applicability_matches": 4.0,
+        "applicability_agreement_rate": 0.8000000000000002
+      },
+      "product_knowledge": {
+        "comparable_scored_pairs": 1.0,
+        "exact_matches": 1.0,
+        "exact_agreement_rate": 1.0,
+        "within_one_matches": 1.0,
+        "within_one_rate": 1.0,
+        "excluded_or_incomplete_pairs": 5.0,
+        "applicability_pairs": 5.0,
+        "applicability_matches": 2.0,
+        "applicability_agreement_rate": 0.4000000000000001
+      },
+      "objection_handling": {
+        "comparable_scored_pairs": 4.0,
+        "exact_matches": 3.6666666666666665,
+        "exact_agreement_rate": 0.9166666666666666,
+        "within_one_matches": 4.0,
+        "within_one_rate": 1.0,
+        "excluded_or_incomplete_pairs": 2.0,
+        "applicability_pairs": 5.0,
+        "applicability_matches": 4.0,
+        "applicability_agreement_rate": 0.8000000000000002
+      },
+      "policy_accuracy": {
+        "comparable_scored_pairs": 1.0,
+        "exact_matches": 1.0,
+        "exact_agreement_rate": 1.0,
+        "within_one_matches": 1.0,
+        "within_one_rate": 1.0,
+        "excluded_or_incomplete_pairs": 5.0,
+        "applicability_pairs": 5.0,
+        "applicability_matches": 4.0,
+        "applicability_agreement_rate": 0.8000000000000002
+      },
+      "closing_next_step": {
+        "comparable_scored_pairs": 4.0,
+        "exact_matches": 4.0,
+        "exact_agreement_rate": 1.0,
+        "within_one_matches": 4.0,
+        "within_one_rate": 1.0,
+        "excluded_or_incomplete_pairs": 2.0,
+        "applicability_pairs": 5.0,
+        "applicability_matches": 5.0,
+        "applicability_agreement_rate": 1.0
+      }
+    }
+  },
+  "stability": {
+    "labels_compared": 25,
+    "identical_across_runs": {
+      "count": 22,
+      "rate": 0.88
+    },
+    "status_flip_count": 2,
+    "mean_score_range": 0.05555555555555555,
+    "per_label": [
+      {
+        "case_id": "JC1_WEAK_DISCOVERY",
+        "criterion": "need_discovery",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 1
+          }
+        ]
+      },
+      {
+        "case_id": "JC1_WEAK_DISCOVERY",
+        "criterion": "product_knowledge",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 1
+          }
+        ]
+      },
+      {
+        "case_id": "JC1_WEAK_DISCOVERY",
+        "criterion": "objection_handling",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 1
+          }
+        ]
+      },
+      {
+        "case_id": "JC1_WEAK_DISCOVERY",
+        "criterion": "policy_accuracy",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 1,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": "unassessed",
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC1_WEAK_DISCOVERY",
+        "criterion": "closing_next_step",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 2
+          }
+        ]
+      },
+      {
+        "case_id": "JC2_ADEQUATE_RESPONSE",
+        "criterion": "need_discovery",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 2
+          }
+        ]
+      },
+      {
+        "case_id": "JC2_ADEQUATE_RESPONSE",
+        "criterion": "product_knowledge",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 1
+          }
+        ]
+      },
+      {
+        "case_id": "JC2_ADEQUATE_RESPONSE",
+        "criterion": "objection_handling",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 2
+          }
+        ]
+      },
+      {
+        "case_id": "JC2_ADEQUATE_RESPONSE",
+        "criterion": "policy_accuracy",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 1,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": "unassessed",
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC2_ADEQUATE_RESPONSE",
+        "criterion": "closing_next_step",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 2
+          }
+        ]
+      },
+      {
+        "case_id": "JC3_CONTEXT_ADAPTIVE",
+        "criterion": "need_discovery",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 3
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 3
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 3
+          }
+        ]
+      },
+      {
+        "case_id": "JC3_CONTEXT_ADAPTIVE",
+        "criterion": "product_knowledge",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 1,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": "unassessed",
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC3_CONTEXT_ADAPTIVE",
+        "criterion": "objection_handling",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 3
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 3
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 3
+          }
+        ]
+      },
+      {
+        "case_id": "JC3_CONTEXT_ADAPTIVE",
+        "criterion": "policy_accuracy",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 1,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": "unassessed",
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC3_CONTEXT_ADAPTIVE",
+        "criterion": "closing_next_step",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 2
+          }
+        ]
+      },
+      {
+        "case_id": "JC4_FACTUAL_ERROR",
+        "criterion": "need_discovery",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 1
+          }
+        ]
+      },
+      {
+        "case_id": "JC4_FACTUAL_ERROR",
+        "criterion": "product_knowledge",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 1
+          }
+        ]
+      },
+      {
+        "case_id": "JC4_FACTUAL_ERROR",
+        "criterion": "objection_handling",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 2
+          }
+        ]
+      },
+      {
+        "case_id": "JC4_FACTUAL_ERROR",
+        "criterion": "policy_accuracy",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 1
+          }
+        ]
+      },
+      {
+        "case_id": "JC4_FACTUAL_ERROR",
+        "criterion": "closing_next_step",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 2
+          }
+        ]
+      },
+      {
+        "case_id": "JC5_PARTIAL_OPPORTUNITY",
+        "criterion": "need_discovery",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 2
+          }
+        ]
+      },
+      {
+        "case_id": "JC5_PARTIAL_OPPORTUNITY",
+        "criterion": "product_knowledge",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 1
+          },
+          {
+            "run_index": 2,
+            "status": "unassessed",
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC5_PARTIAL_OPPORTUNITY",
+        "criterion": "objection_handling",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 1,
+            "status": "assessed",
+            "score": 2
+          },
+          {
+            "run_index": 2,
+            "status": "assessed",
+            "score": 2
+          }
+        ]
+      },
+      {
+        "case_id": "JC5_PARTIAL_OPPORTUNITY",
+        "criterion": "policy_accuracy",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 1,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": "unassessed",
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC5_PARTIAL_OPPORTUNITY",
+        "criterion": "closing_next_step",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 1,
+            "status": "unassessed",
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": "unassessed",
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC6_VF6_PLUS_UPSELL",
+        "criterion": "need_discovery",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": null,
+            "score": null
+          },
+          {
+            "run_index": 1,
+            "status": null,
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": null,
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC6_VF6_PLUS_UPSELL",
+        "criterion": "product_knowledge",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": null,
+            "score": null
+          },
+          {
+            "run_index": 1,
+            "status": null,
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": null,
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC6_VF6_PLUS_UPSELL",
+        "criterion": "objection_handling",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": null,
+            "score": null
+          },
+          {
+            "run_index": 1,
+            "status": null,
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": null,
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC6_VF6_PLUS_UPSELL",
+        "criterion": "policy_accuracy",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": null,
+            "score": null
+          },
+          {
+            "run_index": 1,
+            "status": null,
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": null,
+            "score": null
+          }
+        ]
+      },
+      {
+        "case_id": "JC6_VF6_PLUS_UPSELL",
+        "criterion": "closing_next_step",
+        "predictions": [
+          {
+            "run_index": 0,
+            "status": null,
+            "score": null
+          },
+          {
+            "run_index": 1,
+            "status": null,
+            "score": null
+          },
+          {
+            "run_index": 2,
+            "status": null,
+            "score": null
+          }
+        ]
+      }
+    ]
+  }
+}

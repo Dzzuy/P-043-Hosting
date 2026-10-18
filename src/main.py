@@ -21,6 +21,7 @@ from src.integrations.voice_usage import SQLVoiceUsageRepository
 from src.knowledge.index_readiness import check_copilot_index
 from src.knowledge.retrieval_service import get_retrieval_service
 from src.observability import CopilotTelemetryMiddleware, TelemetryService, configure_logging
+from src.roleplay_tracing import get_roleplay_tracing
 from src.services.recorded_practice import RecordedPracticeService
 from src.services.sales_conversation_service import SalesConversationService
 from src.services.sales_copilot_analyzer import SalesCopilotAnalyzer
@@ -69,6 +70,7 @@ async def lifespan(app: FastAPI):
         yield
     finally:
         await asyncio.to_thread(app.state.copilot_telemetry.close)
+        await asyncio.to_thread(get_roleplay_tracing().close)
         logger.info("Application shutdown")
 
 

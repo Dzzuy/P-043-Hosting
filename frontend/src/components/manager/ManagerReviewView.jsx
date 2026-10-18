@@ -1,81 +1,137 @@
-import { useCallback, useEffect, useState } from "react";
-import { RefreshIcon } from "../common/Icons";
+import { useMemo, useState } from "react";
 import { managerApi } from "../../api/managerApi";
+import { practiceApi } from "../../api/practiceApi";
+import { useLoad } from "../../hooks/useLoad";
+import { fmtScore } from "../../utils/scoreFormat";
 import { ManagerTopNav } from "../layout/ManagerTopNav";
 import { ManagerReviewModal } from "./ManagerReviewModal";
 import { ManagerAssignmentsView } from "./ManagerAssignmentsView";
-import { TeamPerformanceView } from "./TeamPerformanceView";
 import { ManagerAccountsView } from "./ManagerAccountsView";
+import { ManagerDashboard } from "./ManagerDashboard";
+import "./managerDashboard.css";
+
+const byOldest = (a, b) => new Date(a.completed_at || 0) - new Date(b.completed_at || 0);
 
 function formatDate(value) {
   return value ? new Intl.DateTimeFormat("vi-VN", { dateStyle: "short", timeStyle: "short" }).format(new Date(value)) : "—";
 }
 
+function statusLabel(attempt) {
+  if (attempt.review_status === "manager_approved") return "Đã duyệt";
+  if (attempt.evaluation_status === "failed") return "Chấm điểm thất bại";
+  if (attempt.evaluation_status === "pending") return "Đang chấm điểm";
+  return "Chờ duyệt";
+}
+
+function HistoryTable({ history, advisorNames, scenarioNames, onOpenReview }) {
+  const { status, data, error, reload } = history;
+  const rows = data || [];
+  return (
+    <section className="md-panel" aria-labelledby="md-history-h">
+      <div className="md-panel-head">
+        <h2 id="md-history-h" className="md-panel-title">Lịch sử luyện tập toàn đội ngũ</h2>
+        <button type="button" className="md-btn md-btn--outline" onClick={reload}>Làm mới</button>
+      </div>
+      {status === "loading" && <p className="md-state" role="status">Đang tải…</p>}
+      {status === "error" && (
+        <p className="md-state md-state--error" role="alert">
+          {error} <button type="button" className="md-link-btn" onClick={reload}>Thử lại</button>
+        </p>
+      )}
+      {status === "ready" && rows.length === 0 && <p className="md-state">Chưa có phiên luyện tập nào được hoàn thành.</p>}
+      {status === "ready" && rows.length > 0 && (
+        <div className="md-table-scroll">
+          <table className="md-queue">
+            <thead>
+              <tr>
+                <th scope="col">Tư vấn viên</th>
+                <th scope="col">Tình huống</th>
+                <th scope="col">Hoàn thành</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col" className="md-right">Điểm</th>
+                <th scope="col"><span className="md-sr">Thao tác</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((attempt) => {
+                const name = advisorNames[attempt.advisor_id] || attempt.advisor_id;
+                const score = attempt.approved_score ?? attempt.ai_score;
+                return (
+                  <tr key={attempt.session_id}>
+                    <td className="md-strong">{name}</td>
+                    <td>{scenarioNames[attempt.scenario_id] || attempt.scenario_id}</td>
+                    <td className="md-age">{formatDate(attempt.completed_at)}</td>
+                    <td>{statusLabel(attempt)}</td>
+                    <td className="md-right md-strong">
+                      {score == null ? "—" : `${attempt.approved_score == null ? "AI " : ""}${fmtScore(score)} / 3`}
+                    </td>
+                    <td className="md-right">
+                      <button type="button" className="md-btn md-btn--outline" aria-label={`Xem bài của ${name}`} onClick={() => onOpenReview(attempt.session_id)}>
+                        {attempt.review_status === "manager_approved" ? "Xem" : "Duyệt"}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  );
+}
+
 export function ManagerReviewView({ currentUser, onLogout }) {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [overview, setOverview] = useState(null);
-  const [queue, setQueue] = useState([]);
-  const [history, setHistory] = useState([]);
-  const [selectedReview, setSelectedReview] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [actionError, setActionError] = useState("");
+  const [refreshToken, setRefreshToken] = useState(0);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const [overviewData, queueData, historyData] = await Promise.all([
-        managerApi.getTeamOverview(), managerApi.getReviewQueue(), managerApi.getManagerHistory({ limit: 50 }),
-      ]);
-      setOverview(overviewData);
-      setQueue(queueData);
-      setHistory(historyData);
-    } catch (cause) {
-      setError(cause.message || "Không thể tải dữ liệu quản lý.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const queueLoad = useLoad(() => managerApi.getReviewQueue(), "queue", "Không thể tải hàng đợi duyệt.");
+  const historyLoad = useLoad(
+    () => (activeTab === "reports" ? managerApi.getManagerHistory({ limit: 50 }) : Promise.resolve([])),
+    `history-${activeTab === "reports" ? "on" : "off"}-${refreshToken}`,
+    "Không thể tải lịch sử luyện tập.",
+  );
+  const advisorsLoad = useLoad(() => managerApi.getAdvisors().catch(() => []), "advisors");
+  const scenariosLoad = useLoad(() => practiceApi.getScenarios().catch(() => []), "scenarios");
 
-  useEffect(() => {
-    let ignore = false;
-    Promise.all([
-      managerApi.getTeamOverview(), managerApi.getReviewQueue(), managerApi.getManagerHistory({ limit: 50 }),
-    ]).then(([overviewData, queueData, historyData]) => {
-      if (ignore) return;
-      setOverview(overviewData);
-      setQueue(queueData);
-      setHistory(historyData);
-    }).catch((cause) => {
-      if (!ignore) setError(cause.message || "Không thể tải dữ liệu quản lý.");
-    }).finally(() => {
-      if (!ignore) setLoading(false);
-    });
-    return () => { ignore = true; };
-  }, []);
+  const queue = useMemo(() => [...(queueLoad.data || [])].sort(byOldest), [queueLoad.data]);
+  const advisorNames = useMemo(
+    () => Object.fromEntries((advisorsLoad.data || []).map((item) => [item.advisor_id, item.display_name])),
+    [advisorsLoad.data],
+  );
+  const scenarioNames = useMemo(
+    () => Object.fromEntries((scenariosLoad.data || []).map((item) => [item.scenario_id, item.title])),
+    [scenariosLoad.data],
+  );
 
   const openReview = async (sessionId) => {
-    setError("");
+    setActionError("");
     try {
-      setSelectedReview(await managerApi.getReviewDetail(sessionId));
+      setSelected(await managerApi.getReviewDetail(sessionId));
     } catch (cause) {
-      setError(cause.message || "Không thể tải chi tiết phiên luyện tập.");
+      setActionError(cause.message || "Không thể tải chi tiết phiên luyện tập.");
     }
   };
+
+  const currentId = selected?.attempt.session_id;
+  const queueIndex = queue.findIndex((item) => item.session_id === currentId);
+  const others = queue.filter((item) => item.session_id !== currentId);
+  // The next pending review: the one after this in the oldest-first queue, else the first other one.
+  const nextId = (queueIndex >= 0 ? queue[queueIndex + 1]?.session_id : undefined) ?? others[0]?.session_id;
 
   const approve = async (decision) => {
-    if (!selectedReview) return;
-    try {
-      await managerApi.approveReview(selectedReview.attempt.session_id, decision);
-      setSelectedReview(null);
-      await load();
-    } catch (cause) {
-      setError(cause.message || "Không thể duyệt đánh giá. Vui lòng thử lại.");
-      throw cause;
-    }
+    await managerApi.approveReview(currentId, decision);
+    queueLoad.reload();
+    setRefreshToken((value) => value + 1);
+    if (nextId) await openReview(nextId);
+    else setSelected(null);
   };
 
-  const attempts = activeTab === "reports" ? history : queue;
+  const skip = () => {
+    if (nextId) openReview(nextId);
+  };
 
   return (
     <div className="manager-app-layout">
@@ -87,124 +143,49 @@ export function ManagerReviewView({ currentUser, onLogout }) {
         onLogout={onLogout}
       />
       <main className="manager-app-content">
+        {actionError && (
+          <p className="md-state md-state--error" role="alert">
+            {actionError} <button type="button" className="md-link-btn" onClick={() => setActionError("")}>Đóng</button>
+          </p>
+        )}
         {activeTab === "assignments" && <ManagerAssignmentsView onNavigateTab={setActiveTab} />}
-        {activeTab === "performance" && <TeamPerformanceView onNavigateTab={setActiveTab} />}
         {activeTab === "accounts" && <ManagerAccountsView />}
-
-        {(activeTab === "dashboard" || activeTab === "reports") && (
+        {activeTab === "dashboard" && (
+          <ManagerDashboard
+            queue={queue}
+            queueStatus={queueLoad.status}
+            queueError={queueLoad.error}
+            onRetryQueue={queueLoad.reload}
+            advisorNames={advisorNames}
+            scenarioNames={scenarioNames}
+            onOpenReview={openReview}
+            onNavigateTab={setActiveTab}
+            refreshToken={refreshToken}
+          />
+        )}
+        {activeTab === "reports" && (
           <>
-            {activeTab === "dashboard" && overview && (
-              <div className="manager-console-hero">
-                <div className="console-hero-header">
-                  <div>
-                    <div className="console-tag-badge">VinFast AI Sales Enablement • Trung tâm Quản trị</div>
-                    <h1 className="console-hero-title">Tổng quan Năng lực & Đào tạo</h1>
-                    <p className="console-hero-desc">
-                      Theo dõi thời gian thực kết quả luyện tập của đội ngũ tư vấn viên, phê duyệt đánh giá và phân tích kỹ năng bán xe điện.
-                    </p>
-                  </div>
-                  <div className="console-hero-actions">
-                    <button type="button" className="btn-console-sync" onClick={load} disabled={loading}>
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><RefreshIcon style={{ width: 13, height: 13 }} /> {loading ? "Đang đồng bộ..." : "Đồng bộ số liệu"}</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="console-stats-grid" aria-label="Số liệu từ phiên luyện tập">
-                  <div className="console-stat-box">
-                    <span className="cs-label">Tư vấn viên hoạt động</span>
-                    <strong className="cs-val">{overview.active_advisors}</strong>
-                    <span className="cs-sub">Đang trong hệ thống</span>
-                  </div>
-                  <div className="console-stat-box">
-                    <span className="cs-label">Phiên hoàn thành</span>
-                    <strong className="cs-val">{overview.completed_attempts}</strong>
-                    <span className="cs-sub">Tổng số lượt thực chiến</span>
-                  </div>
-                  <div className="console-stat-box">
-                    <span className="cs-label">Đã duyệt đánh giá</span>
-                    <strong className="cs-val">{overview.approved_attempts}</strong>
-                    <span className="cs-sub">Đạt chuẩn & ghi nhận điểm</span>
-                  </div>
-                  <div className="console-stat-box">
-                    <span className="cs-label">Hàng đợi chờ duyệt</span>
-                    <strong className="cs-val" style={{ color: overview.pending_attempts > 0 ? "#FBBF24" : "#FFFFFF" }}>
-                      {overview.pending_attempts}
-                    </strong>
-                    <span className="cs-sub">Cần quản lý phản hồi</span>
-                  </div>
-                </div>
+            <div className="md-page-head">
+              <div>
+                <h1>Lịch sử luyện tập</h1>
+                <p>Mọi bài luyện của đội ngũ, mới nhất lên trước.</p>
               </div>
-            )}
-
-            <section className="card-white" style={{ padding: 28, marginTop: activeTab === "reports" ? 0 : 8 }}>
-              <div className="section-title-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                <h2 className="section-heading" style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--primary)" }}>
-                  {activeTab === "reports" ? "Lịch sử luyện tập toàn đội ngũ" : "Hàng đợi duyệt đánh giá"}
-                </h2>
-                <button type="button" className="btn-outline" onClick={load} disabled={loading}>
-                  Làm mới
-                </button>
-              </div>
-
-              {error && (
-                <div className="manager-error-alert" role="alert" style={{ color: "#dc2626", marginBottom: 16 }}>
-                  {error} <button type="button" className="btn-outline" style={{ marginLeft: 8 }} onClick={load}>Thử lại</button>
-                </div>
-              )}
-
-              {loading ? (
-                <p role="status" style={{ padding: "24px 0", color: "var(--muted)" }}>Đang tải dữ liệu…</p>
-              ) : attempts.length === 0 ? (
-                <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--muted)", border: "1px dashed var(--border)", borderRadius: "var(--radius-md)" }}>
-                  {activeTab === "reports"
-                    ? "Chưa có phiên luyện tập nào được hoàn thành."
-                    : "Hiện tại không có bài luyện tập nào đang chờ duyệt."}
-                </div>
-              ) : (
-                <div style={{ display: "grid", gap: 12 }}>
-                  {attempts.map((attempt) => (
-                    <div
-                      key={attempt.session_id}
-                      className="manager-assignment-card-item"
-                    >
-                      <div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                          <strong style={{ fontSize: "1rem", color: "var(--primary)" }}>
-                            {attempt.advisor_id}
-                          </strong>
-                          <span style={{ fontSize: "0.82rem", color: "var(--muted)" }}>·</span>
-                          <span style={{ fontSize: "0.9rem", color: "var(--secondary)" }}>
-                            {attempt.scenario_id}
-                          </span>
-                        </div>
-                        <small style={{ color: "var(--muted)", fontSize: "0.8rem" }}>
-                          {formatDate(attempt.completed_at)} · Trạng thái: <strong>{attempt.review_status}</strong>
-                          {attempt.ai_score != null && ` · Điểm AI: ${attempt.ai_score}/3`}
-                        </small>
-                      </div>
-                      <button
-                        type="button"
-                        className="btn-outline"
-                        style={{ padding: "8px 16px", fontSize: "0.85rem", fontWeight: 600 }}
-                        onClick={() => openReview(attempt.session_id)}
-                      >
-                        Xem đánh giá & Duyệt →
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
+            </div>
+            <HistoryTable history={historyLoad} advisorNames={advisorNames} scenarioNames={scenarioNames} onOpenReview={openReview} />
           </>
         )}
       </main>
 
-      {selectedReview && (
+      {selected && (
         <ManagerReviewModal
-          detail={selectedReview}
-          onClose={() => setSelectedReview(null)}
+          detail={selected}
+          advisorName={advisorNames[selected.attempt.advisor_id] || selected.attempt.advisor_id}
+          scenarioTitle={scenarioNames[selected.attempt.scenario_id] || selected.attempt.scenario_id}
+          position={queueIndex >= 0 ? { index: queueIndex + 1, total: queue.length } : null}
+          hasNext={Boolean(nextId)}
+          onClose={() => setSelected(null)}
           onApprove={approve}
+          onSkip={skip}
         />
       )}
     </div>

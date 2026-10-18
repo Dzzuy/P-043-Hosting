@@ -54,13 +54,13 @@ async def test_retrieval_failure_is_not_an_empty_knowledge_result(monkeypatch):
 async def test_generation_failure_is_not_abstention(monkeypatch):
     scripted(monkeypatch, [ConnectionError("offline"), ConnectionError("offline")])
     with pytest.raises(CopilotDependencyError, match="generate_answer unavailable"):
-        await nodes.generate_node(draft_state())
+        await nodes.generate_answer(draft_state())
 
 
 @pytest.mark.asyncio
 async def test_retry_does_not_attach_citation_to_unsupported_claim(monkeypatch):
     scripted(monkeypatch, [{"answer": "Giảm giá 50%.", "citation_ids": ["C1"]}])
-    result = await nodes.generate_node(draft_state())
+    result = await nodes.generate_answer(draft_state())
     assert result["draft_answer"] is None
     assert result["generation_count"] == 2
 
@@ -104,7 +104,7 @@ async def test_context_does_not_let_one_document_crowd_out_a_price_list():
     product_hits = [{**EVIDENCE, "chunk_id": f"product-{index}", "document_id": "product-vf8"} for index in range(1, 6)]
     price_hit = {**EVIDENCE, "chunk_id": "price-1", "document_id": "price-list"}
 
-    _, selected = nodes._merge_evidence({}, [*product_hits, price_hit])
+    selected = nodes._merge_evidence({}, [*product_hits, price_hit])
     assert len(selected) <= 8
     assert "price-list" in {item["document_id"] for item in selected}
     assert selected[0]["chunk_id"] == product_hits[0]["chunk_id"]
@@ -121,5 +121,5 @@ async def test_context_keeps_sparse_price_evidence():
         "bm25_score": 2.48,
     }
 
-    _, selected = nodes._merge_evidence({}, [*product_hits, price_hit])
+    selected = nodes._merge_evidence({}, [*product_hits, price_hit])
     assert "price-list" in {item["document_id"] for item in selected}

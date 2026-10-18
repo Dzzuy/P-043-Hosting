@@ -1,0 +1,594 @@
+{
+  "provenance": "curated_synthetic JC1-JC5 transcripts; evaluation-only RoleplayState from scenario defaults; COMPLETED marks transcript end; no RoleplayGraph session, checkpoint, or runtime events",
+  "generated_at": "2026-10-18T07:14:42.780352+00:00",
+  "provider": "openrouter",
+  "model": "openai/gpt-6-luna",
+  "status": "INCOMPLETE",
+  "successful_case_count": 5,
+  "failed_case_count": 1,
+  "missing_case_ids": [
+    "JC6_VF6_PLUS_UPSELL"
+  ],
+  "predictions": [
+    {
+      "case_id": "JC1_WEAK_DISCOVERY",
+      "evaluation": {
+        "session_id": "judge-calibration-JC1_WEAK_DISCOVERY",
+        "scenario_id": "SCENARIO_01_VF5_TAXI",
+        "judge_model": null,
+        "closing_outcome": null,
+        "closing_outcome_label": null,
+        "rubric_version": "sales-rubric-v4",
+        "assessed_criteria_count": 4,
+        "overall_score": 1.25,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC1-M01",
+                "quote": "Anh đang chạy xe dịch vụ và cân nhắc VF 5 Plus. Anh lo đổi xe rồi chi phí mỗi tháng lại cao hơn."
+              },
+              {
+                "message_id": "JC1-M02",
+                "quote": "Xe điện đang được nhiều người chọn anh ạ. Anh cứ qua xem xe rồi tính tiếp."
+              }
+            ],
+            "reason": "Có cơ hội khai thác nhu cầu rõ ràng: khách chạy dịch vụ và lo chi phí hàng tháng. Tư vấn viên không hỏi quãng đường, tiền xăng thực tế hay lịch chạy, cũng không dùng thông tin về nỗi lo chi phí để định hướng trao đổi.",
+            "improvement_suggestion": "Hỏi ngắn về quãng đường chạy và tiền xăng thực tế của Vios trước khi đưa ra nhận định hoặc đề xuất bước tiếp theo.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC1-M03",
+                "quote": "Nhưng anh cần biết tiền sạc và thời gian dừng xe có hợp lịch chạy không."
+              },
+              {
+                "message_id": "JC1-M04",
+                "quote": "Anh yên tâm, dùng xe điện tiện lắm. Khi nào rảnh anh ghé cửa hàng nhé."
+              }
+            ],
+            "reason": "Khách hỏi trực tiếp về tiền sạc và thời gian dừng xe; tư vấn viên không trả lời hai điểm này mà chỉ nêu nhận xét chung, không có thông tin sản phẩm cụ thể.",
+            "improvement_suggestion": "Trả lời riêng từng mối quan tâm bằng thông tin có căn cứ và điều kiện áp dụng; nếu chưa đủ dữ liệu để ước tính, hãy nêu giả định cần xác minh thay vì thay bằng nhận xét chung.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC1-M01",
+                "quote": "Anh đang chạy xe dịch vụ và cân nhắc VF 5 Plus. Anh lo đổi xe rồi chi phí mỗi tháng lại cao hơn."
+              },
+              {
+                "message_id": "JC1-M04",
+                "quote": "Anh yên tâm, dùng xe điện tiện lắm. Khi nào rảnh anh ghé cửa hàng nhé."
+              }
+            ],
+            "reason": "Có cơ hội xử lý lo ngại cụ thể về chi phí và thời gian xe ngừng chạy. Tư vấn viên trấn an chung chung, không tìm hiểu nguyên nhân hoặc giải đáp, cũng không kiểm tra xem khách đã yên tâm chưa.",
+            "improvement_suggestion": "Ghi nhận nỗi lo, hỏi dữ liệu thực tế cần để so sánh chi phí và lịch chạy, rồi kiểm tra lại xem câu trả lời đã giải quyết được băn khoăn chưa.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có cuộc trao đổi về chính sách hoặc giá và policy_assessment_required là false, nên không có cơ hội công bằng để đánh giá tiêu chí này.",
+            "improvement_suggestion": null,
+            "manager_reason": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC1-M04",
+                "quote": "Khi nào rảnh anh ghé cửa hàng nhé."
+              }
+            ],
+            "reason": "Tư vấn viên có đề xuất một bước tiếp theo là ghé cửa hàng, nhưng lời mời chưa cụ thể và không hỏi khách có đồng ý hoặc muốn thống nhất thời điểm nào.",
+            "improvement_suggestion": "Đề xuất bước kiểm chứng gắn với lo ngại về tiền sạc và thời gian dừng xe, rồi hỏi khách chọn thời điểm phù hợp để thực hiện.",
+            "manager_reason": null
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [],
+        "summary_weaknesses": [
+          "Bỏ lỡ việc khai thác quãng đường, tiền xăng thực tế và lịch chạy dịch vụ để hiểu nhu cầu của khách.",
+          "Không trả lời trực tiếp câu hỏi về tiền sạc và thời gian dừng xe; lời mời ghé cửa hàng cũng chưa chốt được thời điểm cụ thể."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_01_VF5_TAXI",
+          "reason": "Luyện khai thác dữ liệu sử dụng xe thực tế trước khi tư vấn, xử lý câu hỏi về chi phí và thời gian sạc, rồi chốt một bước kiểm chứng cụ thể."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JC2_ADEQUATE_RESPONSE",
+      "evaluation": {
+        "session_id": "judge-calibration-JC2_ADEQUATE_RESPONSE",
+        "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+        "judge_model": null,
+        "closing_outcome": null,
+        "closing_outcome_label": null,
+        "rubric_version": "sales-rubric-v4",
+        "assessed_criteria_count": 4,
+        "overall_score": 1.75,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC2-M02",
+                "quote": "Chị thường chở mấy người và dùng xe chủ yếu cho việc gì ạ?"
+              },
+              {
+                "message_id": "JC2-M03",
+                "quote": "Nhà chị có hai con nhỏ, đi làm trong tuần và cuối tuần hay về quê."
+              },
+              {
+                "message_id": "JC2-M04",
+                "quote": "Em ghi nhận nhu cầu đi cùng gia đình và về quê. Em sẽ chuẩn bị bảng so sánh không gian sử dụng, cách sạc và tổng chi phí theo đúng cấu hình chị quan tâm, có nguồn để chị kiểm tra."
+              }
+            ],
+            "reason": "Có cơ hội khai thác nhu cầu và người cùng quyết định. Tư vấn viên hỏi về số người và mục đích sử dụng, rồi gắn nhu cầu gia đình, đi làm và về quê với nội dung so sánh dự kiến. Chưa hỏi ai có tiếng nói quyết định cuối cùng hoặc làm rõ ưu tiên giữa các tiêu chí nên chưa đạt mức 3.",
+            "improvement_suggestion": "Hỏi thêm ai sẽ cùng quyết định và tiêu chí nào quan trọng nhất với gia đình trước khi chọn nội dung so sánh.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC2-M01",
+                "quote": "Chị đang so VF 7 với CX-5 cho gia đình, chưa rõ mẫu nào hợp hơn."
+              },
+              {
+                "message_id": "JC2-M04",
+                "quote": "Em sẽ chuẩn bị bảng so sánh không gian sử dụng, cách sạc và tổng chi phí theo đúng cấu hình chị quan tâm, có nguồn để chị kiểm tra."
+              }
+            ],
+            "reason": "Có cơ hội trả lời nhu cầu so sánh trực tiếp giữa hai mẫu xe, nhưng tư vấn viên chỉ hẹn chuẩn bị thông tin trong tương lai, chưa đưa ra dữ kiện sản phẩm hoặc khác biệt cụ thể trong cuộc trao đổi. Không có nguồn kiến thức được cung cấp để đánh giá tính chính xác của thông số.",
+            "improvement_suggestion": "Đưa ra ngay một vài khác biệt cụ thể, có nguồn, giữa hai mẫu xe và liên hệ chúng với nhu cầu gia đình; nếu chưa có dữ liệu thì nói rõ phần nào cần xác minh.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC2-M01",
+                "quote": "Chị đang so VF 7 với CX-5 cho gia đình, chưa rõ mẫu nào hợp hơn."
+              },
+              {
+                "message_id": "JC2-M04",
+                "quote": "Em ghi nhận nhu cầu đi cùng gia đình và về quê. Em sẽ chuẩn bị bảng so sánh không gian sử dụng, cách sạc và tổng chi phí theo đúng cấu hình chị quan tâm, có nguồn để chị kiểm tra."
+              }
+            ],
+            "reason": "Có cơ hội xử lý sự phân vân về mẫu xe phù hợp. Tư vấn viên ghi nhận bối cảnh sử dụng và đề xuất so sánh có nguồn, phù hợp với mối bận tâm; tuy nhiên chưa làm rõ điều khiến khách còn lưỡng lự nhất hoặc hỏi lại xem hướng so sánh đó đã đáp ứng điều khách cần chưa.",
+            "improvement_suggestion": "Hỏi tiêu chí hoặc lo ngại đang quyết định sự phân vân của khách, rồi kiểm tra lại xem phần so sánh đề xuất có giải quyết đúng mối bận tâm đó không.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có cơ hội công bằng để đánh giá chính sách: policy_assessment_required là false và tư vấn viên không trao đổi về chính sách hoặc giá. Không có bằng chứng để kết luận đúng hay sai về chính sách.",
+            "improvement_suggestion": null,
+            "manager_reason": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC2-M05",
+                "quote": "Ừ, chị muốn xem thông tin cụ thể trước khi quyết."
+              },
+              {
+                "message_id": "JC2-M06",
+                "quote": "Em gửi bảng so sánh và nguồn tham khảo cho chị hôm nay được không ạ?"
+              }
+            ],
+            "reason": "Có cơ hội đề xuất bước tiếp theo. Tư vấn viên nêu việc gửi bảng so sánh và nguồn tham khảo trong ngày, kèm câu hỏi xin đồng ý, nhưng transcript không có phản hồi chấp thuận của khách nên chưa đạt mức 3.",
+            "improvement_suggestion": "Sau khi đề xuất gửi bảng, chờ xác nhận cụ thể về thời điểm hoặc kênh nhận để chốt một cam kết rõ ràng.",
+            "manager_reason": null
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Khai thác được bối cảnh gia đình và gắn nó với nội dung so sánh dự kiến, đồng thời đề xuất gửi thông tin có nguồn."
+        ],
+        "summary_weaknesses": [
+          "Chưa đưa ra khác biệt sản phẩm cụ thể trong lúc khách đang cần chọn giữa hai mẫu.",
+          "Chưa hỏi ai cùng quyết định và chưa xác nhận khách đồng ý nhận bảng so sánh vào thời điểm đã đề xuất."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_02_VF7_VS_CX5",
+          "reason": "Luyện đưa ra so sánh sản phẩm có căn cứ ngay trong cuộc trò chuyện, đồng thời khai thác người cùng quyết định và chốt bước tiếp theo bằng xác nhận cụ thể."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JC3_CONTEXT_ADAPTIVE",
+      "evaluation": {
+        "session_id": "judge-calibration-JC3_CONTEXT_ADAPTIVE",
+        "scenario_id": "SCENARIO_01_VF5_TAXI",
+        "judge_model": null,
+        "closing_outcome": null,
+        "closing_outcome_label": null,
+        "rubric_version": "sales-rubric-v4",
+        "assessed_criteria_count": 3,
+        "overall_score": 2.6666666666666665,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 3,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC3-M02",
+                "quote": "Điều anh cần giữ nhất là thời gian nhận cuốc hay chi phí vận hành? Mỗi ngày anh chạy khoảng bao xa và thường nghỉ lúc nào ạ?"
+              },
+              {
+                "message_id": "JC3-M03",
+                "quote": "Anh ưu tiên không mất cuốc. Ngày chạy khoảng 180 km, nghỉ chừng 12 giờ 30 đến 14 giờ."
+              },
+              {
+                "message_id": "JC3-M04",
+                "quote": "Vậy em sẽ xem trước khả năng sạc trong giờ nghỉ trưa của anh, thay vì chỉ so tiền điện với tiền xăng. Em cần kiểm tra trạm phù hợp, thời gian sạc thực tế và điều kiện áp dụng trước khi tính phương án."
+              }
+            ],
+            "reason": "Có cơ hội khám phá nhu cầu và tư vấn viên đã làm rõ ưu tiên không mất cuốc, quãng đường 180 km/ngày và khung nghỉ trưa. Tư vấn viên dùng chính các dữ kiện đó để chuyển trọng tâm sang khả năng sạc trong giờ nghỉ, thay vì chỉ so chi phí năng lượng.",
+            "improvement_suggestion": null,
+            "manager_reason": null
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Cuộc trò chuyện có nêu mối quan tâm về sạc và thời gian chờ, nhưng tư vấn viên chỉ đề xuất kiểm tra trạm và thời gian thực tế; không đưa ra thông số hay khẳng định cụ thể về sản phẩm. Không có nguồn kiến thức được cung cấp để xác định độ chính xác của câu trả lời, nên chưa đủ bằng chứng để chấm.",
+            "improvement_suggestion": null,
+            "manager_reason": null
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 3,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC3-M05",
+                "quote": "Nếu trạm đông đúng giờ đó thì anh vẫn mất cuốc; em tính chuyện này thế nào?"
+              },
+              {
+                "message_id": "JC3-M06",
+                "quote": "Đúng là thời gian chờ có thể làm phương án không hiệu quả với anh. Mình kiểm tra một trạm trên tuyến chạy và khung 12 giờ 30 đến 14 giờ trước, rồi mới so cả thời gian mất cuốc. Cách đó có giải quyết được băn khoăn chính của anh không?"
+              },
+              {
+                "message_id": "JC3-M07",
+                "quote": "Được, anh muốn thấy phép so có tính thời gian chờ."
+              }
+            ],
+            "reason": "Khách hàng nêu nguyên nhân cụ thể của lo ngại là trạm đông trong giờ nghỉ khiến mất cuốc. Tư vấn viên ghi nhận rủi ro, đề xuất kiểm tra trạm trên tuyến và đúng khung giờ nghỉ, rồi hỏi lại liệu cách đó có giải quyết băn khoăn; khách đồng ý muốn xem phép so có tính thời gian chờ.",
+            "improvement_suggestion": null,
+            "manager_reason": null
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có cơ hội đánh giá chính sách trong phần hội thoại này: policy_assessment_required là false và tư vấn viên không thảo luận giá hay chính sách. Không suy diễn rằng việc chưa nêu chính sách là sai.",
+            "improvement_suggestion": null,
+            "manager_reason": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC3-M07",
+                "quote": "Được, anh muốn thấy phép so có tính thời gian chờ."
+              },
+              {
+                "message_id": "JC3-M08",
+                "quote": "Em sẽ lập bảng giả định theo quãng 180 km/ngày và thời gian chờ tại trạm anh chọn; mình thống nhất kiểm tra số liệu trạm cùng nhau chiều mai được không ạ?"
+              }
+            ],
+            "reason": "Có cơ hội chốt bước tiếp theo. Tư vấn viên đề xuất một việc cụ thể là lập bảng giả định và cùng kiểm tra số liệu trạm chiều mai, nhưng transcript kết thúc bằng câu hỏi xin thống nhất và chưa có phản hồi chấp nhận từ khách, nên bước tiếp theo chưa được xác nhận.",
+            "improvement_suggestion": "Sau khi đề xuất thời điểm kiểm tra, hãy chờ xác nhận rõ từ khách và thống nhất địa điểm hoặc trạm cụ thể để bước tiếp theo được chốt.",
+            "manager_reason": null
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên khai thác được ưu tiên không mất cuốc và lịch chạy, rồi điều chỉnh hướng so sánh sang việc kiểm tra sạc trong giờ nghỉ trưa."
+        ],
+        "summary_weaknesses": [
+          "Chưa xác nhận được khách đồng ý kiểm tra số liệu chiều mai; cũng chưa chốt trạm cụ thể để thực hiện bước kiểm chứng."
+        ],
+        "recommended_next_practice": null,
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JC4_FACTUAL_ERROR",
+      "evaluation": {
+        "session_id": "judge-calibration-JC4_FACTUAL_ERROR",
+        "scenario_id": "SCENARIO_01_VF5_TAXI",
+        "judge_model": null,
+        "closing_outcome": null,
+        "closing_outcome_label": null,
+        "rubric_version": "sales-rubric-v4",
+        "assessed_criteria_count": 5,
+        "overall_score": 1.4,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC4-M01",
+                "quote": "Nếu mua VF 5 Plus chạy dịch vụ, anh phải trả tiền điện ở trạm sạc công cộng không?"
+              },
+              {
+                "message_id": "JC4-M02",
+                "quote": "Theo em, mọi phiên sạc ở trạm công cộng đều miễn phí, không tính tiền điện."
+              }
+            ],
+            "reason": "Có cơ hội khai thác nhu cầu: khách nêu rõ đang cân nhắc chi phí sạc khi chạy dịch vụ. Tư vấn viên không hỏi quãng đường, chi phí nhiên liệu hiện tại hoặc lịch chạy để hiểu điều gì quyết định việc đổi xe.",
+            "improvement_suggestion": "Sau khi xác nhận thông tin phí sạc, hãy hỏi quãng đường chạy và tiền xăng thực tế của khách để có cơ sở so sánh chi phí.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC4-M01",
+                "quote": "Nếu mua VF 5 Plus chạy dịch vụ, anh phải trả tiền điện ở trạm sạc công cộng không?"
+              },
+              {
+                "message_id": "JC4-M02",
+                "quote": "Theo em, mọi phiên sạc ở trạm công cộng đều miễn phí, không tính tiền điện."
+              }
+            ],
+            "reason": "Có câu hỏi trực tiếp về chi phí sạc công cộng, nhưng câu trả lời khẳng định mọi phiên sạc đều miễn phí là sai lệch trọng yếu so với thông tin về đơn giá sạc công cộng trong tài liệu được cung cấp.",
+            "improvement_suggestion": "Kiểm tra tài liệu hiện hành trước khi trả lời, nêu đơn giá và cách tính theo kWh thực tế; nếu chưa xác minh được thì nói rõ sẽ kiểm tra thay vì khẳng định miễn phí.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC4-M03",
+                "quote": "Anh cần xác nhận nguồn vì chi phí này ảnh hưởng quyết định đổi xe."
+              },
+              {
+                "message_id": "JC4-M04",
+                "quote": "Em sẽ kiểm tra lại tài liệu đang áp dụng rồi gửi anh nguồn chính thức trước khi tính chi phí."
+              }
+            ],
+            "reason": "Có cơ hội xử lý lo ngại về độ tin cậy của chi phí. Tư vấn viên nhận ra khách cần xác nhận nguồn và đề nghị kiểm tra, nhưng cuộc trò chuyện chưa cho thấy đã giải quyết mối lo hoặc hỏi lại xem cách xử lý đó có đáp ứng nhu cầu của khách không.",
+            "improvement_suggestion": "Sau khi gửi nguồn và thông tin đã xác minh, hãy kiểm tra xem khách còn băn khoăn gì về chi phí sạc trước khi chuyển sang so sánh tổng chi phí.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC4-M02",
+                "quote": "Theo em, mọi phiên sạc ở trạm công cộng đều miễn phí, không tính tiền điện."
+              }
+            ],
+            "reason": "Có cơ hội đánh giá vì tư vấn viên đã đưa ra một khẳng định về phí sạc. Khẳng định mọi phiên sạc công cộng đều miễn phí mâu thuẫn với tài liệu hiện hành được cung cấp về đơn giá sạc công cộng.",
+            "improvement_suggestion": "Không khẳng định ưu đãi hoặc miễn phí áp dụng cho mọi phiên sạc; đối chiếu điều kiện và đơn giá đang có hiệu lực trước khi tư vấn.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC4-M04",
+                "quote": "Em sẽ kiểm tra lại tài liệu đang áp dụng rồi gửi anh nguồn chính thức trước khi tính chi phí."
+              }
+            ],
+            "reason": "Có cơ hội đề xuất bước tiếp theo. Tư vấn viên đưa ra một việc cụ thể là kiểm tra tài liệu và gửi nguồn, nhưng khách chưa xác nhận đồng ý và chưa có thỏa thuận cụ thể về thời điểm hoặc bước tính tiếp theo.",
+            "improvement_suggestion": "Đề xuất thời điểm gửi nguồn và hỏi khách có đồng ý tiếp tục đối chiếu chi phí sau khi nhận thông tin hay không.",
+            "manager_reason": null
+          }
+        ],
+        "factual_findings": [
+          {
+            "claim": "mọi phiên sạc ở trạm công cộng đều miễn phí, không tính tiền điện",
+            "message_id": "JC4-M02",
+            "status": "contradicted",
+            "source_ids": [
+              "CHARGING_TARIFF_VINFAST_20261004"
+            ],
+            "source_references": [
+              {
+                "source_id": "CHARGING_TARIFF_VINFAST_20261004",
+                "version": "2026.10.04",
+                "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024. Tiền điện được tính theo kWh thực tế của phiên sạc"
+              }
+            ],
+            "severity": "critical",
+            "reason": "Nguồn cho biết sạc tại trạm công cộng có đơn giá 3.858 VNĐ/kWh và tiền điện được tính theo mức tiêu thụ thực tế, nên nhận định mọi phiên sạc đều miễn phí tiền điện là sai."
+          }
+        ],
+        "summary_strengths": [
+          "Tư vấn viên nhận ra khách cần nguồn chính thức và chủ động hứa kiểm tra trước khi tính chi phí."
+        ],
+        "summary_weaknesses": [
+          "Khẳng định sai rằng mọi phiên sạc công cộng đều miễn phí, ngay ở câu trả lời cho câu hỏi trực tiếp của khách.",
+          "Chưa khai thác quãng đường và chi phí nhiên liệu thực tế để đặt câu hỏi về sạc trong bối cảnh chạy dịch vụ."
+        ],
+        "recommended_next_practice": {
+          "type": "document",
+          "target_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "reason": "Ôn lại tài liệu đơn giá sạc công cộng để luyện cách xác minh và trình bày chi phí đúng trước khi so sánh với xe xăng."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JC5_PARTIAL_OPPORTUNITY",
+      "evaluation": {
+        "session_id": "judge-calibration-JC5_PARTIAL_OPPORTUNITY",
+        "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+        "judge_model": null,
+        "closing_outcome": null,
+        "closing_outcome_label": null,
+        "rubric_version": "sales-rubric-v4",
+        "assessed_criteria_count": 2,
+        "overall_score": 2.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC5-M01",
+                "quote": "Nhà anh ở chung cư chưa có chỗ sạc riêng; nếu cân nhắc VF 6 thì nên tìm hiểu từ đâu?"
+              },
+              {
+                "message_id": "JC5-M02",
+                "quote": "Tòa nhà có quy định về lắp sạc hay anh đã thấy trạm công cộng nào trên tuyến đi hằng ngày chưa ạ?"
+              }
+            ],
+            "reason": "Có cơ hội khai thác nhu cầu vì khách nêu rõ trở ngại sạc ở chung cư. Tư vấn viên hỏi về quy định của tòa nhà và khả năng tiếp cận trạm công cộng, là các yếu tố liên quan đến quyết định. Đây là mức thực hiện phù hợp, nhưng chưa làm rõ quãng đường đi lại hoặc khu vực cụ thể để điều chỉnh phương án.",
+            "improvement_suggestion": "Hỏi thêm quãng đường đi lại thường ngày và khu vực sinh sống, rồi dùng câu trả lời để xác định phương án sạc cần kiểm tra.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Cuộc trò chuyện có chạm đến cách tìm hiểu phương án sạc, nhưng phản hồi hiện tại chủ yếu là câu hỏi khai thác. Chưa có đủ nội dung về sản phẩm để kết luận mức độ chính xác hay đầy đủ của kiến thức; dữ liệu nguồn được cung cấp cũng không có bằng chứng kiến thức sản phẩm.",
+            "improvement_suggestion": null,
+            "manager_reason": null
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "JC5-M01",
+                "quote": "Nhà anh ở chung cư chưa có chỗ sạc riêng; nếu cân nhắc VF 6 thì nên tìm hiểu từ đâu?"
+              },
+              {
+                "message_id": "JC5-M02",
+                "quote": "Em hiểu việc chưa có chỗ sạc riêng là điểm cần kiểm tra. Tòa nhà có quy định về lắp sạc hay anh đã thấy trạm công cộng nào trên tuyến đi hằng ngày chưa ạ?"
+              }
+            ],
+            "reason": "Có cơ hội phản hồi mối lo về sạc. Tư vấn viên ghi nhận đây là điểm cần kiểm tra và hỏi về hai yếu tố liên quan, nên xử lý phù hợp ở mức cơ bản. Chưa có câu trả lời hoặc bước kiểm tra lại để cho thấy mối lo đã được giải quyết.",
+            "improvement_suggestion": "Sau khi làm rõ quãng đường và khu vực, đưa ra phương án có thể kiểm chứng với các giả định rõ ràng, rồi hỏi khách liệu phương án đó có giải quyết được lo ngại bất tiện hay không.",
+            "manager_reason": null
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có cuộc trao đổi về chính sách hoặc giá và policy_assessment_required là false, nên chưa có cơ sở để đánh giá tiêu chí này.",
+            "improvement_suggestion": null,
+            "manager_reason": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Chưa có cơ hội công bằng để chốt bước tiếp theo: transcript mới gồm câu hỏi mở đầu và phản hồi khai thác ban đầu, chưa có trao đổi đủ để đề xuất một bước tiếp theo phù hợp.",
+            "improvement_suggestion": null,
+            "manager_reason": null
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Ghi nhận đúng trở ngại sạc tại chung cư và bắt đầu tìm hiểu khả năng lắp sạc hoặc tiếp cận trạm công cộng."
+        ],
+        "summary_weaknesses": [
+          "Chưa hỏi quãng đường đi lại và khu vực sinh sống để có thể cá nhân hóa phương án sạc.",
+          "Chưa có đủ nội dung để đánh giá kiến thức sản phẩm hoặc hiệu quả giải quyết lo ngại."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_03_VF6_APARTMENT",
+          "reason": "Luyện tiếp tình huống này để khai thác quãng đường và khu vực, rồi nối câu trả lời của khách với một phương án sạc có thể kiểm chứng."
+        },
+        "review_status": "ai_draft"
+      }
+    }
+  ],
+  "failures": [
+    {
+      "case_id": "JC6_VF6_PLUS_UPSELL",
+      "error_type": "EvaluationError",
+      "reason": "factual source quote is not exact: PROMOTION_SALES_VINFAST_20260921"
+    }
+  ]
+}

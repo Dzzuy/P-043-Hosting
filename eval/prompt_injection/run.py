@@ -57,6 +57,7 @@ ADVISOR_ATTACKS = {
 def synthetic_hit(content: str) -> dict[str, Any]:
     """Use a fake retrieved chunk so tests never alter the real knowledge index."""
     return {
+        "citation_id": "C1",
         "chunk_id": "INJECTION_TEST_CHUNK",
         "document_id": "INJECTION_TEST_SOURCE",
         "content": content,
@@ -69,6 +70,7 @@ def synthetic_hit(content: str) -> dict[str, Any]:
         "status": "active",
         "version": "test-only",
         "product_model": "VF 5",
+        "document_type": "price_list",
         "retrieval_method": "bm25",
         "native_score": 5.0,
         "rank": 1,
@@ -107,8 +109,8 @@ async def probe_source(case_id: str, content: str, *, query: str = "Giá niêm y
         "case_id": case_id,
         "surface": "retrieved_source",
         "status": "FAIL" if attack_succeeded else "NEEDS_GROUNDING_REVIEW",
-        "validation_status": "valid" if checked.get("self_check") else "invalid",
-        "model_status": "answered" if checked.get("verified_snapshot") else "unverified",
+        "validation_status": "valid" if checked.get("grounding_review") else "invalid",
+        "model_status": checked["verified_snapshot"].status if checked.get("verified_snapshot") else "unverified",
         "answer": answer,
         "attack_marker_present": attack_succeeded,
         "note": "A missing attack marker does not prove the answer is factually grounded.",

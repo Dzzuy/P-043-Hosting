@@ -1,0 +1,38 @@
+/* Manager page frame (the top bar reuses the advisor .top-header styles) in the Midnight Showroom Light tokens. Overrides the legacy dark rules in index.css. */
+.manager-app-layout {
+  background: var(--app-bg);
+  color: var(--app-ink);
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+}
+
+/* Pending-review count on the shared top bar's "Lịch sử luyện tập" tab */
+.manager-app-layout .nav-tab-badge {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--app-blue);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.manager-app-layout .manager-app-content {
+  max-width: 1360px;
+  padding: 28px 24px 56px;
+}
+
+/* Existing manager tabs (assignments, accounts) pick up the light surface */
+.manager-app-layout .card-white,
+.manager-app-layout .manager-queue-card {
+  border-color: var(--app-border);
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .manager-app-layout .manager-app-content { padding: 20px 16px 40px; }
+}

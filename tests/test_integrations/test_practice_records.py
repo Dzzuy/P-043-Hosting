@@ -4,13 +4,14 @@ import pytest
 from pydantic import ValidationError
 
 from src.integrations.practice_records import SQLPracticeRecordsRepository
-from src.models.evaluation import CriterionType, ReviewStatus, SessionEvaluationResult
+from src.models.evaluation import CriterionStatus, CriterionType, ReviewStatus, SessionEvaluationResult
 from src.services.practice_records import (
     AssignmentConflictError,
     AttemptNotFoundError,
     CreateAssignmentInput,
     ManagerReviewDecision,
     ReviewConflictError,
+    ReviewValidationError,
 )
 
 
@@ -206,3 +207,59 @@ async def test_assignment_link_and_status_survive_repository_reopen(tmp_path):
     performance = (await reopened.advisor_performance())["advisor-a"]
     assert (performance.completed_sessions, performance.approved_sessions, performance.scored_sessions) == (1, 1, 1)
     assert performance.average_score == 3
+
+
+@pytest.mark.asyncio
+async def test_old_reviews_without_manager_reason_or_general_comment_stay_readable(tmp_path):
+    records = SQLPracticeRecordsRepository(f"sqlite:///{tmp_path / 'old.db'}")
+    await records.register("attempt-1", "scenario-1", "advisor-a")
+    await records.complete("attempt-1", draft("attempt-1"))
+    legacy_json = draft("attempt-1").model_dump_json(exclude={"evaluations": {"__all__": {"manager_reason"}}})
+    assert "manager_reason" not in legacy_json
+    assert SessionEvaluationResult.model_validate_json(legacy_json).evaluations[0].manager_reason is None
+    await records.approve("attempt-1", "manager-1", ManagerReviewDecision(change_reason="Reviewed."))
+    saved = await records.review_details("attempt-1")
+    assert saved is not None
+    assert saved.change_reason == "Reviewed."
+    assert saved.general_comment == "Reviewed."
+
+
+@pytest.mark.asyncio
+async def test_per_criterion_reason_is_required_and_stored_only_on_changed_scores(tmp_path):
+    records = SQLPracticeRecordsRepository(f"sqlite:///{tmp_path / 'reasons.db'}")
+    await records.register("attempt-1", "scenario-1", "advisor-a")
+    await records.complete("attempt-1", draft("attempt-1"))
+    with pytest.raises(ReviewValidationError, match="need_discovery"):
+        await records.approve(
+            "attempt-1",
+            "manager-1",
+            ManagerReviewDecision.model_validate({"score_overrides": {"need_discovery": {"score": 2}}}),
+        )
+    review = await records.approve(
+        "attempt-1",
+        "manager-1",
+        ManagerReviewDecision.model_validate(
+            {
+                "score_overrides": {"need_discovery": {"score": 2, "reason": "Follow-up missing."}},
+                "general_comment": "Watch the opening.",
+            }
+        ),
+    )
+    item = next(e for e in review.approved_result.evaluations if e.criterion is CriterionType.NEED_DISCOVERY)
+    assert item.status is CriterionStatus.ASSESSED
+    assert (item.score, item.manager_reason) == (2, "Follow-up missing.")
+    assert review.general_comment == "Watch the opening."
+    assert review.ai_draft.evaluations[0].manager_reason is None
+
+
+@pytest.mark.asyncio
+async def test_todos_persist_per_manager_and_order_open_items_first(tmp_path):
+    url = f"sqlite:///{tmp_path / 'todos.db'}"
+    records = SQLPracticeRecordsRepository(url)
+    first = await records.create_todo("manager-a", "First")
+    await records.create_todo("manager-a", "Second")
+    await records.create_todo("manager-b", "Other")
+    await records.set_todo_done("manager-a", first.todo_id, True)
+    reopened = SQLPracticeRecordsRepository(url)
+    assert [(t.text, t.done) for t in await reopened.list_todos("manager-a")] == [("Second", False), ("First", True)]
+    assert [t.text for t in await reopened.list_todos("manager-b")] == ["Other"]

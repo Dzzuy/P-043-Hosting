@@ -61,7 +61,7 @@ def test_exact_personal_scope_and_legacy_tasks_are_not_auto_scheduled(agenda):
         assert conn.execute(select(repo.tasks.c.due_at).limit(1)).scalar() is not None
 
 
-@pytest.mark.parametrize("changes", [{}, {"starts_at": INTERVAL["starts_at"]},
+@pytest.mark.parametrize("changes", [{"starts_at": INTERVAL["starts_at"]},
     {"starts_at": "2026-10-16T10:00:00+07:00", "ends_at": "2026-10-16T09:00:00+07:00"},
     {"starts_at": "2026-10-16T09:00:00", "ends_at": "2026-10-16T10:00:00"},
     {"starts_at": INTERVAL["starts_at"], "ends_at": INTERVAL["starts_at"]}])
@@ -72,7 +72,7 @@ def test_new_tasks_require_valid_aware_interval(agenda, changes):
 
 def test_personal_creation_edit_overlap_and_other_owner_are_private(agenda):
     repo, service, client = agenda
-    response = client.post("/api/v1/sales-copilot/tasks", json={"title": "Họp", "item_type": "appointment", **INTERVAL})
+    response = client.post("/api/v1/sales-copilot/tasks", json={"title": "Họp", "item_type": "appointment", "location": "Showroom", **INTERVAL})
     assert response.status_code == 201
     item = response.json()
     assert item["customer_id"] is None and item["conversation_id"] is None
@@ -110,13 +110,13 @@ def test_root_creation_with_customer_checks_access_and_reuses_conversation(agend
 
 def test_review_approval_requires_schedule_and_does_not_publish_early(agenda):
     repo, service, client = agenda
-    item_id = task(repo, status="needs_review")
+    item_id = task(repo, status="needs_review", item_type="appointment")
     assert service.dashboard(OWNER, now=NOW, work_filter="review")["work_items"]["total"] == 1
     assert not service.calendar(OWNER, date(2026, 10, 16))["items"]
     url = f"/api/v1/sales-copilot/tasks/{item_id}"
     assert client.patch(url, json={"status": "pending"}).status_code == 422
     assert client.patch(url, json={"status": "completed"}).status_code == 422
-    assert client.patch(url, json={"status": "pending", **INTERVAL}).status_code == 200
+    assert client.patch(url, json={"status": "pending", "location": "Showroom", **INTERVAL}).status_code == 200
     assert len(service.calendar(OWNER, date(2026, 10, 16))["items"]) == 1
 
 
@@ -170,7 +170,7 @@ def test_dashboard_uses_confirmations_dedupes_context_and_aggregates_messages(ag
         conn.execute(update(repo.messages).values(sent_at=NOW))
         conn.execute(insert(repo.memories).values(conversation_id=conversation, quick_summary="", detailed_summary="", timeline_json="[]", pending_items_json='["điểm sạc"]', key_promises_json="[]", version=1, updated_at=NOW))
     data = service.dashboard(OWNER, now=NOW)
-    assert data["stage_distribution"] == [{"stage": "appointment", "count": 1}]
+    assert data["stage_distribution"] == [{"stage": "needs_confirmation", "count": 1}]
     assert data["model_interest"] == [{"model": "VF 8", "count": 1}]
     assert data["kpis"]["waiting_customers"] == 1
     assert len(data["customer_intelligence"][0]["issues"]) == 2
@@ -192,7 +192,7 @@ def test_dashboard_reads_are_bounded_and_never_create_conversations(agenda):
     finally:
         event.remove(repo.engine, "before_cursor_execute", capture)
     assert response.status_code == 200 and len(response.json()["message_activity"]) == 30
-    assert len(statements) == 6 and all(statement.lstrip().upper().startswith("SELECT") for statement in statements)
+    assert len(statements) == 7 and all(statement.lstrip().upper().startswith("SELECT") for statement in statements)
     with repo.engine.connect() as conn:
         assert not conn.execute(select(repo.conversations)).all()
     assert client.get("/api/v1/sales-copilot/dashboard?activity_days=8").status_code == 422

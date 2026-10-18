@@ -1,7 +1,21 @@
 import React from 'react';
+import { inlineCitationGroups } from './citationGroups';
 
 export function renderInlineWithCitations(text, citations = [], onCitationClick) {
   if (!text) return null;
+  if (citations.some((source) => source.chunks)) {
+    return text.split(/((?:\[C\d+\][ \t]*)+)/g).map((part, index) => {
+      if (!part.startsWith('[C') || !/^\[C\d+\]/.test(part)) return renderFormattedText(part, index);
+      const ids = [...part.matchAll(/\[(C\d+)\]/g)].map((match) => match[1]);
+      const groups = inlineCitationGroups(ids, citations);
+      const unknown = [...new Set(ids.filter((id) => !groups.some((group) => group.chunks.some((chunk) => chunk.citation_id === id))))];
+      return <React.Fragment key={`group-${index}`}>
+        {groups.map((group) => <button key={group.group_key} type="button" className="sw-inline-citation" title={group.title || group.document_id} aria-label={`Nguồn ${group.display_number}: ${group.title || group.document_id}`} onClick={() => onCitationClick?.(group)}>[{group.display_number}]</button>)}
+        {unknown.map((id) => <span key={id} title="Không tìm thấy thông tin nguồn">[{id}]</span>)}
+        {/[ \t]$/.test(part) ? ' ' : null}
+      </React.Fragment>;
+    });
+  }
   const parts = text.split(/(\[C\d+\])/g);
   return parts.map((part, index) => {
     const match = part.match(/^\[(C\d+)\]$/);

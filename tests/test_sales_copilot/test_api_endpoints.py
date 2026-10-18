@@ -1,14 +1,43 @@
 """Integration tests for Sales Copilot FastAPI endpoints."""
 
+from unittest.mock import AsyncMock
+
 import pytest
+from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 
-from src.main import app
+from src.api.sales_copilot import router
+from src.integrations.sales_copilot_repository import SQLSalesCopilotRepository
+from src.models.auth import AuthenticatedUser
+from src.services.sales_conversation_service import SalesConversationService
+from src.services.sales_copilot_analyzer import SalesCopilotAnalyzer
 
 
 @pytest.fixture
-def client():
-    return TestClient(app)
+def client(tmp_path, monkeypatch):
+    repository = SQLSalesCopilotRepository(f"sqlite:///{tmp_path / 'api.db'}")
+    for number in range(1, 4):
+        customer = repository.create_customer(name=f"Khách QA {number}", advisor_id="endpoint-test")
+        conversation_id = repository.get_or_create_conversation(customer)
+        for index in range(12):
+            repository.add_message(conversation_id, "customer", f"Câu hỏi kiểm thử {index}")
+    analyzer = SalesCopilotAnalyzer(repository)
+    monkeypatch.setattr(analyzer, "analyze_conversation", AsyncMock(return_value={
+        "status": "success", "profile": {}, "memory": {}, "tasks": [], "lead_status": {},
+    }))
+    isolated_app = FastAPI()
+
+    async def authenticated(request):
+        return AuthenticatedUser(user_id="endpoint-test", username="test", display_name="Test", role="advisor")
+
+    isolated_app.state.current_user = authenticated
+    isolated_app.state.sales_copilot_repository = repository
+    isolated_app.state.sales_conversation_service = SalesConversationService(repository)
+    isolated_app.state.sales_copilot_analyzer = analyzer
+    isolated_app.include_router(router, prefix="/api/v1")
+    with TestClient(isolated_app) as test_client:
+        yield test_client
+    repository.engine.dispose()
 
 
 def test_list_conversations_endpoint(client):
@@ -16,11 +45,9 @@ def test_list_conversations_endpoint(client):
     assert res.status_code == 200
     data = res.json()
     assert isinstance(data, list)
-    assert len(data) >= 3
+    assert len(data) == 3
     names = [c["customer_name"] for c in data]
-    assert "Anh Minh Tuấn" in names
-    assert "Anh Quang Huy" in names
-    assert "Anh Đức Trọng" in names
+    assert set(names) == {"Khách QA 1", "Khách QA 2", "Khách QA 3"}
 
 
 def test_conversation_details_and_analyze_endpoint(client):
@@ -58,7 +85,8 @@ def test_preferences_endpoint(client):
     )
     assert patch_res.status_code == 200
     updated = patch_res.json()
-    assert updated["nba_enabled"] is True
+    assert updated["advisor_id"] == "endpoint-test"
+    assert "nba_enabled" not in updated
     assert updated["draft_enabled"] is True
 
 
@@ -75,16 +103,38 @@ def test_send_sales_message_endpoint(client):
     assert msg["sender_role"] == "sales"
     assert "Tin nhắn thử nghiệm" in msg["content"]
 
-    # Clean up test message immediately so it doesn't pollute conversations in UI
-    from sqlalchemy import text
+    repo = client.app.state.sales_copilot_repository
+    saved = repo.list_messages(conv_id)[-1]
+    assert saved.id == msg["id"]
+    assert saved.content == msg["content"]
 
-    from src.main import app
-    repo = app.state.sales_copilot_repository
-    with repo.engine.begin() as conn:
-        conn.execute(text("DELETE FROM copilot_chat_messages WHERE id = :mid"), {"mid": msg["id"]})
+
+def test_endpoints_reject_anonymous_requests(client):
+    async def anonymous(request):
+        raise HTTPException(status_code=401, detail="Authentication required.")
+
+    client.app.state.current_user = anonymous
+    assert client.get("/api/v1/sales-copilot/conversations").status_code == 401
+    assert client.get("/api/v1/sales-copilot/preferences").status_code == 401
+
+
+def test_endpoints_do_not_expose_another_advisors_conversation(client):
+    repo = client.app.state.sales_copilot_repository
+    customer = repo.create_customer(name="Other owner", advisor_id="other-advisor")
+    conversation_id = repo.get_or_create_conversation(customer)
+    repo.add_message(conversation_id, "customer", "Private message")
+    prefix = f"/api/v1/sales-copilot/conversations/{conversation_id}"
+    assert client.get(prefix).status_code == 404
+    assert client.post(prefix + "/messages", json={"content": "Unauthorized", "sender_role": "sales"}).status_code == 404
+    assert len(repo.list_messages(conversation_id)) == 1
 
 
 def test_copilot_contextual_chat_endpoint(tmp_path, monkeypatch, request):
+    from cryptography.fernet import Fernet
+    from pydantic import SecretStr
+
+    from src.config import get_settings
+    monkeypatch.setattr(get_settings(), "sales_pii_key", SecretStr(Fernet.generate_key().decode()))
     from fastapi import FastAPI
 
     from src.agents.copilot.runtime import CopilotAdmission

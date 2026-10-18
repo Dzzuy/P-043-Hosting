@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     app_port: int = Field(default=8000, ge=1, le=65535)
     app_host: str = "0.0.0.0"
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
+    sales_pii_key: SecretStr = SecretStr("")
+    sales_intelligence_v2_enabled: bool = False
     cors_origins: str = "http://localhost:3000"
 
     # Copilot telemetry: Settings reads .env; the SDK is configured explicitly.
@@ -45,6 +47,23 @@ class Settings(BaseSettings):
             raise ValueError("LangSmith content capture is only permitted in development")
         if not self.langsmith_project:
             self.langsmith_project = "p043-copilot-prod" if self.app_env == "production" else "p043-copilot-dev"
+        return self
+
+    # Roleplay telemetry uses its own account and project.
+    roleplay_langsmith_tracing: bool = False
+    roleplay_langsmith_api_key: SecretStr = SecretStr("")
+    roleplay_langsmith_endpoint: str = "https://api.smith.langchain.com"
+    roleplay_langsmith_project: str = ""
+    roleplay_langsmith_capture_content: bool = False
+
+    @model_validator(mode="after")
+    def validate_roleplay_telemetry(self) -> "Settings":
+        if self.app_env == "production" and self.roleplay_langsmith_capture_content:
+            raise ValueError("Roleplay LangSmith content capture is only permitted in development")
+        if not self.roleplay_langsmith_project:
+            self.roleplay_langsmith_project = (
+                "p043-roleplay-prod" if self.app_env == "production" else "p043-roleplay-dev"
+            )
         return self
 
     # LLM Providers
@@ -82,7 +101,7 @@ class Settings(BaseSettings):
     )
 
     practice_judge_provider: Literal["openai", "openrouter", "gemini", "grok", "deepseek"] = "openrouter"
-    practice_judge_model: str = "google/gemini-3.8-flash"
+    practice_judge_model: str = "deepseek/deepseek-v3.2"
 
     # Model Configuration
     model_name: str = Field(
@@ -95,41 +114,51 @@ class Settings(BaseSettings):
     retrieval_timeout_seconds: float = Field(default=20.0, gt=0)
     copilot_request_timeout_seconds: float = Field(default=180.0, gt=0)
     copilot_max_retrieval_rounds: int = Field(default=2, ge=1, le=2)
-    copilot_max_queries_per_plan: int = Field(default=3, ge=1, le=3)
-    copilot_max_search_calls: int = Field(default=5, ge=1, le=5)
+    copilot_max_queries_per_plan: int = Field(default=3, ge=1, le=8)
+    copilot_max_search_calls: int = Field(default=5, ge=1, le=12)
+    copilot_max_requirements: int = Field(default=18, ge=2, le=24)
     copilot_session_ttl_hours: int = Field(default=8, ge=1, le=168)
     copilot_max_llm_attempts: int = Field(default=8, ge=3, le=8)
     # Comma-separated task types enabled by the deployment administrator. Empty disables AI task creation.
     sales_ai_task_rules: str = ""
     copilot_final_reserve_seconds: float = Field(default=10.0, gt=0)
     # Profile caps include all queries in a round and every expanded evidence chunk.
-    copilot_evidence_selection_strategy: Literal["legacy", "rrf_context"] = "rrf_context"
+    copilot_evidence_selection_strategy: Literal["rrf_context", "jev_context"] = "jev_context"
+    copilot_jev_model: str = "typesafe/jev-1.14"
+    copilot_jev_timeout_seconds: float = Field(default=12.0, gt=0, le=30)
+    copilot_jev_concurrency: int = Field(default=4, ge=1, le=8)
+    copilot_jev_relevance_min: float = Field(default=0.45, ge=0, le=1)
+    copilot_jev_evidence_min: float = Field(default=0.55, ge=0, le=1)
+    copilot_jev_contradiction_min: float = Field(default=0.70, ge=0, le=1)
+    copilot_jev_injection_max: float = Field(default=0.70, ge=0, le=1)
     copilot_simple_dense_top_k: int = Field(default=8, ge=1, le=20)
     copilot_simple_bm25_top_k: int = Field(default=8, ge=1, le=20)
     copilot_simple_candidate_pool: int = Field(default=8, ge=1, le=40)
     copilot_simple_evidence_blocks: int = Field(default=4, ge=1, le=12)
     copilot_simple_context_characters: int = Field(default=6000, ge=2000, le=12000)
+    copilot_simple_context_tokens: int = Field(default=4000, ge=1000, le=16000)
     copilot_complex_dense_top_k: int = Field(default=12, ge=1, le=20)
     copilot_complex_bm25_top_k: int = Field(default=12, ge=1, le=20)
-    copilot_complex_candidate_pool: int = Field(default=12, ge=1, le=40)
-    copilot_complex_evidence_blocks: int = Field(default=6, ge=1, le=12)
-    copilot_complex_context_characters: int = Field(default=9000, ge=2000, le=12000)
+    copilot_complex_candidate_pool: int = Field(default=18, ge=1, le=40)
+    copilot_complex_evidence_blocks: int = Field(default=20, ge=1, le=40)
+    copilot_complex_context_characters: int = Field(default=16000, ge=2000, le=32000)
+    copilot_complex_context_tokens: int = Field(default=6500, ge=1000, le=16000)
     copilot_corrective_dense_top_k: int = Field(default=12, ge=1, le=20)
     copilot_corrective_bm25_top_k: int = Field(default=12, ge=1, le=20)
-    copilot_corrective_candidate_pool: int = Field(default=12, ge=1, le=40)
-    copilot_corrective_evidence_blocks: int = Field(default=8, ge=1, le=12)
-    copilot_corrective_context_characters: int = Field(default=12000, ge=2000, le=12000)
-    copilot_analysis_timeout_seconds: float = Field(default=15, gt=0)
+    copilot_corrective_candidate_pool: int = Field(default=24, ge=1, le=40)
+    copilot_corrective_evidence_blocks: int = Field(default=28, ge=1, le=40)
+    copilot_corrective_context_characters: int = Field(default=24000, ge=2000, le=32000)
+    copilot_corrective_context_tokens: int = Field(default=9000, ge=1000, le=16000)
+    copilot_analysis_timeout_seconds: float = Field(default=25, gt=0)
     copilot_plan_timeout_seconds: float = Field(default=15, gt=0)
     copilot_generate_timeout_seconds: float = Field(default=30, gt=0)
     copilot_check_timeout_seconds: float = Field(default=20, gt=0)
-    copilot_analysis_max_tokens: int = Field(default=1200, ge=256)
-    copilot_plan_max_tokens: int = Field(default=800, ge=256)
-    copilot_generate_max_tokens: int = Field(default=3000, ge=256)
-    copilot_check_max_tokens: int = Field(default=1000, ge=256)
+    copilot_analysis_max_tokens: int = Field(default=3600, ge=256)
+    copilot_plan_max_tokens: int = Field(default=1600, ge=256)
+    copilot_generate_max_tokens: int = Field(default=4000, ge=256)
+    copilot_generate_reasoning_effort: Literal["none", "minimal", "low", "medium", "high"] | None = None
+    copilot_check_max_tokens: int = Field(default=4400, ge=256)
     copilot_check_reasoning_effort: Literal["none", "minimal", "low", "medium", "high"] | None = None
-    copilot_native_json_schema: bool = False
-    copilot_json_mode: bool = False
     copilot_regenerate_min_seconds: float = Field(default=60, gt=0)
     copilot_corrective_min_seconds: float = Field(default=95, gt=0)
     copilot_max_concurrency: int = Field(default=4, ge=1, le=32)

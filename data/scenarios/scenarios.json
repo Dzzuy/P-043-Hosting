@@ -130,217 +130,6 @@
     }
   },
   {
-    "scenario_id": "SCENARIO_02_VF7_VS_CX5",
-    "title": "Khách hàng gia đình so sánh VF 7 Plus với Mazda CX-5",
-    "difficulty": "Hard",
-    "sales_channel": "Tin nhắn tư vấn",
-    "training_objective": "Khám phá nhu cầu gia đình và người cùng ra quyết định, sau đó so sánh giá trị mà không hạ thấp đối thủ hoặc đưa ra cam kết khấu hao thiếu căn cứ.",
-    "scenario_version": "2.2",
-    "policy_expectations": [
-      {
-        "policy_id": "vtlx2",
-        "level": "expected",
-        "topic": "Ưu đãi Vì Tương Lai Xanh 2 và điều kiện chuyển đổi sang xe điện cho VF 7",
-        "lookup": {
-          "query": "Vì Tương Lai Xanh 2",
-          "document_type": "promotion",
-          "policy_type": "general",
-          "product_model": "VF 7"
-        },
-        "requires_eligibility_check": true
-      },
-      {
-        "policy_id": "warranty",
-        "level": "expected",
-        "topic": "Chính sách bảo hành xe và pin VF 7",
-        "lookup": {
-          "query": "VF 7 bảo hành",
-          "document_type": "faq",
-          "policy_type": null,
-          "product_model": "VF 7"
-        },
-        "requires_eligibility_check": false
-      },
-      {
-        "policy_id": "charging",
-        "level": "bonus",
-        "topic": "Chính sách ưu đãi sạc pin và điều kiện sử dụng",
-        "lookup": {
-          "query": "Chính sách ưu đãi sạc pin",
-          "document_type": "policy",
-          "policy_type": "charging",
-          "product_model": "ALL"
-        },
-        "requires_eligibility_check": false
-      },
-      {
-        "policy_id": "zero_down",
-        "level": "bonus",
-        "topic": "Chương trình mua xe không cần vốn đối ứng và điều kiện vay",
-        "lookup": {
-          "query": "Mua xe 0 Đồng",
-          "document_type": "promotion",
-          "policy_type": "general",
-          "product_model": "VF 7"
-        },
-        "requires_eligibility_check": false
-      }
-    ],
-    "target_skills": ["product_knowledge", "objection_handling", "closing_next_step"],
-    "persona": {
-      "name": "Chị Thanh",
-      "age": 32,
-      "current_car": null,
-      "communication_style": "Hiện đại, kỹ tính, thích xe đẹp nhưng phân vân chênh lệch giá"
-    },
-    "buyer_intent": "Mua xe cho gia đình đi làm và cuối tuần về quê, thích công nghệ nhưng ngại xe điện mới ra",
-    "customer_goals": "Muốn biết lý do tại sao phải bỏ thêm tiền mua VF 7 thay vì chọn CX-5 đã quen thuộc",
-    "visible_context": "Khách nhắn tin: 'Chị thấy VF 7 với CX-5 cũng như nhau, CX-5 nhìn quen mắt hơn mà sao VF 7 đắt hơn khá nhiều vậy em?'",
-    "hidden_facts": {
-      "family_status": "2 vợ chồng và 2 con nhỏ, cuối tuần về quê 120 km",
-      "decision_maker": "Chị Thanh thích công nghệ nhưng chồng chị đang nghiêng về CX-5 vì sợ xe điện mất giá sau 3 năm",
-      "budget": "Dư dả tài chính, sẵn sàng chi trả nếu thấy xứng đáng"
-    },
-    "disclosure_rules": [
-      {
-        "fact_key": "family_status",
-        "trigger_intent": "ask_family_and_usage",
-        "trigger_keywords": ["gia đình", "mấy người", "chở ai", "mục đích sử dụng", "về quê"],
-        "revealed_statement": "Nhà chị có 2 vợ chồng với 2 nhóc tì, mua xe chủ yếu đi lại hàng ngày với cuối tuần hay chở cả nhà về ngoại tầm 120 cây số."
-      },
-      {
-        "fact_key": "decision_maker",
-        "trigger_intent": "ask_decision_maker_opinion",
-        "trigger_keywords": ["anh nhà", "ông xã", "chồng", "ai quyết định"],
-        "revealed_statement": "Chị thì mê kiểu dáng công nghệ của VF 7 rồi, nhưng ông xã chị cứ cản, bảo mua CX-5 cho lành, sợ xe điện sau này bán mất giá."
-      }
-    ],
-    "objections": [
-      {
-        "objection_id": "OBJ_VF7_PRICE_VS_CX5",
-        "trigger_stage": "presentation",
-        "objection_text": "CX-5 đi đầy đường vừa lành vừa đẹp, VF 7 mới ra chưa biết thế nào mà bán đắt thế em?",
-        "resolve_condition": "Tư vấn viên hỏi tiêu chí ưu tiên, so sánh trung lập các thuộc tính liên quan bằng nguồn hiện hành, gắn khác biệt với nhu cầu gia đình và không tự khẳng định thời gian hoàn vốn khi chưa có dữ liệu sử dụng.",
-        "ideal_sales_response": "Một phản hồi đạt yêu cầu cần công nhận lựa chọn cạnh tranh, hỏi điều gì quan trọng với gia đình, chọn một vài khác biệt có nguồn để giải thích giá trị và tránh dùng claim kiểu 'bù chênh lệch sau một năm' nếu chưa lập được phép tính có căn cứ."
-      },
-      {
-        "objection_id": "OBJ_VF7_DEPRECIATION",
-        "trigger_stage": "closing",
-        "objection_text": "Chồng chị bảo xe điện mua thì đắt mà sau 3 năm bán lại khéo lỗ nửa giá xe, không giữ giá bằng CX-5.",
-        "resolve_condition": "Tư vấn viên không hứa giá bán lại hoặc khoản tiết kiệm tương lai; tách chính sách bảo hành có nguồn khỏi dự đoán khấu hao, ghi nhận vai trò của người cùng quyết định và đề xuất bước xác minh phù hợp cho cả hai.",
-        "ideal_sales_response": "Một phản hồi đạt yêu cầu cần thừa nhận rằng giá bán lại không thể được bảo đảm, chỉ trình bày chính sách bảo hành nếu có nguồn hiện hành, và mời cả hai người tham gia một bước tiếp theo như xem tài liệu hoặc lái thử."
-      }
-    ],
-    "expected_discovery": "Nhân viên phải khai thác được thành phần gia đình sử dụng xe và ai là người có tiếng nói quyết định cuối cùng trong gia đình.",
-    "success_conditions": "Tư vấn viên khám phá nhu cầu sử dụng và người cùng ra quyết định, so sánh trung lập bằng bằng chứng, không cam kết khấu hao và đề xuất một bước tiếp theo phù hợp cho cả hai vợ chồng.",
-    "termination_conditions": {
-      "max_turns": 12,
-      "drop_out_trigger": "Nếu tư vấn viên chê bai dìm hàng CX-5 thô thiển hoặc không chứng minh được giá trị xe."
-    }
-  },
-  {
-    "scenario_id": "SCENARIO_03_VF6_APARTMENT",
-    "title": "Gia đình ở chung cư lo lắng hạ tầng sạc pin cho VF 6",
-    "difficulty": "Easy",
-    "sales_channel": "Chat trực tuyến",
-    "training_objective": "Khai thác quãng đường và khả năng tiếp cận điểm sạc để xử lý lo ngại sạc tại chung cư bằng phương án có thể kiểm chứng.",
-    "scenario_version": "2.2",
-    "policy_expectations": [
-      {
-        "policy_id": "vtlx2",
-        "level": "expected",
-        "topic": "Ưu đãi Vì Tương Lai Xanh 2 và điều kiện chuyển đổi sang xe điện cho VF 6",
-        "lookup": {
-          "query": "Vì Tương Lai Xanh 2",
-          "document_type": "promotion",
-          "policy_type": "general",
-          "product_model": "VF 6"
-        },
-        "requires_eligibility_check": true
-      },
-      {
-        "policy_id": "charging",
-        "level": "expected",
-        "topic": "Chính sách ưu đãi sạc pin và điều kiện sử dụng",
-        "lookup": {
-          "query": "Chính sách ưu đãi sạc pin",
-          "document_type": "policy",
-          "policy_type": "charging",
-          "product_model": "ALL"
-        },
-        "requires_eligibility_check": false
-      },
-      {
-        "policy_id": "warranty",
-        "level": "bonus",
-        "topic": "Chính sách bảo hành xe và pin VF 6",
-        "lookup": {
-          "query": "VF 6 bảo hành",
-          "document_type": "faq",
-          "policy_type": null,
-          "product_model": "VF 6"
-        },
-        "requires_eligibility_check": false
-      },
-      {
-        "policy_id": "home_charger",
-        "level": "bonus",
-        "topic": "Giá bộ sạc tại nhà theo bảng giá hiện hành",
-        "lookup": {
-          "query": "Giá bộ sạc tại nhà",
-          "document_type": "price_list",
-          "policy_type": null,
-          "product_model": "ALL"
-        },
-        "requires_eligibility_check": false
-      }
-    ],
-    "target_skills": ["need_discovery", "objection_handling"],
-    "persona": {
-      "name": "Anh Tuấn",
-      "age": 29,
-      "current_car": null,
-      "communication_style": "Cẩn thận, lần đầu mua xe, nhiều nỗi sợ tâm lý về xe điện"
-    },
-    "buyer_intent": "Mua xe che mưa che nắng cho gia đình trẻ nhưng sợ cảnh sạc pin phiền phức",
-    "customer_goals": "Làm rõ giải pháp sạc pin khi sống ở chung cư không có trụ sạc hầm",
-    "visible_context": "Khách hỏi: 'Nhà anh ở chung cư không có chỗ lắp sạc riêng thì mua VF 6 sạc kiểu gì em ơi?'",
-    "hidden_facts": {
-      "daily_distance": "Chỉ đi làm 15 km/ngày trong phố",
-      "charging_access": "Cách chung cư 800m có trung tâm thương mại Vincom có trạm sạc nhanh V-GREEN",
-      "real_concern": "Nghĩ rằng ngày nào đi làm về cũng phải tìm chỗ sạc như sạc điện thoại"
-    },
-    "disclosure_rules": [
-      {
-        "fact_key": "daily_distance",
-        "trigger_intent": "ask_weekly_travel_distance",
-        "trigger_keywords": ["mỗi ngày đi", "quãng đường", "bao nhiêu km", "đi lại"],
-        "revealed_statement": "Anh chỉ đi làm từ nhà tới cơ quan quanh quanh trong phố tầm 15 cây cả đi lẫn về thôi em."
-      },
-      {
-        "fact_key": "charging_access",
-        "trigger_intent": "ask_living_location",
-        "trigger_keywords": ["ở khu nào", "chung cư nào", "địa chỉ", "quận mấy"],
-        "revealed_statement": "Anh ở chung cư bên mạn Cầu Giấy, gần ngay cái Vincom Trần Duy Hưng ấy."
-      }
-    ],
-    "objections": [
-      {
-        "objection_id": "OBJ_VF6_APARTMENT_CHARGING",
-        "trigger_stage": "presentation",
-        "objection_text": "Đi làm cả ngày mệt mỏi về tối lại phải lang thang đi tìm trụ sạc thì bất tiện quá em.",
-        "resolve_condition": "Tư vấn viên khai thác quãng đường và khu vực sinh sống, dùng phạm vi hoạt động và dữ liệu điểm sạc có nguồn để ước lượng phương án, nêu các giả định và hướng dẫn khách kiểm tra trạm thay vì bảo đảm lịch sạc cố định.",
-        "ideal_sales_response": "Một phản hồi đạt yêu cầu cần giải thích rằng tần suất sạc phụ thuộc mức sử dụng và điều kiện thực tế, dùng dữ liệu có nguồn để minh họa sau khi đã biết quãng đường, rồi đề xuất kiểm tra tình trạng trạm gần nhà hoặc phương án dự phòng."
-      }
-    ],
-    "expected_discovery": "Nhân viên phải hỏi về khoảng cách đi lại trung bình và vị trí sinh sống để chỉ ra điểm sạc công cộng tiện lợi gần nhà.",
-    "success_conditions": "Tư vấn viên khai thác quãng đường và khu vực, giải thích phương án sạc bằng dữ liệu có nguồn, không hứa thời gian hay tần suất cố định và giúp khách xác minh điểm sạc phù hợp.",
-    "termination_conditions": {
-      "max_turns": 8,
-      "drop_out_trigger": "Nếu tư vấn viên bỏ qua câu hỏi sạc mà chuyển sang ép chốt cọc."
-    }
-  },
-  {
     "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
     "title": "Chị Hà — VF 6 Eco hay nâng lên Plus?",
     "difficulty": "Medium",
@@ -632,6 +421,217 @@
     "termination_conditions": {
       "max_turns": 15,
       "drop_out_trigger": "Khách bị ép mua Plus khi chưa thấy lợi ích phù hợp nhu cầu hoặc tư vấn viên nói sai giá/ưu đãi."
+    }
+  },
+  {
+    "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+    "title": "Gia đình ở chung cư lo lắng hạ tầng sạc pin cho VF 6",
+    "difficulty": "Easy",
+    "sales_channel": "Chat trực tuyến",
+    "training_objective": "Khai thác quãng đường và khả năng tiếp cận điểm sạc để xử lý lo ngại sạc tại chung cư bằng phương án có thể kiểm chứng.",
+    "scenario_version": "2.2",
+    "policy_expectations": [
+      {
+        "policy_id": "vtlx2",
+        "level": "expected",
+        "topic": "Ưu đãi Vì Tương Lai Xanh 2 và điều kiện chuyển đổi sang xe điện cho VF 6",
+        "lookup": {
+          "query": "Vì Tương Lai Xanh 2",
+          "document_type": "promotion",
+          "policy_type": "general",
+          "product_model": "VF 6"
+        },
+        "requires_eligibility_check": true
+      },
+      {
+        "policy_id": "charging",
+        "level": "expected",
+        "topic": "Chính sách ưu đãi sạc pin và điều kiện sử dụng",
+        "lookup": {
+          "query": "Chính sách ưu đãi sạc pin",
+          "document_type": "policy",
+          "policy_type": "charging",
+          "product_model": "ALL"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "warranty",
+        "level": "bonus",
+        "topic": "Chính sách bảo hành xe và pin VF 6",
+        "lookup": {
+          "query": "VF 6 bảo hành",
+          "document_type": "faq",
+          "policy_type": null,
+          "product_model": "VF 6"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "home_charger",
+        "level": "bonus",
+        "topic": "Giá bộ sạc tại nhà theo bảng giá hiện hành",
+        "lookup": {
+          "query": "Giá bộ sạc tại nhà",
+          "document_type": "price_list",
+          "policy_type": null,
+          "product_model": "ALL"
+        },
+        "requires_eligibility_check": false
+      }
+    ],
+    "target_skills": ["need_discovery", "objection_handling"],
+    "persona": {
+      "name": "Anh Tuấn",
+      "age": 29,
+      "current_car": null,
+      "communication_style": "Cẩn thận, lần đầu mua xe, nhiều nỗi sợ tâm lý về xe điện"
+    },
+    "buyer_intent": "Mua xe che mưa che nắng cho gia đình trẻ nhưng sợ cảnh sạc pin phiền phức",
+    "customer_goals": "Làm rõ giải pháp sạc pin khi sống ở chung cư không có trụ sạc hầm",
+    "visible_context": "Khách hỏi: 'Nhà anh ở chung cư không có chỗ lắp sạc riêng thì mua VF 6 sạc kiểu gì em ơi?'",
+    "hidden_facts": {
+      "daily_distance": "Chỉ đi làm 15 km/ngày trong phố",
+      "charging_access": "Cách chung cư 800m có trung tâm thương mại Vincom có trạm sạc nhanh V-GREEN",
+      "real_concern": "Nghĩ rằng ngày nào đi làm về cũng phải tìm chỗ sạc như sạc điện thoại"
+    },
+    "disclosure_rules": [
+      {
+        "fact_key": "daily_distance",
+        "trigger_intent": "ask_weekly_travel_distance",
+        "trigger_keywords": ["mỗi ngày đi", "quãng đường", "bao nhiêu km", "đi lại"],
+        "revealed_statement": "Anh chỉ đi làm từ nhà tới cơ quan quanh quanh trong phố tầm 15 cây cả đi lẫn về thôi em."
+      },
+      {
+        "fact_key": "charging_access",
+        "trigger_intent": "ask_living_location",
+        "trigger_keywords": ["ở khu nào", "chung cư nào", "địa chỉ", "quận mấy"],
+        "revealed_statement": "Anh ở chung cư bên mạn Cầu Giấy, gần ngay cái Vincom Trần Duy Hưng ấy."
+      }
+    ],
+    "objections": [
+      {
+        "objection_id": "OBJ_VF6_APARTMENT_CHARGING",
+        "trigger_stage": "presentation",
+        "objection_text": "Đi làm cả ngày mệt mỏi về tối lại phải lang thang đi tìm trụ sạc thì bất tiện quá em.",
+        "resolve_condition": "Tư vấn viên khai thác quãng đường và khu vực sinh sống, dùng phạm vi hoạt động và dữ liệu điểm sạc có nguồn để ước lượng phương án, nêu các giả định và hướng dẫn khách kiểm tra trạm thay vì bảo đảm lịch sạc cố định.",
+        "ideal_sales_response": "Một phản hồi đạt yêu cầu cần giải thích rằng tần suất sạc phụ thuộc mức sử dụng và điều kiện thực tế, dùng dữ liệu có nguồn để minh họa sau khi đã biết quãng đường, rồi đề xuất kiểm tra tình trạng trạm gần nhà hoặc phương án dự phòng."
+      }
+    ],
+    "expected_discovery": "Nhân viên phải hỏi về khoảng cách đi lại trung bình và vị trí sinh sống để chỉ ra điểm sạc công cộng tiện lợi gần nhà.",
+    "success_conditions": "Tư vấn viên khai thác quãng đường và khu vực, giải thích phương án sạc bằng dữ liệu có nguồn, không hứa thời gian hay tần suất cố định và giúp khách xác minh điểm sạc phù hợp.",
+    "termination_conditions": {
+      "max_turns": 8,
+      "drop_out_trigger": "Nếu tư vấn viên bỏ qua câu hỏi sạc mà chuyển sang ép chốt cọc."
+    }
+  },
+  {
+    "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+    "title": "Khách hàng gia đình so sánh VF 7 Plus với Mazda CX-5",
+    "difficulty": "Hard",
+    "sales_channel": "Tin nhắn tư vấn",
+    "training_objective": "Khám phá nhu cầu gia đình và người cùng ra quyết định, sau đó so sánh giá trị mà không hạ thấp đối thủ hoặc đưa ra cam kết khấu hao thiếu căn cứ.",
+    "scenario_version": "2.2",
+    "policy_expectations": [
+      {
+        "policy_id": "vtlx2",
+        "level": "expected",
+        "topic": "Ưu đãi Vì Tương Lai Xanh 2 và điều kiện chuyển đổi sang xe điện cho VF 7",
+        "lookup": {
+          "query": "Vì Tương Lai Xanh 2",
+          "document_type": "promotion",
+          "policy_type": "general",
+          "product_model": "VF 7"
+        },
+        "requires_eligibility_check": true
+      },
+      {
+        "policy_id": "warranty",
+        "level": "expected",
+        "topic": "Chính sách bảo hành xe và pin VF 7",
+        "lookup": {
+          "query": "VF 7 bảo hành",
+          "document_type": "faq",
+          "policy_type": null,
+          "product_model": "VF 7"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "charging",
+        "level": "bonus",
+        "topic": "Chính sách ưu đãi sạc pin và điều kiện sử dụng",
+        "lookup": {
+          "query": "Chính sách ưu đãi sạc pin",
+          "document_type": "policy",
+          "policy_type": "charging",
+          "product_model": "ALL"
+        },
+        "requires_eligibility_check": false
+      },
+      {
+        "policy_id": "zero_down",
+        "level": "bonus",
+        "topic": "Chương trình mua xe không cần vốn đối ứng và điều kiện vay",
+        "lookup": {
+          "query": "Mua xe 0 Đồng",
+          "document_type": "promotion",
+          "policy_type": "general",
+          "product_model": "VF 7"
+        },
+        "requires_eligibility_check": false
+      }
+    ],
+    "target_skills": ["product_knowledge", "objection_handling", "closing_next_step"],
+    "persona": {
+      "name": "Chị Thanh",
+      "age": 32,
+      "current_car": null,
+      "communication_style": "Hiện đại, kỹ tính, thích xe đẹp nhưng phân vân chênh lệch giá"
+    },
+    "buyer_intent": "Mua xe cho gia đình đi làm và cuối tuần về quê, thích công nghệ nhưng ngại xe điện mới ra",
+    "customer_goals": "Muốn biết lý do tại sao phải bỏ thêm tiền mua VF 7 thay vì chọn CX-5 đã quen thuộc",
+    "visible_context": "Khách nhắn tin: 'Chị thấy VF 7 với CX-5 cũng như nhau, CX-5 nhìn quen mắt hơn mà sao VF 7 đắt hơn khá nhiều vậy em?'",
+    "hidden_facts": {
+      "family_status": "2 vợ chồng và 2 con nhỏ, cuối tuần về quê 120 km",
+      "decision_maker": "Chị Thanh thích công nghệ nhưng chồng chị đang nghiêng về CX-5 vì sợ xe điện mất giá sau 3 năm",
+      "budget": "Dư dả tài chính, sẵn sàng chi trả nếu thấy xứng đáng"
+    },
+    "disclosure_rules": [
+      {
+        "fact_key": "family_status",
+        "trigger_intent": "ask_family_and_usage",
+        "trigger_keywords": ["gia đình", "mấy người", "chở ai", "mục đích sử dụng", "về quê"],
+        "revealed_statement": "Nhà chị có 2 vợ chồng với 2 nhóc tì, mua xe chủ yếu đi lại hàng ngày với cuối tuần hay chở cả nhà về ngoại tầm 120 cây số."
+      },
+      {
+        "fact_key": "decision_maker",
+        "trigger_intent": "ask_decision_maker_opinion",
+        "trigger_keywords": ["anh nhà", "ông xã", "chồng", "ai quyết định"],
+        "revealed_statement": "Chị thì mê kiểu dáng công nghệ của VF 7 rồi, nhưng ông xã chị cứ cản, bảo mua CX-5 cho lành, sợ xe điện sau này bán mất giá."
+      }
+    ],
+    "objections": [
+      {
+        "objection_id": "OBJ_VF7_PRICE_VS_CX5",
+        "trigger_stage": "presentation",
+        "objection_text": "CX-5 đi đầy đường vừa lành vừa đẹp, VF 7 mới ra chưa biết thế nào mà bán đắt thế em?",
+        "resolve_condition": "Tư vấn viên hỏi tiêu chí ưu tiên, so sánh trung lập các thuộc tính liên quan bằng nguồn hiện hành, gắn khác biệt với nhu cầu gia đình và không tự khẳng định thời gian hoàn vốn khi chưa có dữ liệu sử dụng.",
+        "ideal_sales_response": "Một phản hồi đạt yêu cầu cần công nhận lựa chọn cạnh tranh, hỏi điều gì quan trọng với gia đình, chọn một vài khác biệt có nguồn để giải thích giá trị và tránh dùng claim kiểu 'bù chênh lệch sau một năm' nếu chưa lập được phép tính có căn cứ."
+      },
+      {
+        "objection_id": "OBJ_VF7_DEPRECIATION",
+        "trigger_stage": "closing",
+        "objection_text": "Chồng chị bảo xe điện mua thì đắt mà sau 3 năm bán lại khéo lỗ nửa giá xe, không giữ giá bằng CX-5.",
+        "resolve_condition": "Tư vấn viên không hứa giá bán lại hoặc khoản tiết kiệm tương lai; tách chính sách bảo hành có nguồn khỏi dự đoán khấu hao, ghi nhận vai trò của người cùng quyết định và đề xuất bước xác minh phù hợp cho cả hai.",
+        "ideal_sales_response": "Một phản hồi đạt yêu cầu cần thừa nhận rằng giá bán lại không thể được bảo đảm, chỉ trình bày chính sách bảo hành nếu có nguồn hiện hành, và mời cả hai người tham gia một bước tiếp theo như xem tài liệu hoặc lái thử."
+      }
+    ],
+    "expected_discovery": "Nhân viên phải khai thác được thành phần gia đình sử dụng xe và ai là người có tiếng nói quyết định cuối cùng trong gia đình.",
+    "success_conditions": "Tư vấn viên khám phá nhu cầu sử dụng và người cùng ra quyết định, so sánh trung lập bằng bằng chứng, không cam kết khấu hao và đề xuất một bước tiếp theo phù hợp cho cả hai vợ chồng.",
+    "termination_conditions": {
+      "max_turns": 12,
+      "drop_out_trigger": "Nếu tư vấn viên chê bai dìm hàng CX-5 thô thiển hoặc không chứng minh được giá trị xe."
     }
   }
 ]

@@ -1,4 +1,4 @@
-"""Tests for simplified Copilot Agent: direct Markdown generation and self-check."""
+"""Response compatibility across structured generation and grounded Markdown publication."""
 
 from unittest.mock import AsyncMock, patch
 
@@ -6,7 +6,7 @@ import pytest
 
 from src.agents.copilot.nodes.answer import finalize_response, generate_answer
 from src.agents.copilot.nodes.verification import check_grounding
-from src.agents.copilot.state import Citation, CopilotResponse, SelfCheckVerdict
+from src.agents.copilot.state import Citation, CopilotResponse, GeneratedAnswer, Requirement
 from src.agents.copilot.tools import build_evidence_context
 
 
@@ -42,27 +42,8 @@ def test_citation_excerpt():
     assert citations[0].title == "Bảng giá VF 8"
 
 
-def test_self_check_verdict_contract():
-    verdict = SelfCheckVerdict(
-        grounded=True,
-        feedback="",
-        unsupported_claims=[],
-        missing_information=[],
-    )
-    assert verdict.grounded is True
-
-    failed_verdict = SelfCheckVerdict(
-        grounded=False,
-        feedback="Suy diễn xe đi được 4 ngày không cần sạc",
-        unsupported_claims=["Xe chạy 4 ngày không cần sạc"],
-        missing_information=[],
-    )
-    assert failed_verdict.grounded is False
-    assert len(failed_verdict.unsupported_claims) == 1
-
-
 @pytest.mark.asyncio
-async def test_generate_answer_parses_citations():
+async def test_generate_answer_renders_structured_citations():
     hit = sample_hit()
     _, citations = build_evidence_context([hit])
     state = {
@@ -73,81 +54,23 @@ async def test_generate_answer_parses_citations():
         "generation_count": 0,
     }
 
+    state["requirements"] = [Requirement(requirement_id="R1", description="Giá VF 8")]
     mock_text = "VF 8 Thế hệ mới có giá niêm yết từ 899 triệu đồng. [C1]"
-    with patch("src.agents.copilot.nodes.answer._invoke_text", new_callable=AsyncMock) as mock_invoke:
-        mock_invoke.return_value = (mock_text, {"input_tokens": 100, "output_tokens": 50})
+    generated = GeneratedAnswer(
+        claims=[
+            {
+                "text": mock_text.removesuffix(" [C1]"),
+                "requirement_ids": ["R1"],
+                "citation_ids": ["C1"],
+            }
+        ]
+    )
+    with patch("src.agents.copilot.nodes.answer._invoke_json", new_callable=AsyncMock) as mock_invoke:
+        mock_invoke.return_value = (generated, {"input_tokens": 100, "output_tokens": 50})
         res = await generate_answer(state)
         assert res["draft_answer"] == mock_text
         assert res["generation_count"] == 1
         assert res["route"] == "check_grounding"
-
-
-@pytest.mark.asyncio
-async def test_check_grounding_passes_when_grounded():
-    hit = sample_hit()
-    state = {
-        "query": "Giá VF 8 bao nhiêu?",
-        "draft_answer": "VF 8 có giá 899 triệu. [C1]",
-        "answer_context": f"[C1] {hit['content']}",
-        "resolved_date": "2026-10-13",
-        "generation_count": 1,
-    }
-
-    mock_verdict = SelfCheckVerdict(grounded=True)
-    with patch("src.agents.copilot.nodes.verification._invoke_json", new_callable=AsyncMock) as mock_invoke:
-        mock_invoke.return_value = (mock_verdict, {"input_tokens": 80, "output_tokens": 20})
-        res = await check_grounding(state)
-        assert res["route"] == "finalize_response"
-        assert res["self_check"].grounded is True
-
-
-@pytest.mark.asyncio
-async def test_check_grounding_retries_on_extrapolation():
-    hit = sample_hit()
-    state = {
-        "query": "Giá VF 8 bao nhiêu?",
-        "draft_answer": "VF 8 có giá 899 triệu và chạy 4 ngày không cần sạc. [C1]",
-        "answer_context": f"[C1] {hit['content']}",
-        "resolved_date": "2026-10-13",
-        "generation_count": 1,
-    }
-
-    mock_verdict = SelfCheckVerdict(
-        grounded=False,
-        feedback="Phát biểu chạy 4 ngày là suy diễn vượt chứng cứ.",
-        unsupported_claims=["chạy 4 ngày không cần sạc"],
-    )
-    with patch("src.agents.copilot.nodes.verification._invoke_json", new_callable=AsyncMock) as mock_invoke:
-        mock_invoke.return_value = (mock_verdict, {"input_tokens": 80, "output_tokens": 20})
-        with patch("src.agents.copilot.nodes.verification.can_regenerate", return_value=True):
-            res = await check_grounding(state)
-            assert res["route"] == "generate_answer"
-            assert "suy diễn" in res["feedback"]
-            assert res["unsupported_claims"] == ["chạy 4 ngày không cần sạc"]
-
-
-@pytest.mark.asyncio
-async def test_check_grounding_abstains_on_second_failed_attempt():
-    hit = sample_hit()
-    state = {
-        "query": "Giá VF 8 bao nhiêu?",
-        "draft_answer": "VF 8 có giá 899 triệu và chạy 4 ngày không cần sạc. [C1]",
-        "answer_context": f"[C1] {hit['content']}",
-        "resolved_date": "2026-10-13",
-        "generation_count": 2,
-    }
-
-    mock_verdict = SelfCheckVerdict(
-        grounded=False,
-        feedback="Vẫn còn suy diễn.",
-        unsupported_claims=["chạy 4 ngày không cần sạc"],
-    )
-    with patch("src.agents.copilot.nodes.verification._invoke_json", new_callable=AsyncMock) as mock_invoke:
-        mock_invoke.return_value = (mock_verdict, {"input_tokens": 80, "output_tokens": 20})
-        with patch("src.agents.copilot.nodes.verification.can_regenerate", return_value=False):
-            res = await check_grounding(state)
-            assert res["route"] == "fallback_response"
-            assert res["fallback_reason"] == "verification_failed"
 
 
 @pytest.mark.asyncio
@@ -159,10 +82,28 @@ async def test_finalize_response_attaches_citations_and_excerpt():
         "draft_answer": "VF 8 có giá 899 triệu đồng theo bảng giá. [C1]",
         "draft_citations": ["C1"],
         "selected_evidence": [hit],
-        "self_check": SelfCheckVerdict(grounded=True),
         "request_id": "a" * 32,
     }
 
+    from src.agents.copilot.state import StructuredGroundingReview
+    from src.agents.copilot.validation.structured import render_answer
+    from tests.test_agents.test_copilot_agentic import checked
+
+    state["requirements"] = [Requirement(requirement_id="R1", description="Giá VF 8")]
+    state["generated_answer"] = GeneratedAnswer(
+        claims=[
+            {
+                "text": "VF 8 có giá 899 triệu đồng theo bảng giá.",
+                "requirement_ids": ["R1"],
+                "citation_ids": ["C1"],
+            }
+        ]
+    )
+    state["draft_answer"] = render_answer(state["generated_answer"])
+    state["resolved_date"] = "2026-10-13"
+    with patch("src.agents.copilot.nodes.verification._invoke_json", new_callable=AsyncMock) as invoke:
+        invoke.return_value = (StructuredGroundingReview(**checked(scope="VF 8")), {})
+        state.update(await check_grounding(state))
     res = await finalize_response(state)
     assert res["route"] == "end"
     final: CopilotResponse = res["final_response"]
@@ -219,5 +160,3 @@ def test_build_product_insights_strictly_from_snapshot_citations():
     assert by_source["C2"].product_model == "ALL"
     assert "Miễn phí sạc" in by_source["C2"].summary
     assert all(i.citation is not None for i in insights)
-
-

@@ -1,113 +1,70 @@
-import { useCallback, useEffect, useState } from 'react';
-import { practiceApi } from '../../api/practiceApi';
-import { BookIcon, RefreshIcon } from '../common/Icons';
+import { RefreshCw } from 'lucide-react';
+import { fmtDayMonth } from '../../utils/scoreFormat';
+import './advisorProgress.css';
 
 const STATUS = { assigned: 'Chưa bắt đầu', in_progress: 'Đang luyện', completed: 'Hoàn thành' };
 
-export function AdvisorAssignmentsView({ scenarios, onStart, onOpenAttempt, reloadToken }) {
-  const [assignments, setAssignments] = useState([]);
-  const [status, setStatus] = useState('loading');
-  const [error, setError] = useState('');
+function dueInfo(assignment) {
+  if (!assignment.due_date) return { text: 'Không đặt hạn', warn: false };
+  const due = new Date(`${assignment.due_date}T00:00:00`);
+  const today = new Date();
+  const days = Math.round((due - new Date(today.getFullYear(), today.getMonth(), today.getDate())) / 86400000);
+  const base = `Hạn ${fmtDayMonth(due)}`;
+  if (assignment.status === 'completed') return { text: base, warn: false };
+  if (days < 0) return { text: `${base}, quá hạn ${-days} ngày`, warn: true };
+  if (days === 0) return { text: `${base}, hết hạn hôm nay`, warn: true };
+  if (days <= 3) return { text: `${base}, còn ${days} ngày`, warn: true };
+  return { text: base, warn: false };
+}
 
-  const load = useCallback(async () => {
-    setStatus('loading');
-    setError('');
-    try {
-      setAssignments(await practiceApi.getAssignments());
-      setStatus('ready');
-    } catch (cause) {
-      setError(cause.message || 'Không thể tải bài được giao.');
-      setStatus('error');
-    }
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-    practiceApi.getAssignments().then((items) => {
-      if (!active) return;
-      setAssignments(items);
-      setStatus('ready');
-    }).catch((cause) => {
-      if (!active) return;
-      setError(cause.message || 'Không thể tải bài được giao.');
-      setStatus('error');
-    });
-    return () => { active = false; };
-  }, [reloadToken]);
-
+export function AdvisorAssignmentsView({ scenarios, assignments, status, error, onReload, onStart }) {
   const scenarioNames = Object.fromEntries(scenarios.map((item) => [item.scenario_id, item.title]));
+  const open = assignments.filter((item) => item.status !== 'completed');
 
   return (
-    <section className="practice-assignments">
-      <div className="practice-assignments-header">
-        <span className="practice-assignment-icon"><BookIcon aria-hidden="true" /></span>
-        <div>
-          <h2>Bài tập được giao</h2>
-          <p>
-            Hoàn thành các bài tập do Quản lý giao để cập nhật tiến độ và năng lực cá nhân.
-          </p>
-        </div>
-        <button type="button" className="practice-refresh" onClick={load} disabled={status === 'loading'}>
-          <RefreshIcon aria-hidden="true" /> Làm mới
+    <section className="ap-card" aria-labelledby="ap-assign-h">
+      <div className="ap-card-head">
+        <h2 id="ap-assign-h">Bài được giao</h2>
+        <button type="button" className="ap-text-btn ap-refresh" onClick={onReload} disabled={status === 'loading'}>
+          <RefreshCw size={14} aria-hidden="true" /> Làm mới
         </button>
       </div>
 
-      {status === 'loading' && <p role="status" style={{ color: 'var(--muted)', padding: '12px 0' }}>Đang tải bài được giao…</p>}
-      {error && (
-        <p role="alert" style={{ color: '#dc2626', marginBottom: 14 }}>
-          {error} <button type="button" className="btn-outline" style={{ marginLeft: 8 }} onClick={load}>Thử lại</button>
+      {status === 'loading' && <p className="ap-state" role="status">Đang tải bài được giao…</p>}
+      {status === 'error' && (
+        <p className="ap-state ap-state--error" role="alert">
+          {error || 'Không thể tải bài được giao.'} <button type="button" className="ap-link" onClick={onReload}>Thử lại</button>
         </p>
       )}
-
-      {status === 'ready' && assignments.length === 0 && (
-        <div className="practice-assignments-empty">
-          <BookIcon aria-hidden="true" />
-          <p>Hiện tại bạn chưa có bài tập nào được giao.<br />Hãy tự do chọn các tình huống bên dưới để tự luyện tập!</p>
-        </div>
+      {status === 'ready' && open.length === 0 && (
+        <p className="ap-state">Hiện bạn chưa có bài nào được giao. Cứ chọn một tình huống trong thư viện để tự luyện.</p>
       )}
-
-      {status === 'ready' && assignments.length > 0 && (
-        <div style={{ display: 'grid', gap: 12, marginTop: 14 }}>
-          {assignments.map((assignment) => (
-            <article
-              key={assignment.assignment_id}
-              className="manager-assignment-card-item"
-            >
-              <div>
-                <strong style={{ fontSize: '0.98rem', color: 'var(--primary)' }}>{assignment.title}</strong>
-                <p style={{ margin: '4px 0 6px', color: 'var(--secondary)', fontSize: '0.88rem' }}>
-                  Kịch bản: <strong>{scenarioNames[assignment.scenario_id] || assignment.scenario_id}</strong>
-                </p>
-                <small style={{ color: 'var(--muted)', fontSize: '0.8rem' }}>
-                  Trạng thái: <strong>{STATUS[assignment.status] || assignment.status}</strong> · Hạn: {assignment.due_date || 'Không đặt'}
-                </small>
-              </div>
-
-              <div>
-                {assignment.status === 'completed' && assignment.session_id ? (
-                  <button
-                    type="button"
-                    className="btn-outline"
-                    onClick={() => onOpenAttempt(assignment.session_id)}
-                    style={{ padding: '8px 16px', fontSize: '0.85rem' }}
-                  >
-                    Xem kết quả
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => onStart(assignment)}
-                    disabled={!scenarioNames[assignment.scenario_id]}
-                    style={{ padding: '8px 18px', fontSize: '0.85rem' }}
-                  >
-                    {assignment.status === 'in_progress' ? 'Luyện tiếp bài này →' : 'Bắt đầu bài được giao →'}
-                  </button>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
+      {status === 'ready' && open.length > 0 && (
+        <ul className="ap-list">
+          {open.map((assignment) => {
+            const due = dueInfo(assignment);
+            const title = scenarioNames[assignment.scenario_id];
+            return (
+              <li className="ap-assignment" key={assignment.assignment_id}>
+                <span className="ap-assignment-main">
+                  <span className="ap-assignment-title">{assignment.title}</span>
+                  {title && title !== assignment.title && <span className="ap-assignment-meta">{title}</span>}
+                  <span className={due.warn ? 'ap-assignment-meta ap-assignment-meta--warn' : 'ap-assignment-meta'}>
+                    {STATUS[assignment.status] || assignment.status}. {due.text}
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  className="ap-btn ap-btn--primary"
+                  onClick={() => onStart(assignment)}
+                  disabled={!title}
+                >
+                  {assignment.status === 'in_progress' ? 'Luyện tiếp' : 'Bắt đầu'}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       )}
     </section>
   );

@@ -19,7 +19,7 @@ export function customerIntelligence(memory = {}, profile = {}, sourceAllowed = 
   if (structured) {
     keyPoints = (structured.key_points || []).map((point) => ({
       topic: text(point.topic), question: text(point.question), answer: text(point.answer),
-      status: point.status === 'answered' && text(point.answer) ? 'answered' : 'open', sourceMessageIds: sourceIds(point),
+      status: ['answered', 'confirmed', 'irrelevant'].includes(point.status) ? point.status : 'open', sourceMessageIds: sourceIds(point),
     })).filter((point) => point.topic || point.question);
     outcomes = (structured.outcomes || []).map((item) => ({ text: text(item.text), sourceMessageIds: sourceIds(item) }))
       .filter((item) => item.text && item.sourceMessageIds.length);

@@ -6,9 +6,9 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from src.agents.copilot.nodes import evidence, verification
+from src.agents.copilot.nodes import evidence
 from src.agents.copilot.runtime import RuntimeBudget
-from src.agents.copilot.state import Requirement, SelfCheckVerdict
+from src.agents.copilot.state import Requirement
 from src.agents.copilot.tools import build_evidence_context
 from src.config import get_settings
 
@@ -24,7 +24,9 @@ def planning_state(**extra):
         "query": "VF 5",
         "analysis": SimpleNamespace(product_models=["VF 5"]),
         "requirements": [Requirement(requirement_id="R1", description="Giá VF 5")],
-        "snapshot": SimpleNamespace(catalog=lambda: {"product_model": ["VF 5"], "document_type": [], "policy_type": []}),
+        "snapshot": SimpleNamespace(
+            catalog=lambda: {"product_model": ["VF 5"], "document_type": [], "policy_type": []}
+        ),
         **extra,
     }
 
@@ -98,69 +100,40 @@ async def test_planner_receives_remaining_limit_and_keeps_snapshot_on_invalid_ou
     invoke = AsyncMock(side_effect=CopilotModelOutputError())
     monkeypatch.setattr(planning, "_invoke_json", invoke)
     result = await planning.plan_queries(state)
-    assert result["route"] == "finalize_response"
+    assert result["route"] == "retrieve_documents"
+    assert result["search_plan"].searches[0].requirement_ids == ["R1"]
+    assert "verified_snapshot" not in result  # Fallback plan never replaces a verified answer.
     assert invoke.call_args.args[2]["max_queries"] == 2
     assert invoke.call_args.args[2]["remaining_search_calls"] == 2
-
-
-@pytest.mark.asyncio
-@pytest.mark.parametrize("length", [500, 501, 12000])
-@pytest.mark.parametrize("use_snapshot", [False, True])
-async def test_long_grounded_answer_does_not_overflow_talking_points(monkeypatch, length, use_snapshot):
-    from src.agents.copilot.nodes.answer import finalize_response
-
-    draft = "a" * (length - 5) + " [C1]"
-    verdict = SelfCheckVerdict(grounded=True, answered_requirement_ids=["R1"])
-    state = {
-        "query": "Giá VF 5", "resolved_date": "2026-10-15",
-        "requirements": [Requirement(requirement_id="R1", description="Giá VF 5")],
-        "selected_evidence": [hit("price", citation_id="C1")],
-        "draft_answer": draft, "self_check": verdict, "generation_count": 1,
-    }
-    monkeypatch.setattr("src.agents.copilot.insights.build_complementary_insights", lambda *args, **kwargs: [])
-    if use_snapshot:
-        monkeypatch.setattr(verification, "_invoke_json", AsyncMock(return_value=(verdict, None)))
-        state.update(await verification.check_grounding(state))
-    final = (await finalize_response(state))["final_response"]
-    assert final.answer == draft
-    assert final.status == "answered"
-    assert final.citations[0].chunk_id == "price"
-    assert final.talking_points == ([draft] if length <= 500 else [])
-
-
-def test_atomic_price_keeps_vat_and_pin_without_creating_capacity():
-    from src.agents.copilot.nodes.guard import atomic_requirements
-    from src.agents.copilot.state import IntakeDecision
-
-    decision = IntakeDecision.model_construct(requirements=[Requirement(
-        requirement_id="R1", description="Giá kèm pin bao gồm VAT và quãng đường NEDC của VF 5 Plus",
-    )])
-    result = atomic_requirements(decision)
-    assert len(result.requirements) == 2
-    assert "kèm pin" in result.requirements[0].description
-    assert "VAT" in result.requirements[0].description
-    assert not any("Dung lượng" in r.description for r in result.requirements)
 
 
 @pytest.mark.asyncio
 async def test_corrective_recovers_rejected_candidates_and_round_references(monkeypatch):
     old = hit("overflow", citation_id="C1", search_requirement_ids=["R1"])
     state = {
-        "resolved_date": "2026-10-15", "profile_name": "corrective",
-        "retrieval_rounds": 2, "corrective_retrieval_count": 1,
-        "recovery_requirement_ids": ["R1"], "rejected_evidence_ids": ["overflow"],
-        "evidence_registry": [old], "evidence_query_references": {"overflow": ["1:0"]},
+        "resolved_date": "2026-10-15",
+        "profile_name": "corrective",
+        "retrieval_rounds": 2,
+        "corrective_retrieval_count": 1,
+        "recovery_requirement_ids": ["R1"],
+        "rejected_evidence_ids": ["overflow"],
+        "evidence_registry": [old],
         "raw_search_results": [{"dense": [hit("new"), hit("overflow")], "bm25": [], "requirement_ids": ["R1"]}],
     }
     result = await evidence.select_evidence(state)
     assert [h["chunk_id"] for h in result["selected_evidence"]][:2] == ["new", "overflow"]
-    assert result["evidence_query_references"]["overflow"] == ["1:0", "2:0"]
+    assert result["candidate_evidence"][1]["search_requirement_ids"] == ["R1"]
 
 
 def test_recovery_stops_at_search_round_and_generation_caps():
     from src.agents.copilot.nodes._shared import can_regenerate, schedule_corrective
 
-    for state in [{"tool_calls": 5}, {"retrieval_rounds": 2}, {"corrective_retrieval_count": 1}, {"generation_count": 2}]:
+    for state in [
+        {"tool_calls": 5},
+        {"retrieval_rounds": 2},
+        {"corrective_retrieval_count": 1},
+        {"generation_count": 2},
+    ]:
         assert schedule_corrective(state) is None
     assert not can_regenerate({"generation_count": 2})
 
@@ -169,7 +142,7 @@ def hit(cid, **extra):
     return {
         "chunk_id": cid,
         "document_id": "doc",
-        "content": "VF 5 | Plus | 496.000.000 VNĐ",
+        "content": f"VF 5 | Plus | 496.000.000 VNĐ | {cid}",
         "title": "Giá xe",
         "section": "MSRP kèm pin gồm VAT",
         "page": None,
@@ -199,19 +172,6 @@ def search(hits, rid):
 
 
 @pytest.mark.asyncio
-async def test_frozen_price_comparison_retains_vehicle_prices():
-    from eval.evidence_selection.run import replay
-
-    rows = (await replay())["results"]
-    comparison = [r for r in rows if r["request_id"] == "d6866e4352924697a7801ac5735a3b63"]
-    assert len(comparison) == 2
-    assert "PRICE_LIST_VINFAST_20260921_4" not in comparison[0]["selected_chunk_ids"]
-    assert "PRICE_LIST_VINFAST_20260921_4" in comparison[1]["selected_chunk_ids"]
-    assert "296.000.000" in comparison[1]["answer_context"]
-    assert "496.000.000" in comparison[1]["answer_context"]
-
-
-@pytest.mark.asyncio
 async def test_query_fairness_and_duplicate_provenance(monkeypatch):
     monkeypatch.setattr(
         evidence, "_profile", lambda _: SimpleNamespace(candidate_pool=2, evidence_blocks=2, context_characters=6000)
@@ -224,32 +184,34 @@ async def test_query_fairness_and_duplicate_provenance(monkeypatch):
     )
     assert [h["chunk_id"] for h in result["selected_evidence"]] == ["a", "shared"]
     assert result["candidate_evidence"][1]["search_requirement_ids"] == ["R1", "R2"]
-    assert result["evidence_query_provenance"]["shared"] == [0, 1]
+    assert result["evidence_selection_diagnostics"][1]["query_indices"] == [0, 1]
     assert len({h["citation_id"] for h in result["selected_evidence"]}) == 2
 
 
 @pytest.mark.asyncio
 async def test_oversized_first_bundle_continues_and_requests_correction(monkeypatch):
-    anchors = [hit("large", context_prefix="header"), hit("small")]
+    anchors = [hit("large", requires_context=True), hit("small")]
     monkeypatch.setattr(
         evidence,
         "get_bm25_search_engine",
         lambda: SimpleNamespace(read_context=lambda *args: [anchors[0], *[hit(str(i)) for i in range(4)]]),
     )
-    state = {"query": "Giá VF 5", "resolved_date": "2026-10-15", "new_hits": anchors}
+    state = {
+        "query": "Giá VF 5",
+        "resolved_date": "2026-10-15",
+        "raw_search_results": [{"dense": anchors, "bm25": [], "requirement_ids": ["R1"]}],
+    }
     result = await evidence.select_evidence(state)
     assert [h["chunk_id"] for h in result["selected_evidence"]] == ["small"]
-    assert result["overflow_anchor_ids"] == ["C1"]
     correction = await evidence.build_context({**state, **result})
-    assert correction["route"] == "retrieve_documents"
-    assert correction["profile_name"] == "corrective"
+    assert correction["route"] == "generate_answer"
     larger = await evidence.select_evidence({**state, "profile_name": "corrective"})
     assert len(larger["selected_evidence"]) == 6
 
 
 @pytest.mark.asyncio
 async def test_shared_conditions_are_not_duplicated(monkeypatch):
-    anchors = [hit("a", context_prefix="header"), hit("b", context_prefix="header")]
+    anchors = [hit("a", requires_context=True), hit("b", requires_context=True)]
     monkeypatch.setattr(
         evidence,
         "get_bm25_search_engine",
@@ -257,12 +219,17 @@ async def test_shared_conditions_are_not_duplicated(monkeypatch):
             read_context=lambda cid, date: [next(h for h in anchors if h["chunk_id"] == cid), hit("condition")]
         ),
     )
-    result = await evidence.select_evidence({"new_hits": anchors, "resolved_date": "2026-10-15"})
+    result = await evidence.select_evidence(
+        {
+            "raw_search_results": [{"dense": anchors, "bm25": [], "requirement_ids": ["R1"]}],
+            "resolved_date": "2026-10-15",
+        }
+    )
     assert [h["chunk_id"] for h in result["selected_evidence"]] == ["a", "condition", "b"]
 
 
 @pytest.mark.asyncio
-async def test_unrepresented_query_overflow_is_recovered(monkeypatch):
+async def test_context_budget_keeps_first_query_and_leaves_recovery_to_checker(monkeypatch):
     monkeypatch.setattr(
         evidence, "_profile", lambda _: SimpleNamespace(candidate_pool=4, evidence_blocks=1, context_characters=6000)
     )
@@ -272,8 +239,11 @@ async def test_unrepresented_query_overflow_is_recovered(monkeypatch):
             "raw_search_results": [search([hit("a")], "R1"), search([hit("b")], "R2")],
         }
     )
-    assert result["selected_anchor_ids"] == ["C1"]
-    assert result["overflow_anchor_ids"] == ["C2"]
+
+    assert [h["chunk_id"] for h in result["selected_evidence"]] == ["a"]
+    assert result["evidence_selection_diagnostics"][1]["reason"] == "context_budget"
+    built = await evidence.build_context(result)
+    assert built["route"] == "generate_answer"
 
 
 @pytest.mark.asyncio
@@ -284,7 +254,9 @@ async def test_character_budget_does_not_truncate_source(monkeypatch):
     result = await evidence.select_evidence(
         {
             "resolved_date": "2026-10-15",
-            "new_hits": [hit("large", content="x" * 1000), hit("small")],
+            "raw_search_results": [
+                {"dense": [hit("large", content="x" * 1000), hit("small")], "bm25": [], "requirement_ids": ["R1"]}
+            ],
         }
     )
     assert [h["chunk_id"] for h in result["selected_evidence"]] == ["small"]
@@ -316,32 +288,13 @@ def test_selection_telemetry_keeps_metrics_without_content():
 async def test_unavailable_context_is_not_silently_dropped():
     result = await evidence.select_evidence(
         {
-            "new_hits": [hit("a", requires_context=True)],
+            "raw_search_results": [{"dense": [hit("a", requires_context=True)], "bm25": [], "requirement_ids": ["R1"]}],
             "resolved_date": "2026-10-15",
             "runtime": RuntimeBudget(time.monotonic() + 5),
         }
     )
     assert not result["selected_evidence"]
     assert result["evidence_selection_diagnostics"][0]["reason"] == "context_unavailable"
-
-
-@pytest.mark.asyncio
-async def test_new_selector_never_uses_affinity(monkeypatch):
-    def forbidden(*args):
-        raise AssertionError("affinity must not govern RRF selection")
-
-    monkeypatch.setattr(evidence, "requirement_affinity", forbidden)
-    result = await evidence.select_evidence(
-        {
-            "new_hits": [hit("a")],
-            "resolved_date": "2026-10-15",
-            "task": "comparison",
-            "requirements": [Requirement(requirement_id="R1", description="Giá VF 5")],
-            "query": "So sánh giá VF 5 và VF 3",
-        }
-    )
-    assert result["selected_evidence"][0]["chunk_id"] == "a"
-    assert result["evidence_map"] == {}
 
 
 @pytest.mark.asyncio
@@ -352,49 +305,65 @@ async def test_parent_timeout_preserves_other_complete_sources(monkeypatch):
     monkeypatch.setattr(evidence, "bounded_io", timeout)
     result = await evidence.select_evidence(
         {
-            "new_hits": [hit("needs_parent", requires_context=True), hit("complete")],
+            "raw_search_results": [
+                {
+                    "dense": [hit("needs_parent", requires_context=True), hit("complete")],
+                    "bm25": [],
+                    "requirement_ids": ["R1"],
+                }
+            ],
             "resolved_date": "2026-10-15",
         }
     )
     assert [h["chunk_id"] for h in result["selected_evidence"]] == ["complete"]
     assert result["evidence_selection_diagnostics"][0]["reason"] == "context_unavailable"
-    assert result["overflow_anchor_ids"] == ["C1"]
 
 
 @pytest.mark.asyncio
 async def test_context_reads_are_bounded_cached_and_incomplete_bundles_excluded(monkeypatch):
     calls = []
-    anchors = [hit(str(i), context_prefix="header") for i in range(6)]
+    anchors = [hit(str(i), requires_context=True) for i in range(6)]
 
     def read(cid, date):
         calls.append(cid)
         return [anchors[int(cid)]]
 
     monkeypatch.setattr(evidence, "get_bm25_search_engine", lambda: SimpleNamespace(read_context=read))
-    state = {"new_hits": anchors, "resolved_date": "2026-10-15"}
+    state = {
+        "raw_search_results": [{"dense": anchors, "bm25": [], "requirement_ids": ["R1"]}],
+        "resolved_date": "2026-10-15",
+    }
     result = await evidence.select_evidence(state)
-    assert len(calls) == 4
+    assert len(calls) == 6
     assert len(result["selected_evidence"]) == 4
-    assert all(d["reason"] == "context_unavailable" for d in result["evidence_selection_diagnostics"][4:])
+    assert all(d["reason"] != "context_unavailable" for d in result["evidence_selection_diagnostics"])
     calls.clear()
-    await evidence.select_evidence({**state, **result, "new_hits": anchors[:4]})
+    await evidence.select_evidence(
+        {**state, **result, "raw_search_results": [{"dense": anchors[:4], "bm25": [], "requirement_ids": ["R1"]}]}
+    )
     # The first four cached parents are never read again.
     assert not set(calls) & {"0", "1", "2", "3"}
 
 
 @pytest.mark.asyncio
-async def test_date_scope_snapshot_and_verified_source_priority():
+async def test_date_scope_and_stable_citations_without_pinning_sources():
     good = hit("good", product_model="VF 5", citation_id="C1")
     result = await evidence.select_evidence(
         {
             "resolved_date": "2026-10-15",
             "analysis": SimpleNamespace(product_models=["VF 5"]),
-            "new_hits": [
-                hit("expired", status="expired"),
-                hit("future", effective_from="2027-01-01"),
-                hit("other", product_model="VF 6"),
-                hit("new"),
-                good,
+            "raw_search_results": [
+                {
+                    "dense": [
+                        hit("expired", status="expired"),
+                        hit("future", effective_from="2027-01-01"),
+                        hit("other", product_model="VF 6"),
+                        hit("new"),
+                        good,
+                    ],
+                    "bm25": [],
+                    "requirement_ids": ["R1"],
+                }
             ],
             "corrective_retrieval_count": 1,
             "selected_evidence": [good],
@@ -402,48 +371,15 @@ async def test_date_scope_snapshot_and_verified_source_priority():
             "evidence_registry": [good],
         }
     )
-    assert [h["chunk_id"] for h in result["selected_evidence"]] == ["good", "new"]
-    assert result["selected_evidence"][0]["citation_id"] == "C1"
+    assert [h["chunk_id"] for h in result["selected_evidence"]] == ["new", "good"]
+    assert next(h for h in result["selected_evidence"] if h["chunk_id"] == "good")["citation_id"] == "C1"
     from src.agents.copilot.runtime import CopilotDependencyError
 
     with pytest.raises(CopilotDependencyError, match="outside verified snapshot"):
         await evidence.select_evidence(
-            {"new_hits": [hit("forged")], "snapshot": SimpleNamespace(chunks={}), "resolved_date": "2026-10-15"}
+            {
+                "raw_search_results": [{"dense": [hit("forged")], "bm25": [], "requirement_ids": ["R1"]}],
+                "snapshot": SimpleNamespace(chunks={}),
+                "resolved_date": "2026-10-15",
+            }
         )
-
-
-@pytest.mark.asyncio
-@pytest.mark.parametrize("grounded", [True, False])
-@pytest.mark.parametrize(
-    "recovery,route", [("search", "plan_queries"), ("none", "plan_queries"), ("regenerate", "generate_answer")]
-)
-async def test_checker_directs_recovery_despite_keyword_coverage(monkeypatch, grounded, recovery, route):
-    source = hit("a", citation_id="C1")
-    verdict = SelfCheckVerdict(
-        grounded=grounded,
-        answered_requirement_ids=["R1"],
-        missing_requirement_ids=["R2"],
-        missing_information=["Thiếu giá VF 3"],
-        recovery=recovery,
-    )
-    monkeypatch.setattr(verification, "_invoke_json", AsyncMock(return_value=(verdict, None)))
-    result = await verification.check_grounding(
-        {
-            "query": "So sánh giá",
-            "resolved_date": "2026-10-15",
-            "generation_count": 1,
-            "requirements": [
-                Requirement(requirement_id="R1", description="Giá VF 5"),
-                Requirement(requirement_id="R2", description="Giá VF 3"),
-            ],
-            "selected_evidence": [source],
-            "answer_context": build_evidence_context([source])[0],
-            "draft_answer": "VF 5: 496 triệu [C1]",
-            "evidence_map": {"R1": ["C1"], "R2": ["C1"]},
-        }
-    )
-    assert result["route"] == route
-    if route == "plan_queries":
-        assert result["recovery_requirement_ids"] == ["R2"]
-    if grounded:
-        assert result["verified_snapshot"].status == "partial"

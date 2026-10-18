@@ -20,6 +20,15 @@ export function formatDateTime(value, date = true) {
   if (!value) return 'Cần xếp lịch';
   return new Intl.DateTimeFormat('vi-VN', { timeZone: TIMEZONE, hour: '2-digit', minute: '2-digit', ...(date ? { day: '2-digit', month: '2-digit' } : {}) }).format(new Date(value));
 }
+export function defaultTaskWindow(kind = 'task', offsetMinutes = 0) {
+  const durationMinutes = kind === 'appointment' ? 60 : 30;
+  const now = new Date();
+  const slotMs = 30 * 60 * 1000;
+  const roundedStartMs = Math.ceil((now.getTime() + 5 * 60 * 1000) / slotMs) * slotMs + offsetMinutes * 60 * 1000;
+  const startIso = new Date(roundedStartMs).toISOString();
+  const endIso = new Date(roundedStartMs + durationMinutes * 60 * 1000).toISOString();
+  return { start: localInput(startIso), end: localInput(endIso) };
+}
 export function waitingDuration(value, now = Date.now()) {
   const since = new Date(value).getTime();
   if (!value || !Number.isFinite(since)) return 'Đang chờ phản hồi';

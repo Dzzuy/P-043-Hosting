@@ -1,0 +1,3079 @@
+{
+  "provenance": "held_out fixed transcripts; evaluation-only RoleplayState from scenario defaults; no RoleplayGraph session, checkpoint, or runtime events",
+  "generated_at": "2026-10-17T09:24:35.349605+00:00",
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "status": "INCOMPLETE",
+  "successful_case_count": 17,
+  "failed_case_count": 3,
+  "missing_case_ids": [
+    "JH26_04_VF5_04",
+    "JH26_08_VF7_08",
+    "JH26_09_VF7_09"
+  ],
+  "predictions": [
+    {
+      "case_id": "JH26_03_VF5_03",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_03_VF5_03",
+        "scenario_id": "SCENARIO_01_VF5_TAXI",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 5,
+        "overall_score": 2.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "5b2269bd-fce5-4708-bb54-35422e0f4ef8",
+                    "quote": "Anh thường chạy mấy km một ngày và có khung giờ nào nghỉ giữa ca không ạ?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã hỏi về quãng đường chạy hàng ngày và thời gian nghỉ giữa ca, nhưng chưa khai thác sâu hơn về chi phí xăng thực tế và các yếu tố khác ảnh hưởng đến quyết định của khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "5b2269bd-fce5-4708-bb54-35422e0f4ef8",
+                "quote": "Anh thường chạy mấy km một ngày và có khung giờ nào nghỉ giữa ca không ạ?"
+              }
+            ],
+            "reason": "Tư vấn viên đã hỏi về quãng đường chạy hàng ngày và thời gian nghỉ giữa ca, nhưng chưa khai thác sâu hơn về chi phí xăng thực tế và các yếu tố khác ảnh hưởng đến quyết định của khách hàng.",
+            "improvement_suggestion": "Cần hỏi thêm về chi phí xăng thực tế mà khách hàng đang chi trả để có cái nhìn rõ hơn về nhu cầu và so sánh với chi phí sạc."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "3485e440-71b9-4ebe-a2e6-1ea414810fa5",
+                    "quote": "Thời gian sạc và chi phí còn phụ thuộc trụ, mức pin, chính sách áp dụng."
+                  }
+                ],
+                "reason": "Tư vấn viên đã cung cấp thông tin về thời gian sạc và chi phí, nhưng chưa nêu rõ các yếu tố cụ thể ảnh hưởng đến chi phí sạc cho khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "3485e440-71b9-4ebe-a2e6-1ea414810fa5",
+                "quote": "Thời gian sạc và chi phí còn phụ thuộc trụ, mức pin, chính sách áp dụng."
+              }
+            ],
+            "reason": "Tư vấn viên đã cung cấp thông tin về thời gian sạc và chi phí, nhưng chưa nêu rõ các yếu tố cụ thể ảnh hưởng đến chi phí sạc cho khách hàng.",
+            "improvement_suggestion": "Cần cung cấp thông tin chi tiết hơn về đơn giá sạc và các điều kiện áp dụng để khách hàng có cái nhìn rõ hơn."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "cd86019a-55d2-4136-8af4-e5b0f7590b71",
+                    "quote": "Nếu anh muốn, em gửi bảng so sánh có ghi rõ giả định và cùng anh rà lại lịch chạy vào một cuộc gọi ngắn."
+                  }
+                ],
+                "reason": "Tư vấn viên đã nhận thức được lo ngại của khách hàng và đề xuất gửi bảng so sánh, nhưng chưa thực sự tìm hiểu sâu về nguyên nhân lo ngại của khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "cd86019a-55d2-4136-8af4-e5b0f7590b71",
+                "quote": "Nếu anh muốn, em gửi bảng so sánh có ghi rõ giả định và cùng anh rà lại lịch chạy vào một cuộc gọi ngắn."
+              }
+            ],
+            "reason": "Tư vấn viên đã nhận thức được lo ngại của khách hàng và đề xuất gửi bảng so sánh, nhưng chưa thực sự tìm hiểu sâu về nguyên nhân lo ngại của khách hàng.",
+            "improvement_suggestion": "Cần tìm hiểu thêm về nguyên nhân cụ thể của lo ngại và cung cấp thông tin chi tiết hơn để giải quyết mối băn khoăn của khách hàng."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "fce4f46a-44ea-47cc-9240-a068b3467727",
+                    "quote": "Em sẽ so riêng chi phí điện, thời gian dừng và khoản vay; để tính được cần quãng đường cùng chi phí xăng thực tế của anh."
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề cập đến việc tách biệt các yếu tố chi phí, nhưng chưa cung cấp thông tin cụ thể về chính sách ưu đãi sạc và điều kiện áp dụng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "fce4f46a-44ea-47cc-9240-a068b3467727",
+                "quote": "Em sẽ so riêng chi phí điện, thời gian dừng và khoản vay; để tính được cần quãng đường cùng chi phí xăng thực tế của anh."
+              }
+            ],
+            "reason": "Tư vấn viên đã đề cập đến việc tách biệt các yếu tố chi phí, nhưng chưa cung cấp thông tin cụ thể về chính sách ưu đãi sạc và điều kiện áp dụng.",
+            "improvement_suggestion": "Cần cung cấp thông tin chi tiết về chính sách ưu đãi sạc và điều kiện áp dụng cho khách hàng."
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "cd86019a-55d2-4136-8af4-e5b0f7590b71",
+                    "quote": "Nếu anh muốn, em gửi bảng so sánh có ghi rõ giả định và cùng anh rà lại lịch chạy vào một cuộc gọi ngắn."
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể là gửi bảng so sánh, nhưng chưa xác định rõ ràng thời gian và cách thức thực hiện."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "cd86019a-55d2-4136-8af4-e5b0f7590b71",
+                "quote": "Nếu anh muốn, em gửi bảng so sánh có ghi rõ giả định và cùng anh rà lại lịch chạy vào một cuộc gọi ngắn."
+              }
+            ],
+            "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể là gửi bảng so sánh, nhưng chưa xác định rõ ràng thời gian và cách thức thực hiện.",
+            "improvement_suggestion": "Cần xác định rõ ràng thời gian và cách thức thực hiện cuộc gọi để khách hàng có thể dễ dàng đồng ý."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã hỏi về quãng đường chạy hàng ngày và thời gian nghỉ giữa ca."
+        ],
+        "summary_weaknesses": [
+          "Chưa khai thác sâu hơn về chi phí xăng thực tế và các yếu tố khác ảnh hưởng đến quyết định của khách hàng.",
+          "Chưa cung cấp thông tin chi tiết về đơn giá sạc và các điều kiện áp dụng."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_02_VF5_TAXI",
+          "reason": "Cần cải thiện khả năng khai thác nhu cầu và cung cấp thông tin chi tiết hơn về chính sách ưu đãi sạc."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_05_VF5_05",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_05_VF5_05",
+        "scenario_id": "SCENARIO_01_VF5_TAXI",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 5,
+        "overall_score": 1.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "need_discovery_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "be1eee94-4038-4860-abcb-b6689fb87444",
+                    "quote": "VF 5 Plus lăn bánh khoảng bao nhiêu? Anh muốn so sánh chi phí sử dụng với Vios."
+                  }
+                ],
+                "reason": "Tư vấn viên không khai thác được nhu cầu cụ thể của khách hàng về quãng đường và chi phí xăng thực tế từ xe Vios, dẫn đến việc không có thông tin cần thiết để so sánh chi phí sử dụng giữa hai xe."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "be1eee94-4038-4860-abcb-b6689fb87444",
+                "quote": "VF 5 Plus lăn bánh khoảng bao nhiêu? Anh muốn so sánh chi phí sử dụng với Vios."
+              }
+            ],
+            "reason": "Tư vấn viên không khai thác được nhu cầu cụ thể của khách hàng về quãng đường và chi phí xăng thực tế từ xe Vios, dẫn đến việc không có thông tin cần thiết để so sánh chi phí sử dụng giữa hai xe.",
+            "improvement_suggestion": "Cần hỏi thêm về quãng đường thực tế mà khách hàng chạy với xe Vios, cũng như tiền xăng mà họ đang chi trả để có thể đưa ra so sánh chính xác hơn."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "product_knowledge_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "04b2cb33-d54d-4791-aa71-27aa003d1eb8",
+                    "quote": "Anh yên tâm, tiền sạc xe này luôn cố định một mức cho mọi trạm và sẽ không bao giờ tăng."
+                  }
+                ],
+                "reason": "Tư vấn viên đã cung cấp thông tin không chính xác về mức giá sạc, không nêu rõ rằng giá sạc có thể thay đổi theo chính sách ưu đãi và điều kiện cụ thể."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "04b2cb33-d54d-4791-aa71-27aa003d1eb8",
+                "quote": "Anh yên tâm, tiền sạc xe này luôn cố định một mức cho mọi trạm và sẽ không bao giờ tăng."
+              }
+            ],
+            "reason": "Tư vấn viên đã cung cấp thông tin không chính xác về mức giá sạc, không nêu rõ rằng giá sạc có thể thay đổi theo chính sách ưu đãi và điều kiện cụ thể.",
+            "improvement_suggestion": "Cần nắm rõ các thông tin về mức giá sạc và điều kiện áp dụng để cung cấp thông tin chính xác cho khách hàng."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "objection_handling_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "ead2f283-193d-4b5b-9ce5-4dc0be170f93",
+                    "quote": "Nhưng anh nghe nói sạc ngoài lượt được ưu đãi vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+                  }
+                ],
+                "reason": "Tư vấn viên không ghi nhận lo ngại của khách hàng về chi phí sạc và trả góp, không đưa ra giải pháp hoặc thông tin để giải quyết mối băn khoăn này."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "ead2f283-193d-4b5b-9ce5-4dc0be170f93",
+                "quote": "Nhưng anh nghe nói sạc ngoài lượt được ưu đãi vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+              }
+            ],
+            "reason": "Tư vấn viên không ghi nhận lo ngại của khách hàng về chi phí sạc và trả góp, không đưa ra giải pháp hoặc thông tin để giải quyết mối băn khoăn này.",
+            "improvement_suggestion": "Cần lắng nghe và ghi nhận các lo ngại của khách hàng, sau đó cung cấp thông tin cụ thể và giải pháp để giải quyết những băn khoăn đó."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "policy_accuracy_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "022e463b-aec0-40e6-b4dd-943c47b8d105",
+                    "quote": "Em không cần kiểm tra chính sách vì mọi khách đều được áp dụng như nhau."
+                  }
+                ],
+                "reason": "Tư vấn viên đã đưa ra thông tin sai lệch về chính sách áp dụng cho khách hàng, không nêu rõ rằng có thể có sự khác biệt trong điều kiện áp dụng cho từng trường hợp."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "022e463b-aec0-40e6-b4dd-943c47b8d105",
+                "quote": "Em không cần kiểm tra chính sách vì mọi khách đều được áp dụng như nhau."
+              }
+            ],
+            "reason": "Tư vấn viên đã đưa ra thông tin sai lệch về chính sách áp dụng cho khách hàng, không nêu rõ rằng có thể có sự khác biệt trong điều kiện áp dụng cho từng trường hợp.",
+            "improvement_suggestion": "Cần kiểm tra và xác nhận các chính sách áp dụng cho từng khách hàng cụ thể, tránh đưa ra thông tin sai lệch."
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "closing_next_step_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "bf96ff8a-e420-4f40-bb9f-9ada296a14b2",
+                    "quote": "Anh vẫn chưa yên tâm về điểm này. Bây giờ anh phải ghé siêu thị mua ít đồ. Mình tạm dừng ở đây; em gửi thông tin phù hợp với trường hợp của anh sau nhé."
+                  }
+                ],
+                "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể để giữ chân khách hàng và không tạo cơ hội cho việc chốt đơn."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "bf96ff8a-e420-4f40-bb9f-9ada296a14b2",
+                "quote": "Anh vẫn chưa yên tâm về điểm này. Bây giờ anh phải ghé siêu thị mua ít đồ. Mình tạm dừng ở đây; em gửi thông tin phù hợp với trường hợp của anh sau nhé."
+              }
+            ],
+            "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể để giữ chân khách hàng và không tạo cơ hội cho việc chốt đơn.",
+            "improvement_suggestion": "Cần đề xuất một bước tiếp theo cụ thể, như hẹn gặp lại để thảo luận thêm hoặc gửi thông tin chi tiết để khách hàng có thể xem xét."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [],
+        "summary_weaknesses": [
+          "Không khai thác nhu cầu cụ thể của khách hàng về chi phí và quãng đường thực tế.",
+          "Cung cấp thông tin không chính xác về mức giá sạc và điều kiện áp dụng chính sách ưu đãi sạc cho khách hàng."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_02_VF5_TAXI",
+          "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng để nâng cao hiệu quả tư vấn."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_10_VF7_10",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_10_VF7_10",
+        "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 5,
+        "overall_score": 1.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "7d3a9de3-2b3e-41c8-9c15-a10dc5ff7524",
+                "quote": "Chị thấy VF 7 với CX-5 cũng như nhau, CX-5 nhìn quen mắt hơn mà sao VF 7 đắt hơn 50 triệu vậy em?"
+              },
+              {
+                "message_id": "b56915a4-f2fd-49ec-a95c-e7f946af422f",
+                "quote": "CX-5 đi đầy đường vừa lành vừa đẹp, VF 7 mới ra chưa biết thế nào mà bán đắt thế em?"
+              }
+            ],
+            "reason": "Tư vấn viên không khai thác được nhu cầu cụ thể của khách hàng, chỉ phản hồi về giá trị giữ giá mà không tìm hiểu thêm về lý do lựa chọn xe của khách hàng.",
+            "improvement_suggestion": "Cần hỏi về các yếu tố quan trọng khác của gia đình, như số lượng người sử dụng xe, mục đích sử dụng cụ thể và ai là người có tiếng nói quyết định trong gia đình."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "d9da0363-591e-473c-bbde-a1faf21f3e52",
+                "quote": "Em cam đoan VF 7 sẽ giữ ít nhất 90% giá mua, không có rủi ro mất giá."
+              },
+              {
+                "message_id": "20810cf1-3272-4550-8fc7-7e713d243f7f",
+                "quote": "Con số đó chắc chắn áp dụng cho mọi phiên bản và mọi thời điểm, chị không cần hỏi thêm bên nào."
+              }
+            ],
+            "reason": "Tư vấn viên đã đưa ra thông tin không chính xác về khả năng giữ giá của VF 7 mà không có nguồn hỗ trợ, điều này có thể gây rủi ro cho khách hàng.",
+            "improvement_suggestion": "Cần cung cấp thông tin về chính sách bảo hành và các yếu tố ảnh hưởng đến giá trị xe mà có nguồn hỗ trợ, thay vì khẳng định chắc chắn mà không có căn cứ."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "d9da0363-591e-473c-bbde-a1faf21f3e52",
+                "quote": "Em cam đoan VF 7 sẽ giữ ít nhất 90% giá mua, không có rủi ro mất giá."
+              },
+              {
+                "message_id": "20810cf1-3272-4550-8fc7-7e713d243f7f",
+                "quote": "Con số đó chắc chắn áp dụng cho mọi phiên bản và mọi thời điểm, chị không cần hỏi thêm bên nào."
+              }
+            ],
+            "reason": "Tư vấn viên đã không nhận diện và xử lý đúng mối lo ngại của khách hàng về giá trị bán lại, mà chỉ khẳng định mà không đưa ra lý do hợp lý.",
+            "improvement_suggestion": "Cần thừa nhận rằng giá trị bán lại không thể được đảm bảo và nên mời khách hàng tham gia vào một bước tiếp theo như xem tài liệu hoặc lái thử."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "d9da0363-591e-473c-bbde-a1faf21f3e52",
+                "quote": "Em cam đoan VF 7 sẽ giữ ít nhất 90% giá mua, không có rủi ro mất giá."
+              },
+              {
+                "message_id": "20810cf1-3272-4550-8fc7-7e713d243f7f",
+                "quote": "Con số đó chắc chắn áp dụng cho mọi phiên bản và mọi thời điểm, chị không cần hỏi thêm bên nào."
+              }
+            ],
+            "reason": "Tư vấn viên đã sử dụng thông tin không chính xác và không có nguồn hỗ trợ về khả năng giữ giá của xe, điều này có thể gây hiểu lầm cho khách hàng.",
+            "improvement_suggestion": "Cần trình bày chính sách bảo hành và các điều kiện liên quan đến giá trị xe một cách rõ ràng và có nguồn hỗ trợ."
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 1,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "4afe11d6-6ccc-402d-bff0-9412996d8db9",
+                "quote": "Em có thể cho chị biết lý do cụ thể nào khiến VF 7 lại đắt hơn CX-5 không?"
+              }
+            ],
+            "reason": "Tư vấn viên không đề xuất một bước tiếp theo cụ thể cho khách hàng, chỉ dừng lại ở việc hỏi lý do mà không dẫn dắt đến một thỏa thuận hay hành động tiếp theo.",
+            "improvement_suggestion": "Cần đề xuất một bước tiếp theo cụ thể như mời khách hàng tham gia lái thử hoặc xem tài liệu để giúp họ có thêm thông tin."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [],
+        "summary_weaknesses": [
+          "Không khai thác nhu cầu và ưu tiên của khách hàng.",
+          "Cung cấp thông tin không chính xác về khả năng giữ giá của xe mà không có nguồn hỗ trợ."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_03_VF7_VS_CX5",
+          "reason": "Cần cải thiện khả năng khám phá nhu cầu và xử lý phản đối của khách hàng để tăng cường sự tin tưởng và hiệu quả trong tư vấn."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_12_VF7_12",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_12_VF7_12",
+        "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 4,
+        "overall_score": 1.25,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "need_discovery_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "1ce2c840-344f-4990-a1d5-1bde3f021346",
+                    "quote": "Chị thấy VF 7 và CX-5 cũng tương tự nhau, nhưng tại sao VF 7 lại đắt hơn 50 triệu? Có điểm gì nổi bật hơn không?"
+                  }
+                ],
+                "reason": "Tư vấn viên không khai thác được nhu cầu gia đình và người có tiếng nói quyết định trong gia đình, dẫn đến việc không hiểu rõ ưu tiên của khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "1ce2c840-344f-4990-a1d5-1bde3f021346",
+                "quote": "Chị thấy VF 7 và CX-5 cũng tương tự nhau, nhưng tại sao VF 7 lại đắt hơn 50 triệu? Có điểm gì nổi bật hơn không?"
+              }
+            ],
+            "reason": "Tư vấn viên không khai thác được nhu cầu gia đình và người có tiếng nói quyết định trong gia đình, dẫn đến việc không hiểu rõ ưu tiên của khách hàng.",
+            "improvement_suggestion": "Cần hỏi thêm về thành phần gia đình sử dụng xe và ai là người có tiếng nói quyết định cuối cùng trong gia đình."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "product_knowledge_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "1f83ec2e-9f88-4ede-9580-967d754bb36a",
+                    "quote": "VF 7 có thiết kế ngoại thất khá nổi bật và khoang lái hiện đại chị ạ."
+                  }
+                ],
+                "reason": "Tư vấn viên đã cung cấp thông tin về thiết kế và tính năng của VF 7, nhưng chưa đủ chi tiết để thuyết phục khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "1f83ec2e-9f88-4ede-9580-967d754bb36a",
+                "quote": "VF 7 có thiết kế ngoại thất khá nổi bật và khoang lái hiện đại chị ạ."
+              }
+            ],
+            "reason": "Tư vấn viên đã cung cấp thông tin về thiết kế và tính năng của VF 7, nhưng chưa đủ chi tiết để thuyết phục khách hàng.",
+            "improvement_suggestion": "Cần cung cấp thêm thông tin chi tiết về các tính năng nổi bật và lợi ích cụ thể của VF 7 so với CX-5."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "objection_handling_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "8126a684-a573-4fb8-86c5-99d45df8cf0b",
+                    "quote": "Em thấy CX-5 đi đầy đường, vừa đẹp vừa bền, trong khi VF 7 mới ra chưa biết thế nào mà giá lại cao hơn. Có lý do gì thuyết phục không?"
+                  },
+                  {
+                    "message_id": "13ea9039-6557-4e7c-b84d-1c9003f31198",
+                    "quote": "Em vẫn thấy CX-5 đi đầy đường, vừa đẹp vừa bền, trong khi VF 7 mới ra chưa biết thế nào mà giá lại cao hơn. Có lý do gì thuyết phục không?"
+                  }
+                ],
+                "reason": "Tư vấn viên không nhận diện và xử lý được mối quan ngại của khách hàng về giá trị và độ tin cậy của VF 7."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "8126a684-a573-4fb8-86c5-99d45df8cf0b",
+                "quote": "Em thấy CX-5 đi đầy đường, vừa đẹp vừa bền, trong khi VF 7 mới ra chưa biết thế nào mà giá lại cao hơn. Có lý do gì thuyết phục không?"
+              },
+              {
+                "message_id": "13ea9039-6557-4e7c-b84d-1c9003f31198",
+                "quote": "Em vẫn thấy CX-5 đi đầy đường, vừa đẹp vừa bền, trong khi VF 7 mới ra chưa biết thế nào mà giá lại cao hơn. Có lý do gì thuyết phục không?"
+              }
+            ],
+            "reason": "Tư vấn viên không nhận diện và xử lý được mối quan ngại của khách hàng về giá trị và độ tin cậy của VF 7.",
+            "improvement_suggestion": "Cần thừa nhận mối quan ngại của khách hàng và cung cấp thông tin cụ thể về chính sách bảo hành và các tính năng nổi bật của VF 7."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có thông tin cụ thể về chính sách giá bán và bảo hành trong cuộc trò chuyện.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "closing_next_step_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "8126a684-a573-4fb8-86c5-99d45df8cf0b",
+                    "quote": "Em thấy CX-5 đi đầy đường, vừa đẹp vừa bền, trong khi VF 7 mới ra chưa biết thế nào mà giá lại cao hơn. Có lý do gì thuyết phục không?"
+                  }
+                ],
+                "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể nào để tiếp tục cuộc trò chuyện."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "8126a684-a573-4fb8-86c5-99d45df8cf0b",
+                "quote": "Em thấy CX-5 đi đầy đường, vừa đẹp vừa bền, trong khi VF 7 mới ra chưa biết thế nào mà giá lại cao hơn. Có lý do gì thuyết phục không?"
+              }
+            ],
+            "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể nào để tiếp tục cuộc trò chuyện.",
+            "improvement_suggestion": "Cần đề xuất một bước tiếp theo như xem tài liệu hoặc lái thử để tạo cơ hội cho khách hàng tham gia."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [],
+        "summary_weaknesses": [
+          "Không khai thác được nhu cầu gia đình và người có tiếng nói quyết định.",
+          "Cung cấp thông tin sản phẩm chưa đủ thuyết phục và không xử lý được mối quan ngại của khách hàng."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_03_VF7_VS_CX5",
+          "reason": "Cần cải thiện khả năng khám phá nhu cầu và xử lý phản đối của khách hàng."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_14_VF7_14",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_14_VF7_14",
+        "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 4,
+        "overall_score": 1.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "need_discovery_1",
+                "verdict": "missed",
+                "evidence": [],
+                "reason": "Tư vấn viên không khai thác được nhu cầu sử dụng xe của gia đình và ai là người có tiếng nói quyết định cuối cùng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "b0cd5cdb-6085-46c7-ba38-f518408e4a6a",
+                "quote": "Chị thấy VF 7 với CX-5 cũng như nhau, CX-5 nhìn quen mắt hơn mà sao VF 7 đắt hơn 50 triệu vậy em?"
+              },
+              {
+                "message_id": "dd987cdf-133f-4fdf-a8c6-cf713cb1aa7a",
+                "quote": "Chồng chị bảo xe điện mua thì đắt mà sau 3 năm bán lại khéo lỗ nửa giá xe, không giữ giá bằng CX-5. Em có thể giải thích cho chị lý do không?"
+              }
+            ],
+            "reason": "Tư vấn viên không hỏi về nhu cầu cụ thể của gia đình và không xác định ai là người có ảnh hưởng trong quyết định mua xe.",
+            "improvement_suggestion": "Cần hỏi thêm về thành phần gia đình sử dụng xe và ai là người có tiếng nói quyết định cuối cùng."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "product_knowledge_1",
+                "verdict": "missed",
+                "evidence": [],
+                "reason": "Tư vấn viên không cung cấp thông tin cụ thể về giá trị giữ giá của VF 7 so với CX-5."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "c07193d9-28f7-4c5c-9a6a-b003dbb6e4d7",
+                "quote": "Em có thể giải thích cụ thể hơn về lý do giữ giá của VF 7 không? Chị vẫn thấy lo lắng về việc lỗ giá khi bán lại."
+              }
+            ],
+            "reason": "Tư vấn viên không đưa ra thông tin cụ thể về lý do tại sao VF 7 có giá trị giữ giá tốt hơn CX-5.",
+            "improvement_suggestion": "Cần nắm rõ các điểm khác biệt và lợi ích của VF 7 để giải thích cho khách hàng."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "objection_handling_1",
+                "verdict": "missed",
+                "evidence": [],
+                "reason": "Tư vấn viên không xử lý được lo lắng của khách hàng về giá trị giữ giá của xe."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "f187e31d-242f-4ec2-b0e2-02d3964f28fd",
+                "quote": "Nếu không cọc bây giờ thì chị sẽ bỏ lỡ cơ hội; mình khỏi cần bàn thêm về điều anh nhà đang lo."
+              }
+            ],
+            "reason": "Tư vấn viên đã bỏ qua mối lo ngại của khách hàng và không cung cấp thông tin để giải quyết vấn đề này.",
+            "improvement_suggestion": "Cần lắng nghe và phản hồi lại những lo ngại của khách hàng một cách cụ thể."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có thông tin cụ thể về chính sách giá bán và khấu hao được đề cập trong cuộc trò chuyện.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "closing_next_step_1",
+                "verdict": "missed",
+                "evidence": [],
+                "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể cho khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "0d126ba0-0367-4f60-9e19-dddd6ef41d69",
+                "quote": "Em gửi ngay đường dẫn đặt cọc, chị hoàn tất trước rồi hãy xem xe sau."
+              }
+            ],
+            "reason": "Tư vấn viên không tạo ra một bước tiếp theo rõ ràng và không xác nhận sự đồng ý của khách hàng trước khi tiến hành.",
+            "improvement_suggestion": "Cần đề xuất một bước tiếp theo cụ thể và xác nhận sự đồng ý của khách hàng."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [],
+        "summary_weaknesses": [
+          "Tư vấn viên không khai thác được nhu cầu sử dụng xe của gia đình và người có tiếng nói quyết định.",
+          "Không cung cấp thông tin cụ thể về giá trị giữ giá của VF 7 so với CX-5."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_02_VF7_VS_CX5",
+          "reason": "Cần cải thiện khả năng khám phá nhu cầu và xử lý phản đối của khách hàng."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_15_VF6_15",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_15_VF6_15",
+        "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 4,
+        "overall_score": 2.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "need_discovery_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "c871432d-cfc6-4a2c-870e-81b69e6905eb",
+                    "quote": "Anh đi khoảng bao nhiêu km mỗi ngày và xe thường đỗ ở khu nào ạ?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã hỏi về quãng đường đi lại và nơi đỗ xe, điều này giúp xác định nhu cầu của khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "c871432d-cfc6-4a2c-870e-81b69e6905eb",
+                "quote": "Anh đi khoảng bao nhiêu km mỗi ngày và xe thường đỗ ở khu nào ạ?"
+              }
+            ],
+            "reason": "Tư vấn viên đã xác định được nhu cầu của khách hàng nhưng chưa khai thác sâu hơn về các lựa chọn sạc cụ thể cho khu vực của khách hàng.",
+            "improvement_suggestion": "Cần hỏi thêm về các trạm sạc công cộng gần khu vực sống của khách hàng và thời gian có thể sạc để đưa ra giải pháp cụ thể hơn."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "product_knowledge_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "cadb20dd-beee-4968-87d0-c6be00ece625",
+                    "quote": "Không có chỗ sạc riêng thì mình cần kiểm tra trạm công cộng gần nhà, gần chỗ làm và thời gian thực tế anh có thể dừng."
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề cập đến việc kiểm tra trạm công cộng gần nhà, nhưng chưa cung cấp thông tin cụ thể về các trạm sạc hoặc chính sách ưu đãi sạc."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "cadb20dd-beee-4968-87d0-c6be00ece625",
+                "quote": "Không có chỗ sạc riêng thì mình cần kiểm tra trạm công cộng gần nhà, gần chỗ làm và thời gian thực tế anh có thể dừng."
+              }
+            ],
+            "reason": "Tư vấn viên đã có kiến thức về việc kiểm tra trạm sạc công cộng, nhưng cần cung cấp thêm thông tin chi tiết về giá cả và chính sách sạc.",
+            "improvement_suggestion": "Cần cung cấp thông tin cụ thể về giá sạc và các điều kiện ưu đãi sạc cho khách hàng."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "objection_handling_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "ecd4fc30-612f-4230-843b-143c29186393",
+                    "quote": "Đi làm cả ngày mệt mỏi về tối lại phải lang thang đi tìm trụ sạc thì bất tiện quá em."
+                  },
+                  {
+                    "message_id": "6f5a1f4c-ed9e-4b19-b69e-9ebb5a05a5e5",
+                    "quote": "Em chưa dám bảo đảm trạm nào luôn còn chỗ; em sẽ hướng dẫn anh tra tình trạng và thử một tuyến sạc phù hợp."
+                  }
+                ],
+                "reason": "Tư vấn viên đã nhận ra mối quan ngại của khách hàng và đã cố gắng đưa ra giải pháp."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "ecd4fc30-612f-4230-843b-143c29186393",
+                "quote": "Đi làm cả ngày mệt mỏi về tối lại phải lang thang đi tìm trụ sạc thì bất tiện quá em."
+              },
+              {
+                "message_id": "6f5a1f4c-ed9e-4b19-b69e-9ebb5a05a5e5",
+                "quote": "Em chưa dám bảo đảm trạm nào luôn còn chỗ; em sẽ hướng dẫn anh tra tình trạng và thử một tuyến sạc phù hợp."
+              }
+            ],
+            "reason": "Tư vấn viên đã nhận diện được mối lo ngại của khách hàng và đưa ra hướng dẫn, nhưng chưa tìm hiểu sâu hơn về các giải pháp thay thế.",
+            "improvement_suggestion": "Cần tìm hiểu thêm về các lựa chọn sạc khác và cung cấp thông tin cụ thể hơn cho khách hàng."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có thông tin cụ thể về chính sách sạc được đề cập trong cuộc trò chuyện.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "closing_next_step_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "bb55f883-4701-45b6-8e0e-73e2ff08eeac",
+                    "quote": "Anh có muốn cùng em xem bản đồ trạm và chọn một phương án dự phòng trước khi quyết định xem VF 6 không?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể để giúp khách hàng đưa ra quyết định."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "bb55f883-4701-45b6-8e0e-73e2ff08eeac",
+                "quote": "Anh có muốn cùng em xem bản đồ trạm và chọn một phương án dự phòng trước khi quyết định xem VF 6 không?"
+              }
+            ],
+            "reason": "Tư vấn viên đã đưa ra một bước tiếp theo cụ thể nhưng chưa hoàn toàn phù hợp với mức độ sẵn sàng của khách hàng.",
+            "improvement_suggestion": "Cần xác định rõ hơn về mức độ sẵn sàng của khách hàng trước khi đề xuất bước tiếp theo."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã hỏi về quãng đường đi lại và nơi đỗ xe, giúp xác định nhu cầu của khách hàng."
+        ],
+        "summary_weaknesses": [
+          "Chưa khai thác sâu về các lựa chọn sạc cụ thể cho khu vực của khách hàng.",
+          "Cần cung cấp thêm thông tin chi tiết về giá cả và chính sách ưu đãi sạc."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_03_VF6_APARTMENT",
+          "reason": "Cần cải thiện khả năng khai thác nhu cầu và cung cấp thông tin chi tiết về chính sách sạc cho khách hàng."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_17_VF6_17",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_17_VF6_17",
+        "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 4,
+        "overall_score": 1.25,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "need_discovery_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "794a513d-8974-48b9-b5a6-1db160856471",
+                    "quote": "Nhà anh ở chung cư không có chỗ lắp sạc riêng thì mua VF 6 sạc kiểu gì em ơi?"
+                  }
+                ],
+                "reason": "Tư vấn viên không khai thác thêm thông tin về quãng đường đi lại và khu vực sinh sống của khách hàng, dẫn đến việc không hiểu rõ nhu cầu thực sự của khách."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "794a513d-8974-48b9-b5a6-1db160856471",
+                "quote": "Nhà anh ở chung cư không có chỗ lắp sạc riêng thì mua VF 6 sạc kiểu gì em ơi?"
+              }
+            ],
+            "reason": "Tư vấn viên không khai thác thêm thông tin về quãng đường đi lại và khu vực sinh sống của khách hàng, dẫn đến việc không hiểu rõ nhu cầu thực sự của khách.",
+            "improvement_suggestion": "Cần hỏi về khoảng cách đi lại trung bình và vị trí sinh sống để chỉ ra điểm sạc công cộng tiện lợi gần nhà."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "product_knowledge_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "aba11f34-6d5f-4e10-8070-2cc9693032b8",
+                    "quote": "Anh hoàn toàn không cần quan tâm thời gian sạc, xe lúc nào cũng đủ pin để đi cả tuần."
+                  }
+                ],
+                "reason": "Tư vấn viên đã cung cấp thông tin về khả năng sử dụng pin của xe, nhưng không có dữ liệu cụ thể để hỗ trợ."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "aba11f34-6d5f-4e10-8070-2cc9693032b8",
+                "quote": "Anh hoàn toàn không cần quan tâm thời gian sạc, xe lúc nào cũng đủ pin để đi cả tuần."
+              }
+            ],
+            "reason": "Tư vấn viên đã cung cấp thông tin về khả năng sử dụng pin của xe, nhưng không có dữ liệu cụ thể để hỗ trợ.",
+            "improvement_suggestion": "Cần sử dụng dữ liệu cụ thể về dung lượng pin và quãng đường di chuyển để minh họa cho khách hàng."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "objection_handling_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "f7866b36-b96f-4b36-b574-cc40db1a72a7",
+                    "quote": "Đi làm cả ngày mệt mỏi về tối lại phải lang thang đi tìm trụ sạc thì bất tiện quá em."
+                  },
+                  {
+                    "message_id": "2c5a3152-a644-4e62-a9f7-0d6ecf8081a7",
+                    "quote": "Không có trụ ở chung cư vẫn chắc chắn không bao giờ bất tiện, em bảo đảm."
+                  }
+                ],
+                "reason": "Tư vấn viên không nhận diện và giải quyết đúng mối lo ngại của khách hàng về sự bất tiện khi tìm trụ sạc."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "f7866b36-b96f-4b36-b574-cc40db1a72a7",
+                "quote": "Đi làm cả ngày mệt mỏi về tối lại phải lang thang đi tìm trụ sạc thì bất tiện quá em."
+              },
+              {
+                "message_id": "2c5a3152-a644-4e62-a9f7-0d6ecf8081a7",
+                "quote": "Không có trụ ở chung cư vẫn chắc chắn không bao giờ bất tiện, em bảo đảm."
+              }
+            ],
+            "reason": "Tư vấn viên không nhận diện và giải quyết đúng mối lo ngại của khách hàng về sự bất tiện khi tìm trụ sạc.",
+            "improvement_suggestion": "Cần khai thác thêm thông tin về quãng đường và khu vực sống, sau đó đề xuất các giải pháp sạc cụ thể và thực tế."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có thông tin cụ thể về chính sách sạc pin được đề cập trong cuộc trò chuyện.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "closing_next_step_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "9b128056-a298-490c-b1cf-be216e0deaf5",
+                    "quote": "Em có thể cho anh biết thêm về các giải pháp sạc pin nào có thể áp dụng cho chung cư không có trụ sạc không?"
+                  }
+                ],
+                "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể để giải quyết mối quan tâm của khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "9b128056-a298-490c-b1cf-be216e0deaf5",
+                "quote": "Em có thể cho anh biết thêm về các giải pháp sạc pin nào có thể áp dụng cho chung cư không có trụ sạc không?"
+              }
+            ],
+            "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể để giải quyết mối quan tâm của khách hàng.",
+            "improvement_suggestion": "Cần đưa ra một bước tiếp theo cụ thể và phù hợp với nhu cầu của khách hàng, chẳng hạn như đề xuất kiểm tra các trạm sạc gần nhà."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã cung cấp thông tin về khả năng sử dụng pin của xe."
+        ],
+        "summary_weaknesses": [
+          "Không khai thác được nhu cầu và thông tin cần thiết từ khách hàng.",
+          "Không giải quyết được mối lo ngại của khách hàng về sự bất tiện khi tìm trụ sạc."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_03_VF6_APARTMENT",
+          "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_19_VF6_19",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_19_VF6_19",
+        "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 4,
+        "overall_score": 2.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "need_discovery_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "97d03ca0-0230-4ef6-8809-fcf15e599f93",
+                    "quote": "anh thường đi bao nhiêu km mỗi ngày ạ?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã hỏi về quãng đường đi lại hàng ngày của khách hàng, điều này giúp xác định nhu cầu liên quan đến sạc pin."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "97d03ca0-0230-4ef6-8809-fcf15e599f93",
+                "quote": "anh thường đi bao nhiêu km mỗi ngày ạ?"
+              }
+            ],
+            "reason": "Tư vấn viên đã hỏi về quãng đường đi lại hàng ngày của khách hàng, điều này giúp xác định nhu cầu liên quan đến sạc pin.",
+            "improvement_suggestion": "Cần khai thác thêm thông tin về thời gian làm việc và thói quen sử dụng xe của khách hàng để hiểu rõ hơn về nhu cầu sạc."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "product_knowledge_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "acab747b-45aa-4dea-bf9a-e98c6e20b2c3",
+                    "quote": "Em sẽ không hứa có trụ trống khi chưa xem dữ liệu; mình có thể kiểm tra cả một phương án dự phòng."
+                  }
+                ],
+                "reason": "Tư vấn viên đã không hứa hẹn về việc có trụ sạc trống mà thay vào đó đề xuất kiểm tra dữ liệu, cho thấy sự hiểu biết về tình hình sạc."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "acab747b-45aa-4dea-bf9a-e98c6e20b2c3",
+                "quote": "Em sẽ không hứa có trụ trống khi chưa xem dữ liệu; mình có thể kiểm tra cả một phương án dự phòng."
+              }
+            ],
+            "reason": "Tư vấn viên đã không hứa hẹn về việc có trụ sạc trống mà thay vào đó đề xuất kiểm tra dữ liệu, cho thấy sự hiểu biết về tình hình sạc.",
+            "improvement_suggestion": "Cần cung cấp thông tin cụ thể hơn về các trạm sạc gần khu vực của khách hàng và các phương án sạc khả thi."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "objection_handling_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "acab747b-45aa-4dea-bf9a-e98c6e20b2c3",
+                    "quote": "Em sẽ không hứa có trụ trống khi chưa xem dữ liệu; mình có thể kiểm tra cả một phương án dự phòng."
+                  }
+                ],
+                "reason": "Tư vấn viên đã nhận ra sự lo lắng của khách hàng về việc sạc pin và đã phản hồi một cách hợp lý bằng cách không hứa hẹn mà đề xuất kiểm tra dữ liệu."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "acab747b-45aa-4dea-bf9a-e98c6e20b2c3",
+                "quote": "Em sẽ không hứa có trụ trống khi chưa xem dữ liệu; mình có thể kiểm tra cả một phương án dự phòng."
+              }
+            ],
+            "reason": "Tư vấn viên đã nhận ra sự lo lắng của khách hàng về việc sạc pin và đã phản hồi một cách hợp lý bằng cách không hứa hẹn mà đề xuất kiểm tra dữ liệu.",
+            "improvement_suggestion": "Cần tìm hiểu sâu hơn về nguyên nhân lo lắng của khách hàng và cung cấp các giải pháp cụ thể hơn để giải quyết những lo ngại đó."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Chưa có thông tin nào về chính sách sạc pin được đề cập trong cuộc trò chuyện.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "closing_next_step_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "5be90383-b411-47f3-a180-8d5a0e21d66e",
+                    "quote": "Anh có đồng ý nhận đề xuất thời gian xem xe qua kênh đang trao đổi này không?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể là xem xe, nhưng chưa có sự đồng thuận rõ ràng từ khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "5be90383-b411-47f3-a180-8d5a0e21d66e",
+                "quote": "Anh có đồng ý nhận đề xuất thời gian xem xe qua kênh đang trao đổi này không?"
+              }
+            ],
+            "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể là xem xe, nhưng chưa có sự đồng thuận rõ ràng từ khách hàng.",
+            "improvement_suggestion": "Cần xác nhận rõ ràng sự đồng ý của khách hàng trước khi tiến hành bước tiếp theo."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã đặt câu hỏi để khám phá nhu cầu của khách hàng."
+        ],
+        "summary_weaknesses": [
+          "Chưa cung cấp thông tin cụ thể về các trạm sạc và chính sách sạc pin.",
+          "Cần cải thiện khả năng xử lý phản đối và xác nhận bước tiếp theo."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_04_VF6_CHARGING",
+          "reason": "Cần cải thiện khả năng xử lý phản đối và cung cấp thông tin chính xác về chính sách sạc pin."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_20_VF6_20",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_20_VF6_20",
+        "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 3,
+        "overall_score": 1.6666666666666667,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "8c86d7ad-e740-4b5d-aab0-9b887c0c3017",
+                    "quote": "Anh đi làm mỗi ngày khoảng bao xa, và thường gửi xe ở khu nào ạ?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã hỏi về khoảng cách đi làm và khu vực gửi xe, điều này giúp khám phá nhu cầu của khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "8c86d7ad-e740-4b5d-aab0-9b887c0c3017",
+                "quote": "Anh đi làm mỗi ngày khoảng bao xa, và thường gửi xe ở khu nào ạ?"
+              }
+            ],
+            "reason": "Tư vấn viên đã hỏi về khoảng cách đi làm và khu vực gửi xe, điều này giúp khám phá nhu cầu của khách hàng.",
+            "improvement_suggestion": "Cần làm rõ hơn về tần suất sạc và các lựa chọn sạc gần nhà để phù hợp với nhu cầu của khách hàng."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "1b45f5b1-3791-4e30-a161-a7d5e6a0946a",
+                    "quote": "Nhưng em có thể cho anh biết thêm về thời gian sạc và chi phí không?"
+                  }
+                ],
+                "reason": "Tư vấn viên không cung cấp thông tin cụ thể về thời gian sạc và chi phí, điều này là cần thiết để giải quyết mối quan tâm của khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "1b45f5b1-3791-4e30-a161-a7d5e6a0946a",
+                "quote": "Nhưng em có thể cho anh biết thêm về thời gian sạc và chi phí không?"
+              }
+            ],
+            "reason": "Tư vấn viên không cung cấp thông tin cụ thể về thời gian sạc và chi phí, điều này là cần thiết để giải quyết mối quan tâm của khách hàng.",
+            "improvement_suggestion": "Cần cung cấp thông tin chi tiết về thời gian sạc và chi phí để khách hàng có thể đưa ra quyết định."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có cơ hội để xử lý phản đối vì khách hàng chưa bày tỏ mối quan ngại cụ thể nào.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có cơ hội để kiểm tra độ chính xác của chính sách vì không có thông tin cụ thể nào được yêu cầu.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "f8c65d12-6192-49ed-8512-56c4cfc2ce07",
+                    "quote": "Em hiểu anh đang bận; nếu muốn tạm dừng, lúc khác mình kiểm tra khu sạc gần nhà rồi nói tiếp."
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể là kiểm tra khu sạc gần nhà."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "f8c65d12-6192-49ed-8512-56c4cfc2ce07",
+                "quote": "Em hiểu anh đang bận; nếu muốn tạm dừng, lúc khác mình kiểm tra khu sạc gần nhà rồi nói tiếp."
+              }
+            ],
+            "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể là kiểm tra khu sạc gần nhà.",
+            "improvement_suggestion": "Cần kết hợp với việc xác nhận sự đồng ý của khách hàng để đảm bảo họ sẵn sàng cho bước tiếp theo."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã khai thác thông tin về khoảng cách đi làm và khu vực gửi xe của khách hàng."
+        ],
+        "summary_weaknesses": [
+          "Tư vấn viên chưa cung cấp thông tin cụ thể về thời gian sạc và chi phí, điều này cần thiết để giải quyết mối quan tâm của khách hàng.",
+          "Chưa có cơ hội để xử lý phản đối hoặc kiểm tra độ chính xác của chính sách."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_03_VF6_APARTMENT",
+          "reason": "Cần cải thiện khả năng cung cấp thông tin sản phẩm và xử lý phản đối để tăng cường sự tự tin của khách hàng."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_11_VF7_11",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_11_VF7_11",
+        "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 4,
+        "overall_score": 1.75,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "c79b83c8-d04d-49e4-b0af-33a13175b12d",
+                    "quote": "Thông số trang bị có thể khác giữa các phiên bản; chị muốn ưu tiên an toàn, không gian hay tiện nghi?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã hỏi về ưu tiên của khách hàng, nhưng chưa khai thác sâu về thành phần gia đình và ai là người có tiếng nói quyết định cuối cùng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "c79b83c8-d04d-49e4-b0af-33a13175b12d",
+                "quote": "Thông số trang bị có thể khác giữa các phiên bản; chị muốn ưu tiên an toàn, không gian hay tiện nghi?"
+              }
+            ],
+            "reason": "Tư vấn viên đã hỏi về ưu tiên của khách hàng, nhưng chưa khai thác sâu về thành phần gia đình và ai là người có tiếng nói quyết định cuối cùng.",
+            "improvement_suggestion": "Cần hỏi thêm về ai là người cùng ra quyết định trong gia đình và các yếu tố khác mà họ quan tâm."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "b833411b-d566-40ac-9c29-d565e5c84049",
+                    "quote": "Em cần kiểm tra tài liệu và thời điểm áp dụng trước khi xác nhận những tính năng chị hỏi."
+                  }
+                ],
+                "reason": "Tư vấn viên nhận ra cần kiểm tra tài liệu nhưng chưa cung cấp thông tin cụ thể về sản phẩm."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "b833411b-d566-40ac-9c29-d565e5c84049",
+                "quote": "Em cần kiểm tra tài liệu và thời điểm áp dụng trước khi xác nhận những tính năng chị hỏi."
+              }
+            ],
+            "reason": "Tư vấn viên nhận ra cần kiểm tra tài liệu nhưng chưa cung cấp thông tin cụ thể về sản phẩm.",
+            "improvement_suggestion": "Cần chuẩn bị thông tin cụ thể về các tính năng và lợi ích của VF 7 để trả lời khách hàng ngay lập tức."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "11f72bf7-259d-4017-a2fe-33af1ca28f1b",
+                    "quote": "Em có thể cho chị biết lý do cụ thể nào khiến VF 7 lại đắt hơn không?"
+                  }
+                ],
+                "reason": "Tư vấn viên chưa nhận diện và xử lý đúng các lo ngại của khách hàng về giá cả và giá trị."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "11f72bf7-259d-4017-a2fe-33af1ca28f1b",
+                "quote": "Em có thể cho chị biết lý do cụ thể nào khiến VF 7 lại đắt hơn không?"
+              }
+            ],
+            "reason": "Tư vấn viên chưa nhận diện và xử lý đúng các lo ngại của khách hàng về giá cả và giá trị.",
+            "improvement_suggestion": "Cần thừa nhận lo ngại về giá trị và so sánh với CX-5 một cách trung lập, đồng thời hỏi thêm về các yếu tố quan trọng với khách hàng."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có thông tin cụ thể về chính sách giá hoặc bảo hành được đề cập trong cuộc trò chuyện.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "8e5234fa-ed01-49df-9429-6af8d9b706b9",
+                    "quote": "Khi có đúng hai phiên bản, em sẽ gửi bảng đối chiếu kèm nguồn để chị và gia đình xem rồi mới quyết định bước tiếp."
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể nhưng chưa có sự đồng thuận từ khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "8e5234fa-ed01-49df-9429-6af8d9b706b9",
+                "quote": "Khi có đúng hai phiên bản, em sẽ gửi bảng đối chiếu kèm nguồn để chị và gia đình xem rồi mới quyết định bước tiếp."
+              }
+            ],
+            "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể nhưng chưa có sự đồng thuận từ khách hàng.",
+            "improvement_suggestion": "Cần xác nhận sự đồng ý từ khách hàng về bước tiếp theo và tạo cơ hội cho cả hai cùng tham gia quyết định."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã hỏi về ưu tiên của khách hàng trong việc chọn xe."
+        ],
+        "summary_weaknesses": [
+          "Chưa khai thác sâu về thành phần gia đình và người có tiếng nói quyết định.",
+          "Chưa cung cấp thông tin cụ thể về sản phẩm và chính sách."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_03_VF7_VS_CX5",
+          "reason": "Cần cải thiện khả năng xử lý phản đối và cung cấp thông tin sản phẩm cụ thể."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_16_VF6_16",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_16_VF6_16",
+        "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 4,
+        "overall_score": 1.25,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "f5a0fd29-e5c4-46c9-9ce5-a46f3e951471",
+                    "quote": "Nhà anh ở chung cư không có chỗ lắp sạc riêng thì mua VF 6 sạc kiểu gì em ơi?"
+                  },
+                  {
+                    "message_id": "85a57f54-6d61-4fbe-9e38-e59cac23f976",
+                    "quote": "Đi làm cả ngày mệt mỏi về tối lại phải lang thang đi tìm trụ sạc thì bất tiện quá em."
+                  }
+                ],
+                "reason": "Tư vấn viên không khai thác thông tin về quãng đường đi lại và khu vực sinh sống của khách hàng, dẫn đến việc không xác định được nhu cầu cụ thể của khách hàng về giải pháp sạc pin."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "f5a0fd29-e5c4-46c9-9ce5-a46f3e951471",
+                "quote": "Nhà anh ở chung cư không có chỗ lắp sạc riêng thì mua VF 6 sạc kiểu gì em ơi?"
+              },
+              {
+                "message_id": "1e0ded4f-48c4-4e11-aedb-23d47fafdc6d",
+                "quote": "Em có thể cho anh biết có những giải pháp nào cho việc sạc xe điện khi sống ở chung cư không có trụ sạc không?"
+              }
+            ],
+            "reason": "Tư vấn viên không khai thác thông tin về quãng đường đi lại và khu vực sinh sống của khách hàng, dẫn đến việc không xác định được nhu cầu cụ thể của khách hàng về giải pháp sạc pin.",
+            "improvement_suggestion": "Cần hỏi về khoảng cách đi lại trung bình và vị trí sinh sống của khách hàng để xác định điểm sạc công cộng gần nhất."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "7c374d95-5c66-41c8-9a90-480cf9356477",
+                    "quote": "VF 6 có kiểu dáng năng động, anh nhìn ngoài đời sẽ thấy đẹp hơn ảnh."
+                  },
+                  {
+                    "message_id": "4acb06b6-d5e0-4d71-be75-2051f3263e80",
+                    "quote": "Nội thất của xe khá hiện đại và đi phố cũng tiện anh ạ."
+                  }
+                ],
+                "reason": "Tư vấn viên đã cung cấp thông tin về kiểu dáng và nội thất của xe VF 6, tuy nhiên chưa đề cập đến các thông tin liên quan đến giải pháp sạc pin."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "7c374d95-5c66-41c8-9a90-480cf9356477",
+                "quote": "VF 6 có kiểu dáng năng động, anh nhìn ngoài đời sẽ thấy đẹp hơn ảnh."
+              },
+              {
+                "message_id": "4acb06b6-d5e0-4d71-be75-2051f3263e80",
+                "quote": "Nội thất của xe khá hiện đại và đi phố cũng tiện anh ạ."
+              }
+            ],
+            "reason": "Tư vấn viên đã cung cấp thông tin về kiểu dáng và nội thất của xe VF 6, tuy nhiên chưa đề cập đến các thông tin liên quan đến giải pháp sạc pin.",
+            "improvement_suggestion": "Cần cung cấp thông tin về các giải pháp sạc pin cho khách hàng sống ở chung cư."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "85a57f54-6d61-4fbe-9e38-e59cac23f976",
+                    "quote": "Đi làm cả ngày mệt mỏi về tối lại phải lang thang đi tìm trụ sạc thì bất tiện quá em."
+                  }
+                ],
+                "reason": "Tư vấn viên không nhận diện và xử lý mối quan ngại của khách hàng về việc tìm kiếm trụ sạc."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "85a57f54-6d61-4fbe-9e38-e59cac23f976",
+                "quote": "Đi làm cả ngày mệt mỏi về tối lại phải lang thang đi tìm trụ sạc thì bất tiện quá em."
+              }
+            ],
+            "reason": "Tư vấn viên không nhận diện và xử lý mối quan ngại của khách hàng về việc tìm kiếm trụ sạc.",
+            "improvement_suggestion": "Cần nhận diện và phản hồi về mối quan ngại của khách hàng, đồng thời cung cấp thông tin về các trạm sạc gần khu vực sinh sống."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Chưa có thông tin nào liên quan đến chính sách sạc pin được đề cập trong cuộc trò chuyện.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "1e0ded4f-48c4-4e11-aedb-23d47fafdc6d",
+                    "quote": "Em có thể cho anh biết có những giải pháp nào cho việc sạc xe điện khi sống ở chung cư không có trụ sạc không?"
+                  }
+                ],
+                "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể sau khi khách hàng hỏi về giải pháp sạc."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "1e0ded4f-48c4-4e11-aedb-23d47fafdc6d",
+                "quote": "Em có thể cho anh biết có những giải pháp nào cho việc sạc xe điện khi sống ở chung cư không có trụ sạc không?"
+              }
+            ],
+            "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể sau khi khách hàng hỏi về giải pháp sạc.",
+            "improvement_suggestion": "Cần đề xuất một bước tiếp theo cụ thể để tiếp tục cuộc trò chuyện, chẳng hạn như tìm hiểu thêm về khu vực sinh sống của khách hàng."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã cung cấp thông tin về kiểu dáng và nội thất của xe VF 6."
+        ],
+        "summary_weaknesses": [
+          "Không khai thác nhu cầu và mối quan ngại của khách hàng về giải pháp sạc pin.",
+          "Không đề xuất bước tiếp theo cụ thể trong cuộc trò chuyện."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_03_VF6_APARTMENT",
+          "reason": "Cần cải thiện khả năng khai thác nhu cầu và mối quan ngại của khách hàng về giải pháp sạc pin."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_01_VF5_01",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_01_VF5_01",
+        "scenario_id": "SCENARIO_01_VF5_TAXI",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 2,
+        "overall_score": 2.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "16b84de8-ff34-4340-8564-50929787dafd",
+                "quote": "Để tính cho việc chạy dịch vụ, anh thường đi khoảng bao nhiêu km mỗi ngày và một tháng ạ?"
+              },
+              {
+                "message_id": "0d667a3a-b154-4952-a386-d85d9223ad6f",
+                "quote": "Hiện mỗi tháng anh chi khoảng bao nhiêu tiền xăng cho chiếc Vios? Anh có ghi lại số thực tế không?"
+              },
+              {
+                "message_id": "6c2a74fa-4ea8-40cc-886c-52c67e6877a8",
+                "quote": "Anh chạy vào những khung giờ nào, thường nghỉ giữa ca ở đâu và có thể dừng sạc lúc nào?"
+              }
+            ],
+            "reason": "Tư vấn viên đã tìm hiểu một số thông tin về quãng đường và chi phí xăng của khách hàng, nhưng chưa khai thác sâu hơn về các yếu tố ảnh hưởng đến quyết định của khách hàng như thời gian dừng sạc và lịch chạy.",
+            "improvement_suggestion": "Cần hỏi thêm về các yếu tố cụ thể như thời gian chạy, lịch trình làm việc và các yếu tố khác có thể ảnh hưởng đến quyết định của khách hàng."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Chưa có thông tin về việc tư vấn viên đã cung cấp thông tin sản phẩm cụ thể nào liên quan đến VF 5 Plus.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Chưa có cơ hội để tư vấn viên xử lý các phản đối cụ thể từ khách hàng trong cuộc trò chuyện này.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Chưa có thông tin về việc tư vấn viên đã đề cập đến chính sách giá hoặc điều kiện sạc nào trong cuộc trò chuyện này.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "4d366cf2-e696-405e-85fe-dcd5a5124410",
+                "quote": "Em sẽ tách tiền năng lượng, khoản vay và thời gian dừng xe trong bảng so sánh theo số liệu của anh. Anh đồng ý để em gửi bản giả định để mình cùng kiểm tra không ạ?"
+              }
+            ],
+            "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể là gửi bản giả định để kiểm tra, nhưng chưa có sự đồng ý rõ ràng từ khách hàng về việc này.",
+            "improvement_suggestion": "Cần xác nhận sự đồng ý của khách hàng một cách rõ ràng hơn và có thể đề xuất một thời gian cụ thể để tiếp tục cuộc trò chuyện."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã khai thác được một số thông tin cần thiết từ khách hàng để phục vụ cho việc so sánh chi phí sử dụng giữa hai xe."
+        ],
+        "summary_weaknesses": [
+          "Chưa khai thác đủ thông tin về nhu cầu và lo ngại của khách hàng, đặc biệt là về thời gian dừng sạc và lịch trình làm việc.",
+          "Chưa cung cấp thông tin sản phẩm cụ thể nào liên quan đến VF 5 Plus."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_02_VF5_TAXI",
+          "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng trong các tình huống cụ thể."
+        },
+        "review_status": "ai_draft"
+      }
+    },
+    {
+      "case_id": "JH26_06_VF5_06",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_06_VF5_06",
+        "scenario_id": "SCENARIO_01_VF5_TAXI",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 5,
+        "overall_score": 2.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "7a3ecf5c-b7b0-4dda-8eea-3482782c146d",
+                    "quote": "Tiền xăng Vios hiện tại mỗi tháng của anh khoảng bao nhiêu để mình tách khỏi khoản trả góp?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã hỏi về chi phí xăng của khách hàng để tách biệt với khoản trả góp, nhưng chưa khai thác sâu hơn về quãng đường và lịch chạy của khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "7a3ecf5c-b7b0-4dda-8eea-3482782c146d",
+                "quote": "Tiền xăng Vios hiện tại mỗi tháng của anh khoảng bao nhiêu để mình tách khỏi khoản trả góp?"
+              }
+            ],
+            "reason": "Tư vấn viên đã hỏi về chi phí xăng của khách hàng để tách biệt với khoản trả góp, nhưng chưa khai thác sâu hơn về quãng đường và lịch chạy của khách hàng.",
+            "improvement_suggestion": "Cần hỏi thêm về quãng đường chạy hàng ngày và lịch trình cụ thể của khách hàng để có thể đưa ra so sánh chi phí chính xác hơn."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "e5b858bb-77ad-4d48-bcf2-d0afcde6654d",
+                    "quote": "Lãi vay và ưu đãi phụ thuộc hồ sơ, ngân hàng và thời điểm; em cần xác minh bảng điều kiện trước khi lập phép tính."
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề cập đến các yếu tố ảnh hưởng đến lãi vay và ưu đãi, nhưng chưa cung cấp thông tin cụ thể về thời gian sạc và chi phí sạc."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "e5b858bb-77ad-4d48-bcf2-d0afcde6654d",
+                "quote": "Lãi vay và ưu đãi phụ thuộc hồ sơ, ngân hàng và thời điểm; em cần xác minh bảng điều kiện trước khi lập phép tính."
+              }
+            ],
+            "reason": "Tư vấn viên đã đề cập đến các yếu tố ảnh hưởng đến lãi vay và ưu đãi, nhưng chưa cung cấp thông tin cụ thể về thời gian sạc và chi phí sạc.",
+            "improvement_suggestion": "Cần cung cấp thông tin cụ thể về thời gian sạc và chi phí sạc để khách hàng có cái nhìn rõ hơn về chi phí sử dụng."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "dbe441d2-3a4f-4946-ab08-19efbaa3e662",
+                    "quote": "Anh nghe nói sạc ngoài lượt được ưu đãi vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã nhận diện được lo ngại của khách hàng về chi phí sạc và trả góp, nhưng chưa đưa ra giải pháp cụ thể để giải quyết."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "dbe441d2-3a4f-4946-ab08-19efbaa3e662",
+                "quote": "Anh nghe nói sạc ngoài lượt được ưu đãi vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+              },
+              {
+                "message_id": "677893aa-f28b-4e6a-b663-ae3042d07910",
+                "quote": "Em sẽ gửi hai kịch bản với giả định rõ ràng, để anh tự xem mức trả hàng tháng có phù hợp dòng tiền không."
+              }
+            ],
+            "reason": "Tư vấn viên đã nhận diện được lo ngại của khách hàng về chi phí sạc và trả góp, nhưng chưa đưa ra giải pháp cụ thể để giải quyết.",
+            "improvement_suggestion": "Cần đưa ra các giải pháp cụ thể để giải quyết lo ngại của khách hàng về chi phí sạc và trả góp, chẳng hạn như so sánh chi phí thực tế."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "e5b858bb-77ad-4d48-bcf2-d0afcde6654d",
+                    "quote": "Lãi vay và ưu đãi phụ thuộc hồ sơ, ngân hàng và thời điểm; em cần xác minh bảng điều kiện trước khi lập phép tính."
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề cập đến việc cần xác minh bảng điều kiện trước khi lập phép tính, nhưng chưa cung cấp thông tin cụ thể về các điều kiện ưu đãi."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "e5b858bb-77ad-4d48-bcf2-d0afcde6654d",
+                "quote": "Lãi vay và ưu đãi phụ thuộc hồ sơ, ngân hàng và thời điểm; em cần xác minh bảng điều kiện trước khi lập phép tính."
+              }
+            ],
+            "reason": "Tư vấn viên đã đề cập đến việc cần xác minh bảng điều kiện trước khi lập phép tính, nhưng chưa cung cấp thông tin cụ thể về các điều kiện ưu đãi.",
+            "improvement_suggestion": "Cần cung cấp thông tin cụ thể về các điều kiện ưu đãi và chi phí sạc để khách hàng có cái nhìn rõ hơn."
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "677893aa-f28b-4e6a-b663-ae3042d07910",
+                    "quote": "Em sẽ gửi hai kịch bản với giả định rõ ràng, để anh tự xem mức trả hàng tháng có phù hợp dòng tiền không."
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề xuất gửi hai kịch bản với giả định rõ ràng, nhưng chưa xác định rõ bước tiếp theo cụ thể."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "677893aa-f28b-4e6a-b663-ae3042d07910",
+                "quote": "Em sẽ gửi hai kịch bản với giả định rõ ràng, để anh tự xem mức trả hàng tháng có phù hợp dòng tiền không."
+              }
+            ],
+            "reason": "Tư vấn viên đã đề xuất gửi hai kịch bản với giả định rõ ràng, nhưng chưa xác định rõ bước tiếp theo cụ thể.",
+            "improvement_suggestion": "Cần xác định rõ bước tiếp theo cụ thể và hỏi khách hàng về sự đồng ý để tiến hành."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã hỏi về chi phí xăng của khách hàng để tách biệt với khoản trả góp."
+        ],
+        "summary_weaknesses": [
+          "Cần cung cấp thông tin cụ thể về thời gian sạc và chi phí sạc để khách hàng có cái nhìn rõ hơn.",
+          "Cần đưa ra các giải pháp cụ thể để giải quyết lo ngại của khách hàng về chi phí sạc và trả góp."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_02_VF5_TAXI",
+          "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng."
+        },
+        "review_status": "ai_draft"
+      },
+      "prediction_mode": "evidence_recovered",
+      "recovery": {
+        "protocol_version": "judge-evidence-only-v1",
+        "original_judge_draft": {
+          "evaluations": [
+            {
+              "criterion": "need_discovery",
+              "status": "assessed",
+              "score": 2,
+              "checks": [
+                {
+                  "check_id": "1",
+                  "verdict": "met",
+                  "evidence": [
+                    {
+                      "message_id": "7a3ecf5c-b7b0-4dda-8eea-3482782c146d",
+                      "quote": "Tiền xăng Vios hiện tại mỗi tháng của anh khoảng bao nhiêu để mình tách khỏi khoản trả góp?"
+                    }
+                  ],
+                  "reason": "Tư vấn viên đã hỏi về chi phí xăng của khách hàng để tách biệt với khoản trả góp, nhưng chưa khai thác sâu hơn về quãng đường và lịch chạy của khách hàng."
+                }
+              ],
+              "evidence": [
+                {
+                  "message_id": "7a3ecf5c-b7b0-4dda-8eea-3482782c146d",
+                  "quote": "Tiền xăng Vios hiện tại mỗi tháng của anh khoảng bao nhiêu để mình tách khỏi khoản trả góp?"
+                }
+              ],
+              "reason": "Tư vấn viên đã hỏi về chi phí xăng của khách hàng để tách biệt với khoản trả góp, nhưng chưa khai thác sâu hơn về quãng đường và lịch chạy của khách hàng.",
+              "improvement_suggestion": "Cần hỏi thêm về quãng đường chạy hàng ngày và lịch trình cụ thể của khách hàng để có thể đưa ra so sánh chi phí chính xác hơn."
+            },
+            {
+              "criterion": "product_knowledge",
+              "status": "assessed",
+              "score": 2,
+              "checks": [
+                {
+                  "check_id": "1",
+                  "verdict": "met",
+                  "evidence": [
+                    {
+                      "message_id": "e5b858bb-77ad-4d48-bcf2-d0afcde6654d",
+                      "quote": "Lãi vay và ưu đãi phụ thuộc hồ sơ, ngân hàng và thời điểm; em cần xác minh bảng điều kiện trước khi lập phép tính."
+                    }
+                  ],
+                  "reason": "Tư vấn viên đã đề cập đến các yếu tố ảnh hưởng đến lãi vay và ưu đãi, nhưng chưa cung cấp thông tin cụ thể về thời gian sạc và chi phí sạc."
+                }
+              ],
+              "evidence": [
+                {
+                  "message_id": "e5b858bb-77ad-4d48-bcf2-d0afcde6654d",
+                  "quote": "Lãi vay và ưu đãi phụ thuộc hồ sơ, ngân hàng và thời điểm; em cần xác minh bảng điều kiện trước khi lập phép tính."
+                }
+              ],
+              "reason": "Tư vấn viên đã đề cập đến các yếu tố ảnh hưởng đến lãi vay và ưu đãi, nhưng chưa cung cấp thông tin cụ thể về thời gian sạc và chi phí sạc.",
+              "improvement_suggestion": "Cần cung cấp thông tin cụ thể về thời gian sạc và chi phí sạc để khách hàng có cái nhìn rõ hơn về chi phí sử dụng."
+            },
+            {
+              "criterion": "objection_handling",
+              "status": "assessed",
+              "score": 2,
+              "checks": [
+                {
+                  "check_id": "1",
+                  "verdict": "met",
+                  "evidence": [
+                    {
+                      "message_id": "dbe441d2-3a4f-4946-ab08-19efbaa3e662",
+                      "quote": "Anh nghe nói sạc ngoài lượt được ưu đãi vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+                    }
+                  ],
+                  "reason": "Tư vấn viên đã nhận diện được lo ngại của khách hàng về chi phí sạc và trả góp, nhưng chưa đưa ra giải pháp cụ thể để giải quyết."
+                }
+              ],
+              "evidence": [
+                {
+                  "message_id": "dbe441d2-3a4f-4946-ab08-19efbaa3e662",
+                  "quote": "Anh nghe nói sạc ngoài lượt được ưu đãi vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+                }
+              ],
+              "reason": "Tư vấn viên đã nhận diện được lo ngại của khách hàng về chi phí sạc và trả góp, nhưng chưa đưa ra giải pháp cụ thể để giải quyết.",
+              "improvement_suggestion": "Cần đưa ra các giải pháp cụ thể để giải quyết lo ngại của khách hàng về chi phí sạc và trả góp, chẳng hạn như so sánh chi phí thực tế."
+            },
+            {
+              "criterion": "policy_accuracy",
+              "status": "assessed",
+              "score": 2,
+              "checks": [
+                {
+                  "check_id": "1",
+                  "verdict": "met",
+                  "evidence": [
+                    {
+                      "message_id": "e5b858bb-77ad-4d48-bcf2-d0afcde6654d",
+                      "quote": "Lãi vay và ưu đãi phụ thuộc hồ sơ, ngân hàng và thời điểm; em cần xác minh bảng điều kiện trước khi lập phép tính."
+                    }
+                  ],
+                  "reason": "Tư vấn viên đã đề cập đến việc cần xác minh bảng điều kiện trước khi lập phép tính, nhưng chưa cung cấp thông tin cụ thể về các điều kiện ưu đãi."
+                }
+              ],
+              "evidence": [
+                {
+                  "message_id": "e5b858bb-77ad-4d48-bcf2-d0afcde6654d",
+                  "quote": "Lãi vay và ưu đãi phụ thuộc hồ sơ, ngân hàng và thời điểm; em cần xác minh bảng điều kiện trước khi lập phép tính."
+                }
+              ],
+              "reason": "Tư vấn viên đã đề cập đến việc cần xác minh bảng điều kiện trước khi lập phép tính, nhưng chưa cung cấp thông tin cụ thể về các điều kiện ưu đãi.",
+              "improvement_suggestion": "Cần cung cấp thông tin cụ thể về các điều kiện ưu đãi và chi phí sạc để khách hàng có cái nhìn rõ hơn."
+            },
+            {
+              "criterion": "closing_next_step",
+              "status": "assessed",
+              "score": 2,
+              "checks": [
+                {
+                  "check_id": "1",
+                  "verdict": "met",
+                  "evidence": [
+                    {
+                      "message_id": "677893aa-f28b-4e6a-b663-ae3042d07910",
+                      "quote": "Em sẽ gửi hai kịch bản với giả định rõ ràng, để anh tự xem mức trả hàng tháng có phù hợp dòng tiền không."
+                    }
+                  ],
+                  "reason": "Tư vấn viên đã đề xuất gửi hai kịch bản với giả định rõ ràng, nhưng chưa xác định rõ bước tiếp theo cụ thể."
+                }
+              ],
+              "evidence": [
+                {
+                  "message_id": "677893aa-f28b-4e6a-b663-ae3042d07910",
+                  "quote": "Em sẽ gửi hai kịch bản với giả định rõ ràng, để anh tự xem mức trả hàng tháng có phù hợp dòng tiền không."
+                }
+              ],
+              "reason": "Tư vấn viên đã đề xuất gửi hai kịch bản với giả định rõ ràng, nhưng chưa xác định rõ bước tiếp theo cụ thể.",
+              "improvement_suggestion": "Cần xác định rõ bước tiếp theo cụ thể và hỏi khách hàng về sự đồng ý để tiến hành."
+            }
+          ],
+          "factual_findings": [],
+          "summary_strengths": [
+            "Tư vấn viên đã hỏi về chi phí xăng của khách hàng để tách biệt với khoản trả góp."
+          ],
+          "summary_weaknesses": [
+            "Cần cung cấp thông tin cụ thể về thời gian sạc và chi phí sạc để khách hàng có cái nhìn rõ hơn.",
+            "Cần đưa ra các giải pháp cụ thể để giải quyết lo ngại của khách hàng về chi phí sạc và trả góp."
+          ],
+          "recommended_next_practice": {
+            "type": "scenario",
+            "target_id": "SCENARIO_02_VF5_TAXI",
+            "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng."
+          }
+        },
+        "evidence_patches": [
+          {
+            "criterion": "objection_handling",
+            "missing_roles": [
+              "advisor"
+            ],
+            "added_message_ids": [
+              "677893aa-f28b-4e6a-b663-ae3042d07910"
+            ],
+            "support_explanation": "The advisor addresses the customer's concern about the costs by offering to provide scenarios for monthly payments, which helps to alleviate the customer's objection."
+          }
+        ],
+        "expert_labels_in_model_context": false,
+        "predicted_status_and_scores_preserved": true
+      }
+    },
+    {
+      "case_id": "JH26_13_VF7_13",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_13_VF7_13",
+        "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 5,
+        "overall_score": 2.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "90ec76e2-ccb9-4a4f-bf4c-3fc417d88927",
+                "quote": "Em hiểu chị thích trải nghiệm mới còn anh nhà muốn lựa chọn quen thuộc. Điều gì mỗi người lo nhất ạ?"
+              },
+              {
+                "message_id": "3a072e65-e474-4492-8b05-fd43c3ff6ee1",
+                "quote": "Những chuyến gia đình mình đi xa và việc sử dụng hàng ngày khác nhau thế nào để em chọn thông tin cần đối chiếu?"
+              }
+            ],
+            "reason": "Tư vấn viên đã nhận diện được nhu cầu của khách hàng bằng cách hỏi về những lo lắng của từng thành viên trong gia đình. Tuy nhiên, chưa khai thác sâu hơn về các yếu tố quyết định cụ thể của gia đình.",
+            "improvement_suggestion": "Cần làm rõ hơn về ai là người có tiếng nói quyết định trong gia đình và các yếu tố cụ thể mà họ quan tâm khi chọn xe."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "b1a3eb9d-a7fc-4a91-b305-4a25634e3422",
+                "quote": "Em không thể bảo đảm giá bán lại sau ba năm; mình có thể cùng xem nguồn về chính sách hiện hành và đánh giá nhu cầu sử dụng."
+              }
+            ],
+            "reason": "Tư vấn viên đã cung cấp thông tin về chính sách hiện hành nhưng chưa nêu rõ các tính năng cụ thể của VF 7 so với CX-5 để làm nổi bật giá trị của sản phẩm.",
+            "improvement_suggestion": "Cần cung cấp thông tin chi tiết về các tính năng nổi bật của VF 7, đặc biệt là những điểm khác biệt so với CX-5 mà khách hàng quan tâm."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "b1a3eb9d-a7fc-4a91-b305-4a25634e3422",
+                "quote": "Em không thể bảo đảm giá bán lại sau ba năm; mình có thể cùng xem nguồn về chính sách hiện hành và đánh giá nhu cầu sử dụng."
+              },
+              {
+                "message_id": "f242d78d-d309-4afb-947d-f717c93a9966",
+                "quote": "Nếu cả hai đồng ý, em mời anh chị cùng xem xe hoặc lái thử, mỗi người tự kiểm tra tiêu chí của mình."
+              }
+            ],
+            "reason": "Tư vấn viên đã nhận diện và phản hồi một cách hợp lý với lo ngại về giá trị bán lại của xe điện, nhưng chưa tìm hiểu sâu về nguyên nhân lo lắng của khách hàng.",
+            "improvement_suggestion": "Cần tìm hiểu nguyên nhân cụ thể của lo lắng về khấu hao và cung cấp thông tin cụ thể về chính sách bảo hành và giá trị giữ giá của VF 7."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "b1a3eb9d-a7fc-4a91-b305-4a25634e3422",
+                "quote": "Em không thể bảo đảm giá bán lại sau ba năm; mình có thể cùng xem nguồn về chính sách hiện hành và đánh giá nhu cầu sử dụng."
+              }
+            ],
+            "reason": "Tư vấn viên đã không hứa hẹn về giá trị bán lại, nhưng chưa cung cấp thông tin cụ thể về chính sách bảo hành và các điều kiện liên quan đến giá trị giữ giá của xe.",
+            "improvement_suggestion": "Cần cung cấp thông tin rõ ràng về chính sách bảo hành và các yếu tố ảnh hưởng đến giá trị giữ giá của VF 7."
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [],
+            "evidence": [
+              {
+                "message_id": "f242d78d-d309-4afb-947d-f717c93a9966",
+                "quote": "Nếu cả hai đồng ý, em mời anh chị cùng xem xe hoặc lái thử, mỗi người tự kiểm tra tiêu chí của mình."
+              }
+            ],
+            "reason": "Tư vấn viên đã đề xuất một bước tiếp theo cụ thể là mời khách hàng lái thử xe, nhưng chưa xác nhận sự đồng ý của khách hàng trước khi tiến hành bước tiếp theo.",
+            "improvement_suggestion": "Cần xác nhận sự đồng ý của cả hai vợ chồng trước khi đề xuất bước tiếp theo để đảm bảo rằng cả hai đều sẵn sàng tham gia."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã nhận diện được nhu cầu và lo lắng của khách hàng."
+        ],
+        "summary_weaknesses": [
+          "Cần cải thiện khả năng cung cấp thông tin chi tiết về sản phẩm và chính sách bảo hành."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_02_VF7_VS_CX5",
+          "reason": "Cần thực hành thêm về việc cung cấp thông tin sản phẩm và chính sách bảo hành để tăng cường khả năng thuyết phục khách hàng."
+        },
+        "review_status": "ai_draft"
+      },
+      "prediction_mode": "native"
+    },
+    {
+      "case_id": "JH26_02_VF5_02",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_02_VF5_02",
+        "scenario_id": "SCENARIO_01_VF5_TAXI",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 4,
+        "overall_score": 1.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "need_discovery_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "ce0c9af6-da1e-40dd-b508-f703c6eb7cb7",
+                    "quote": "VF 5 Plus lăn bánh khoảng bao nhiêu? Anh đang chạy Vios dịch vụ nên muốn biết chi phí sử dụng và thời gian sạc ảnh hưởng đến thu nhập như thế nào."
+                  },
+                  {
+                    "message_id": "b58eab51-9291-45bc-bed1-f8e90190f1f2",
+                    "quote": "Em nghe nói sạc ngoài vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+                  }
+                ],
+                "reason": "Tư vấn viên không khai thác thông tin về quãng đường thực tế và chi phí xăng của khách hàng, dẫn đến việc không xác định được nhu cầu cụ thể của khách hàng về chi phí sử dụng xe điện so với xe xăng."
+              },
+              {
+                "check_id": "need_discovery_2",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "64ac4efe-5273-497a-b1a5-3960fa4d6598",
+                    "quote": "Em có thể cho anh biết cụ thể chi phí sạc ngoài là bao nhiêu không? Anh cần biết rõ để tính toán xem có hợp lý không."
+                  }
+                ],
+                "reason": "Tư vấn viên không hỏi về lịch trình chạy xe của khách hàng, điều này làm giảm khả năng hiểu rõ nhu cầu và lo ngại của khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "ce0c9af6-da1e-40dd-b508-f703c6eb7cb7",
+                "quote": "VF 5 Plus lăn bánh khoảng bao nhiêu? Anh đang chạy Vios dịch vụ nên muốn biết chi phí sử dụng và thời gian sạc ảnh hưởng đến thu nhập như thế nào."
+              },
+              {
+                "message_id": "b58eab51-9291-45bc-bed1-f8e90190f1f2",
+                "quote": "Em nghe nói sạc ngoài vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+              },
+              {
+                "message_id": "64ac4efe-5273-497a-b1a5-3960fa4d6598",
+                "quote": "Em có thể cho anh biết cụ thể chi phí sạc ngoài là bao nhiêu không? Anh cần biết rõ để tính toán xem có hợp lý không."
+              }
+            ],
+            "reason": "Tư vấn viên không khai thác nhu cầu và thông tin cần thiết từ khách hàng để xác định rõ hơn về chi phí và điều kiện sử dụng xe điện.",
+            "improvement_suggestion": "Cần hỏi thêm về quãng đường thực tế mà khách hàng chạy hàng ngày và chi phí xăng hiện tại để so sánh với chi phí sử dụng xe điện."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "product_knowledge_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "3969fcee-d95c-4807-b088-9775f7a57265",
+                    "quote": "VF 5 Plus là dòng xe điện nhìn hiện đại, đi phố rất hợp anh ạ."
+                  },
+                  {
+                    "message_id": "41f715ca-cbf7-4d1c-92d8-fd09f67f881c",
+                    "quote": "Nội thất xe khá gọn và thiết kế cũng trẻ trung, anh có thể xem nhiều màu."
+                  }
+                ],
+                "reason": "Tư vấn viên không cung cấp thông tin cụ thể về chi phí sạc và thời gian sạc, điều này là rất quan trọng cho khách hàng đang cân nhắc chuyển đổi từ xe xăng sang xe điện."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "64ac4efe-5273-497a-b1a5-3960fa4d6598",
+                "quote": "Em có thể cho anh biết cụ thể chi phí sạc ngoài là bao nhiêu không? Anh cần biết rõ để tính toán xem có hợp lý không."
+              }
+            ],
+            "reason": "Tư vấn viên không cung cấp thông tin chi tiết về chi phí sạc và điều kiện sử dụng xe điện, điều này làm giảm khả năng thuyết phục khách hàng.",
+            "improvement_suggestion": "Cần nắm rõ thông tin về chi phí sạc, thời gian sạc và các điều kiện ưu đãi để cung cấp cho khách hàng."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "objection_handling_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "b58eab51-9291-45bc-bed1-f8e90190f1f2",
+                    "quote": "Em nghe nói sạc ngoài vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+                  },
+                  {
+                    "message_id": "64ac4efe-5273-497a-b1a5-3960fa4d6598",
+                    "quote": "Em có thể cho anh biết cụ thể chi phí sạc ngoài là bao nhiêu không? Anh cần biết rõ để tính toán xem có hợp lý không."
+                  }
+                ],
+                "reason": "Tư vấn viên không ghi nhận và phản hồi đúng mức độ lo ngại của khách hàng về chi phí sạc và trả góp, dẫn đến việc không giải quyết được những băn khoăn của khách."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "6216c56e-db50-45b5-ad79-531202cf5d90",
+                "quote": "Anh vẫn chưa yên tâm về điểm này. Bây giờ anh phải ghé siêu thị mua ít đồ. Mình tạm dừng ở đây; em gửi thông tin phù hợp với trường hợp của anh sau nhé."
+              }
+            ],
+            "reason": "Tư vấn viên không phản hồi đúng cách với các lo ngại của khách hàng về chi phí và thời gian sạc, điều này làm giảm sự tin tưởng của khách hàng.",
+            "improvement_suggestion": "Cần ghi nhận lo ngại của khách hàng và cung cấp thông tin cụ thể về chi phí sạc và các điều kiện liên quan."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có thông tin cụ thể nào về chính sách sạc hoặc điều kiện ưu đãi được đề cập trong cuộc trò chuyện.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "closing_next_step_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "6216c56e-db50-45b5-ad79-531202cf5d90",
+                    "quote": "Anh vẫn chưa yên tâm về điểm này. Bây giờ anh phải ghé siêu thị mua ít đồ. Mình tạm dừng ở đây; em gửi thông tin phù hợp với trường hợp của anh sau nhé."
+                  }
+                ],
+                "reason": "Tư vấn viên không đề xuất một bước tiếp theo cụ thể nào để tiếp tục cuộc trò chuyện, dẫn đến việc khách hàng không có động lực để tiếp tục."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "86531e98-9472-4718-ae41-6a1427782330",
+                "quote": "Anh ghé xem xe trước đi, lúc đó em giới thiệu thêm các tính năng."
+              }
+            ],
+            "reason": "Tư vấn viên không tạo ra một bước tiếp theo rõ ràng để giữ chân khách hàng, điều này có thể dẫn đến việc khách hàng không quay lại.",
+            "improvement_suggestion": "Cần đề xuất một bước tiếp theo cụ thể, chẳng hạn như hẹn gặp hoặc gửi thông tin chi tiết về chi phí sạc và điều kiện ưu đãi."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [],
+        "summary_weaknesses": [
+          "Không khai thác nhu cầu và thông tin cần thiết từ khách hàng.",
+          "Không cung cấp thông tin chi tiết về chi phí sạc và thời gian sạc."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_02_VF5_TAXI",
+          "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng trong tình huống cụ thể."
+        },
+        "review_status": "ai_draft"
+      },
+      "prediction_mode": "schema_evidence_recovered",
+      "recovery": {
+        "protocol_version": "judge-schema-evidence-only-v2",
+        "original_judge_draft": {
+          "evaluations": [
+            {
+              "criterion": "need_discovery",
+              "status": "assessed",
+              "score": 1,
+              "checks": [
+                {
+                  "check_id": "need_discovery_1",
+                  "verdict": "missed",
+                  "evidence": [
+                    {
+                      "message_id": "ce0c9af6-da1e-40dd-b508-f703c6eb7cb7",
+                      "quote": "VF 5 Plus lăn bánh khoảng bao nhiêu? Anh đang chạy Vios dịch vụ nên muốn biết chi phí sử dụng và thời gian sạc ảnh hưởng đến thu nhập như thế nào."
+                    },
+                    {
+                      "message_id": "b58eab51-9291-45bc-bed1-f8e90190f1f2",
+                      "quote": "Em nghe nói sạc ngoài vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+                    }
+                  ],
+                  "reason": "Tư vấn viên không khai thác thông tin về quãng đường thực tế và chi phí xăng của khách hàng, dẫn đến việc không xác định được nhu cầu cụ thể của khách hàng về chi phí sử dụng xe điện so với xe xăng."
+                },
+                {
+                  "check_id": "need_discovery_2",
+                  "verdict": "missed",
+                  "evidence": [
+                    {
+                      "message_id": "64ac4efe-5273-497a-b1a5-3960fa4d6598",
+                      "quote": "Em có thể cho anh biết cụ thể chi phí sạc ngoài là bao nhiêu không? Anh cần biết rõ để tính toán xem có hợp lý không."
+                    }
+                  ],
+                  "reason": "Tư vấn viên không hỏi về lịch trình chạy xe của khách hàng, điều này làm giảm khả năng hiểu rõ nhu cầu và lo ngại của khách hàng."
+                }
+              ],
+              "evidence": [],
+              "reason": "Tư vấn viên không khai thác nhu cầu và thông tin cần thiết từ khách hàng để xác định rõ hơn về chi phí và điều kiện sử dụng xe điện.",
+              "improvement_suggestion": "Cần hỏi thêm về quãng đường thực tế mà khách hàng chạy hàng ngày và chi phí xăng hiện tại để so sánh với chi phí sử dụng xe điện."
+            },
+            {
+              "criterion": "product_knowledge",
+              "status": "assessed",
+              "score": 1,
+              "checks": [
+                {
+                  "check_id": "product_knowledge_1",
+                  "verdict": "missed",
+                  "evidence": [
+                    {
+                      "message_id": "3969fcee-d95c-4807-b088-9775f7a57265",
+                      "quote": "VF 5 Plus là dòng xe điện nhìn hiện đại, đi phố rất hợp anh ạ."
+                    },
+                    {
+                      "message_id": "41f715ca-cbf7-4d1c-92d8-fd09f67f881c",
+                      "quote": "Nội thất xe khá gọn và thiết kế cũng trẻ trung, anh có thể xem nhiều màu."
+                    }
+                  ],
+                  "reason": "Tư vấn viên không cung cấp thông tin cụ thể về chi phí sạc và thời gian sạc, điều này là rất quan trọng cho khách hàng đang cân nhắc chuyển đổi từ xe xăng sang xe điện."
+                }
+              ],
+              "evidence": [],
+              "reason": "Tư vấn viên không cung cấp thông tin chi tiết về chi phí sạc và điều kiện sử dụng xe điện, điều này làm giảm khả năng thuyết phục khách hàng.",
+              "improvement_suggestion": "Cần nắm rõ thông tin về chi phí sạc, thời gian sạc và các điều kiện ưu đãi để cung cấp cho khách hàng."
+            },
+            {
+              "criterion": "objection_handling",
+              "status": "assessed",
+              "score": 1,
+              "checks": [
+                {
+                  "check_id": "objection_handling_1",
+                  "verdict": "missed",
+                  "evidence": [
+                    {
+                      "message_id": "b58eab51-9291-45bc-bed1-f8e90190f1f2",
+                      "quote": "Em nghe nói sạc ngoài vẫn tốn tiền, rồi còn trả góp nữa. Chạy nhiều như anh thì đổi từ Vios có đáng không em?"
+                    },
+                    {
+                      "message_id": "64ac4efe-5273-497a-b1a5-3960fa4d6598",
+                      "quote": "Em có thể cho anh biết cụ thể chi phí sạc ngoài là bao nhiêu không? Anh cần biết rõ để tính toán xem có hợp lý không."
+                    }
+                  ],
+                  "reason": "Tư vấn viên không ghi nhận và phản hồi đúng mức độ lo ngại của khách hàng về chi phí sạc và trả góp, dẫn đến việc không giải quyết được những băn khoăn của khách."
+                }
+              ],
+              "evidence": [],
+              "reason": "Tư vấn viên không phản hồi đúng cách với các lo ngại của khách hàng về chi phí và thời gian sạc, điều này làm giảm sự tin tưởng của khách hàng.",
+              "improvement_suggestion": "Cần ghi nhận lo ngại của khách hàng và cung cấp thông tin cụ thể về chi phí sạc và các điều kiện liên quan."
+            },
+            {
+              "criterion": "policy_accuracy",
+              "status": "unassessed",
+              "score": null,
+              "checks": [],
+              "evidence": [],
+              "reason": "Không có thông tin cụ thể nào về chính sách sạc hoặc điều kiện ưu đãi được đề cập trong cuộc trò chuyện.",
+              "improvement_suggestion": null
+            },
+            {
+              "criterion": "closing_next_step",
+              "status": "assessed",
+              "score": 1,
+              "checks": [
+                {
+                  "check_id": "closing_next_step_1",
+                  "verdict": "missed",
+                  "evidence": [
+                    {
+                      "message_id": "6216c56e-db50-45b5-ad79-531202cf5d90",
+                      "quote": "Anh vẫn chưa yên tâm về điểm này. Bây giờ anh phải ghé siêu thị mua ít đồ. Mình tạm dừng ở đây; em gửi thông tin phù hợp với trường hợp của anh sau nhé."
+                    }
+                  ],
+                  "reason": "Tư vấn viên không đề xuất một bước tiếp theo cụ thể nào để tiếp tục cuộc trò chuyện, dẫn đến việc khách hàng không có động lực để tiếp tục."
+                }
+              ],
+              "evidence": [],
+              "reason": "Tư vấn viên không tạo ra một bước tiếp theo rõ ràng để giữ chân khách hàng, điều này có thể dẫn đến việc khách hàng không quay lại.",
+              "improvement_suggestion": "Cần đề xuất một bước tiếp theo cụ thể, chẳng hạn như hẹn gặp hoặc gửi thông tin chi tiết về chi phí sạc và điều kiện ưu đãi."
+            }
+          ],
+          "factual_findings": [],
+          "summary_strengths": [],
+          "summary_weaknesses": [
+            "Không khai thác nhu cầu và thông tin cần thiết từ khách hàng.",
+            "Không cung cấp thông tin chi tiết về chi phí sạc và thời gian sạc."
+          ],
+          "recommended_next_practice": {
+            "type": "scenario",
+            "target_id": "SCENARIO_02_VF5_TAXI",
+            "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng trong tình huống cụ thể."
+          }
+        },
+        "evidence_patches": [
+          {
+            "criterion": "need_discovery",
+            "missing_roles": [
+              "any_transcript_message"
+            ],
+            "added_message_ids": [
+              "ce0c9af6-da1e-40dd-b508-f703c6eb7cb7",
+              "b58eab51-9291-45bc-bed1-f8e90190f1f2",
+              "64ac4efe-5273-497a-b1a5-3960fa4d6598"
+            ],
+            "support_explanation": "Khách hàng đã đặt câu hỏi về chi phí sử dụng và thời gian sạc, cho thấy nhu cầu tìm hiểu thông tin cụ thể."
+          },
+          {
+            "criterion": "product_knowledge",
+            "missing_roles": [
+              "any_transcript_message"
+            ],
+            "added_message_ids": [
+              "64ac4efe-5273-497a-b1a5-3960fa4d6598"
+            ],
+            "support_explanation": "Khách hàng yêu cầu thông tin chi tiết về chi phí sạc, cho thấy sự thiếu hụt thông tin từ tư vấn viên."
+          },
+          {
+            "criterion": "objection_handling",
+            "missing_roles": [
+              "any_transcript_message"
+            ],
+            "added_message_ids": [
+              "6216c56e-db50-45b5-ad79-531202cf5d90"
+            ],
+            "support_explanation": "Khách hàng bày tỏ sự không yên tâm về thông tin và yêu cầu thêm thông tin, cho thấy tư vấn viên chưa xử lý được lo ngại của khách hàng."
+          },
+          {
+            "criterion": "closing_next_step",
+            "missing_roles": [
+              "any_transcript_message"
+            ],
+            "added_message_ids": [
+              "86531e98-9472-4718-ae41-6a1427782330"
+            ],
+            "support_explanation": "Tư vấn viên đã đề xuất một bước tiếp theo là khách hàng ghé xem xe, nhưng không rõ ràng và không đủ để giữ chân khách hàng."
+          }
+        ],
+        "expert_labels_in_model_context": false,
+        "predicted_status_and_scores_preserved": true,
+        "strict_schema_revalidated": true
+      }
+    },
+    {
+      "case_id": "JH26_07_VF5_07",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_07_VF5_07",
+        "scenario_id": "SCENARIO_01_VF5_TAXI",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 4,
+        "overall_score": 1.25,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "need_discovery_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "12d592a8-e1c0-49c5-aef4-534087155939",
+                    "quote": "VF 5 Plus lăn bánh khoảng bao nhiêu? Anh đang chạy Vios dịch vụ, muốn biết chi phí sử dụng xe điện này so với Vios ra sao."
+                  },
+                  {
+                    "message_id": "e3b7e78b-1a10-4c37-8300-ed86c74425e5",
+                    "quote": "Em nghe nói sạc ngoài vẫn tốn tiền và có trả góp nữa. Anh chạy nhiều như vậy thì đổi từ Vios có đáng không em?"
+                  }
+                ],
+                "reason": "Tư vấn viên không khai thác nhu cầu cụ thể của khách hàng về chi phí sử dụng xe điện so với xe xăng, không hỏi về quãng đường thực tế hay chi phí xăng của Vios, dẫn đến thiếu thông tin để tư vấn chính xác hơn."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "12d592a8-e1c0-49c5-aef4-534087155939",
+                "quote": "VF 5 Plus lăn bánh khoảng bao nhiêu? Anh đang chạy Vios dịch vụ, muốn biết chi phí sử dụng xe điện này so với Vios ra sao."
+              },
+              {
+                "message_id": "e3b7e78b-1a10-4c37-8300-ed86c74425e5",
+                "quote": "Em nghe nói sạc ngoài vẫn tốn tiền và có trả góp nữa. Anh chạy nhiều như vậy thì đổi từ Vios có đáng không em?"
+              }
+            ],
+            "reason": "Tư vấn viên không khai thác nhu cầu cụ thể của khách hàng về chi phí sử dụng xe điện so với xe xăng, không hỏi về quãng đường thực tế hay chi phí xăng của Vios, dẫn đến thiếu thông tin để tư vấn chính xác hơn.",
+            "improvement_suggestion": "Cần hỏi thêm về quãng đường chạy hàng ngày của khách và chi phí xăng thực tế của Vios để có thể so sánh chi phí sử dụng giữa hai loại xe."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "product_knowledge_1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "97a41034-097c-4123-92c7-1ce933fff897",
+                    "quote": "Em có thể cho anh biết cụ thể chi phí sạc ngoài và cách trả góp cho VF 5 Plus không? Anh cần biết rõ để tính toán."
+                  }
+                ],
+                "reason": "Tư vấn viên đã nhận thức được yêu cầu của khách hàng về chi phí sạc và trả góp, nhưng chưa cung cấp thông tin cụ thể."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "97a41034-097c-4123-92c7-1ce933fff897",
+                "quote": "Em có thể cho anh biết cụ thể chi phí sạc ngoài và cách trả góp cho VF 5 Plus không? Anh cần biết rõ để tính toán."
+              },
+              {
+                "message_id": "bb38eba5-8094-4d49-be4f-7f4ad4744197",
+                "quote": "VF 5 Plus đang được nhiều người quan tâm, kiểu dáng cũng đẹp anh ạ."
+              },
+              {
+                "message_id": "6df5e14a-fdb8-4101-90ac-e1d4c04fc52e",
+                "quote": "Chuyện dừng sạc và mất cuốc chắc không đáng lo đâu. Anh cứ xem xe trước rồi tính tiếp."
+              }
+            ],
+            "reason": "Tư vấn viên đã nhận thức được yêu cầu của khách hàng về chi phí sạc và trả góp, nhưng chưa cung cấp thông tin cụ thể.",
+            "improvement_suggestion": "Cần cung cấp thông tin chi tiết về chi phí sạc và các điều kiện trả góp cho VF 5 Plus để đáp ứng yêu cầu của khách hàng."
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "objection_handling_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "e3b7e78b-1a10-4c37-8300-ed86c74425e5",
+                    "quote": "Em nghe nói sạc ngoài vẫn tốn tiền và có trả góp nữa. Anh chạy nhiều như vậy thì đổi từ Vios có đáng không em?"
+                  },
+                  {
+                    "message_id": "6df5e14a-fdb8-4101-90ac-e1d4c04fc52e",
+                    "quote": "Chuyện dừng sạc và mất cuốc chắc không đáng lo đâu. Anh cứ xem xe trước rồi tính tiếp."
+                  }
+                ],
+                "reason": "Tư vấn viên đã không ghi nhận lo ngại của khách hàng về chi phí sạc và thời gian dừng sạc, dẫn đến phản hồi không thuyết phục."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "e3b7e78b-1a10-4c37-8300-ed86c74425e5",
+                "quote": "Em nghe nói sạc ngoài vẫn tốn tiền và có trả góp nữa. Anh chạy nhiều như vậy thì đổi từ Vios có đáng không em?"
+              },
+              {
+                "message_id": "6df5e14a-fdb8-4101-90ac-e1d4c04fc52e",
+                "quote": "Chuyện dừng sạc và mất cuốc chắc không đáng lo đâu. Anh cứ xem xe trước rồi tính tiếp."
+              }
+            ],
+            "reason": "Tư vấn viên đã không ghi nhận lo ngại của khách hàng về chi phí sạc và thời gian dừng sạc, dẫn đến phản hồi không thuyết phục.",
+            "improvement_suggestion": "Cần ghi nhận và phản hồi cụ thể về lo ngại của khách hàng, giải thích rõ ràng về chi phí và thời gian sạc, đồng thời đề xuất cách kiểm chứng thực tế."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Chưa có thông tin cụ thể về chính sách ưu đãi sạc và điều kiện áp dụng trong cuộc trò chuyện.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 1,
+            "checks": [
+              {
+                "check_id": "closing_next_step_1",
+                "verdict": "missed",
+                "evidence": [
+                  {
+                    "message_id": "6df5e14a-fdb8-4101-90ac-e1d4c04fc52e",
+                    "quote": "Chuyện dừng sạc và mất cuốc chắc không đáng lo đâu. Anh cứ xem xe trước rồi tính tiếp."
+                  }
+                ],
+                "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể nào cho khách hàng, dẫn đến thiếu sự rõ ràng trong việc chốt lại cuộc trò chuyện."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "6df5e14a-fdb8-4101-90ac-e1d4c04fc52e",
+                "quote": "Chuyện dừng sạc và mất cuốc chắc không đáng lo đâu. Anh cứ xem xe trước rồi tính tiếp."
+              }
+            ],
+            "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể nào cho khách hàng, dẫn đến thiếu sự rõ ràng trong việc chốt lại cuộc trò chuyện.",
+            "improvement_suggestion": "Cần đề xuất một bước tiếp theo cụ thể, chẳng hạn như hẹn gặp để tư vấn chi tiết hơn hoặc gửi thông tin về chi phí sạc và trả góp."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [],
+        "summary_weaknesses": [
+          "Không khai thác nhu cầu cụ thể của khách hàng về chi phí sử dụng xe điện so với xe xăng.",
+          "Thiếu thông tin chi tiết về chi phí sạc và trả góp cho VF 5 Plus để đáp ứng yêu cầu của khách hàng.  "
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_02_VF5_TAXI",
+          "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng trong bối cảnh cụ thể."
+        },
+        "review_status": "ai_draft"
+      },
+      "prediction_mode": "evidence_recovered",
+      "recovery": {
+        "protocol_version": "judge-evidence-only-v1",
+        "original_judge_draft": {
+          "evaluations": [
+            {
+              "criterion": "need_discovery",
+              "status": "assessed",
+              "score": 1,
+              "checks": [
+                {
+                  "check_id": "need_discovery_1",
+                  "verdict": "missed",
+                  "evidence": [
+                    {
+                      "message_id": "12d592a8-e1c0-49c5-aef4-534087155939",
+                      "quote": "VF 5 Plus lăn bánh khoảng bao nhiêu? Anh đang chạy Vios dịch vụ, muốn biết chi phí sử dụng xe điện này so với Vios ra sao."
+                    },
+                    {
+                      "message_id": "e3b7e78b-1a10-4c37-8300-ed86c74425e5",
+                      "quote": "Em nghe nói sạc ngoài vẫn tốn tiền và có trả góp nữa. Anh chạy nhiều như vậy thì đổi từ Vios có đáng không em?"
+                    }
+                  ],
+                  "reason": "Tư vấn viên không khai thác nhu cầu cụ thể của khách hàng về chi phí sử dụng xe điện so với xe xăng, không hỏi về quãng đường thực tế hay chi phí xăng của Vios, dẫn đến thiếu thông tin để tư vấn chính xác hơn."
+                }
+              ],
+              "evidence": [
+                {
+                  "message_id": "12d592a8-e1c0-49c5-aef4-534087155939",
+                  "quote": "VF 5 Plus lăn bánh khoảng bao nhiêu? Anh đang chạy Vios dịch vụ, muốn biết chi phí sử dụng xe điện này so với Vios ra sao."
+                },
+                {
+                  "message_id": "e3b7e78b-1a10-4c37-8300-ed86c74425e5",
+                  "quote": "Em nghe nói sạc ngoài vẫn tốn tiền và có trả góp nữa. Anh chạy nhiều như vậy thì đổi từ Vios có đáng không em?"
+                }
+              ],
+              "reason": "Tư vấn viên không khai thác nhu cầu cụ thể của khách hàng về chi phí sử dụng xe điện so với xe xăng, không hỏi về quãng đường thực tế hay chi phí xăng của Vios, dẫn đến thiếu thông tin để tư vấn chính xác hơn.",
+              "improvement_suggestion": "Cần hỏi thêm về quãng đường chạy hàng ngày của khách và chi phí xăng thực tế của Vios để có thể so sánh chi phí sử dụng giữa hai loại xe."
+            },
+            {
+              "criterion": "product_knowledge",
+              "status": "assessed",
+              "score": 2,
+              "checks": [
+                {
+                  "check_id": "product_knowledge_1",
+                  "verdict": "met",
+                  "evidence": [
+                    {
+                      "message_id": "97a41034-097c-4123-92c7-1ce933fff897",
+                      "quote": "Em có thể cho anh biết cụ thể chi phí sạc ngoài và cách trả góp cho VF 5 Plus không? Anh cần biết rõ để tính toán."
+                    }
+                  ],
+                  "reason": "Tư vấn viên đã nhận thức được yêu cầu của khách hàng về chi phí sạc và trả góp, nhưng chưa cung cấp thông tin cụ thể."
+                }
+              ],
+              "evidence": [
+                {
+                  "message_id": "97a41034-097c-4123-92c7-1ce933fff897",
+                  "quote": "Em có thể cho anh biết cụ thể chi phí sạc ngoài và cách trả góp cho VF 5 Plus không? Anh cần biết rõ để tính toán."
+                }
+              ],
+              "reason": "Tư vấn viên đã nhận thức được yêu cầu của khách hàng về chi phí sạc và trả góp, nhưng chưa cung cấp thông tin cụ thể.",
+              "improvement_suggestion": "Cần cung cấp thông tin chi tiết về chi phí sạc và các điều kiện trả góp cho VF 5 Plus để đáp ứng yêu cầu của khách hàng."
+            },
+            {
+              "criterion": "objection_handling",
+              "status": "assessed",
+              "score": 1,
+              "checks": [
+                {
+                  "check_id": "objection_handling_1",
+                  "verdict": "missed",
+                  "evidence": [
+                    {
+                      "message_id": "e3b7e78b-1a10-4c37-8300-ed86c74425e5",
+                      "quote": "Em nghe nói sạc ngoài vẫn tốn tiền và có trả góp nữa. Anh chạy nhiều như vậy thì đổi từ Vios có đáng không em?"
+                    },
+                    {
+                      "message_id": "6df5e14a-fdb8-4101-90ac-e1d4c04fc52e",
+                      "quote": "Chuyện dừng sạc và mất cuốc chắc không đáng lo đâu. Anh cứ xem xe trước rồi tính tiếp."
+                    }
+                  ],
+                  "reason": "Tư vấn viên đã không ghi nhận lo ngại của khách hàng về chi phí sạc và thời gian dừng sạc, dẫn đến phản hồi không thuyết phục."
+                }
+              ],
+              "evidence": [
+                {
+                  "message_id": "e3b7e78b-1a10-4c37-8300-ed86c74425e5",
+                  "quote": "Em nghe nói sạc ngoài vẫn tốn tiền và có trả góp nữa. Anh chạy nhiều như vậy thì đổi từ Vios có đáng không em?"
+                },
+                {
+                  "message_id": "6df5e14a-fdb8-4101-90ac-e1d4c04fc52e",
+                  "quote": "Chuyện dừng sạc và mất cuốc chắc không đáng lo đâu. Anh cứ xem xe trước rồi tính tiếp."
+                }
+              ],
+              "reason": "Tư vấn viên đã không ghi nhận lo ngại của khách hàng về chi phí sạc và thời gian dừng sạc, dẫn đến phản hồi không thuyết phục.",
+              "improvement_suggestion": "Cần ghi nhận và phản hồi cụ thể về lo ngại của khách hàng, giải thích rõ ràng về chi phí và thời gian sạc, đồng thời đề xuất cách kiểm chứng thực tế."
+            },
+            {
+              "criterion": "policy_accuracy",
+              "status": "unassessed",
+              "score": null,
+              "checks": [],
+              "evidence": [],
+              "reason": "Chưa có thông tin cụ thể về chính sách ưu đãi sạc và điều kiện áp dụng trong cuộc trò chuyện.",
+              "improvement_suggestion": null
+            },
+            {
+              "criterion": "closing_next_step",
+              "status": "assessed",
+              "score": 1,
+              "checks": [
+                {
+                  "check_id": "closing_next_step_1",
+                  "verdict": "missed",
+                  "evidence": [
+                    {
+                      "message_id": "6df5e14a-fdb8-4101-90ac-e1d4c04fc52e",
+                      "quote": "Chuyện dừng sạc và mất cuốc chắc không đáng lo đâu. Anh cứ xem xe trước rồi tính tiếp."
+                    }
+                  ],
+                  "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể nào cho khách hàng, dẫn đến thiếu sự rõ ràng trong việc chốt lại cuộc trò chuyện."
+                }
+              ],
+              "evidence": [
+                {
+                  "message_id": "6df5e14a-fdb8-4101-90ac-e1d4c04fc52e",
+                  "quote": "Chuyện dừng sạc và mất cuốc chắc không đáng lo đâu. Anh cứ xem xe trước rồi tính tiếp."
+                }
+              ],
+              "reason": "Tư vấn viên không đề xuất bước tiếp theo cụ thể nào cho khách hàng, dẫn đến thiếu sự rõ ràng trong việc chốt lại cuộc trò chuyện.",
+              "improvement_suggestion": "Cần đề xuất một bước tiếp theo cụ thể, chẳng hạn như hẹn gặp để tư vấn chi tiết hơn hoặc gửi thông tin về chi phí sạc và trả góp."
+            }
+          ],
+          "factual_findings": [],
+          "summary_strengths": [],
+          "summary_weaknesses": [
+            "Không khai thác nhu cầu cụ thể của khách hàng về chi phí sử dụng xe điện so với xe xăng.",
+            "Thiếu thông tin chi tiết về chi phí sạc và trả góp cho VF 5 Plus để đáp ứng yêu cầu của khách hàng.  "
+          ],
+          "recommended_next_practice": {
+            "type": "scenario",
+            "target_id": "SCENARIO_02_VF5_TAXI",
+            "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng trong bối cảnh cụ thể."
+          }
+        },
+        "evidence_patches": [
+          {
+            "criterion": "product_knowledge",
+            "missing_roles": [
+              "advisor"
+            ],
+            "added_message_ids": [
+              "bb38eba5-8094-4d49-be4f-7f4ad4744197",
+              "6df5e14a-fdb8-4101-90ac-e1d4c04fc52e"
+            ],
+            "support_explanation": "The advisor acknowledges the interest in the VF 5 Plus and provides some general information about its popularity and design, but does not directly answer the customer's specific questions about charging costs and installment plans."
+          }
+        ],
+        "expert_labels_in_model_context": false,
+        "predicted_status_and_scores_preserved": true,
+        "strict_schema_revalidated": true
+      }
+    },
+    {
+      "case_id": "JH26_18_VF6_18",
+      "evaluation": {
+        "session_id": "judge-calibration-JH26_18_VF6_18",
+        "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+        "rubric_version": "sales-rubric-v3",
+        "assessed_criteria_count": 3,
+        "overall_score": 2.0,
+        "passed": null,
+        "evaluations": [
+          {
+            "criterion": "need_discovery",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "2c6aedb3-13a9-4be0-b967-4cbea45d0f7a",
+                    "quote": "Anh thường đi bao nhiêu km một ngày và hầm chung cư có cho đỗ xe điện không ạ?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã hỏi về khoảng cách đi lại hàng ngày của khách hàng, điều này giúp xác định nhu cầu sạc pin. Tuy nhiên, cần khai thác thêm về ưu tiên và sự lo lắng của khách hàng để có thể điều chỉnh câu hỏi cho phù hợp hơn."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "2c6aedb3-13a9-4be0-b967-4cbea45d0f7a",
+                "quote": "Anh thường đi bao nhiêu km một ngày và hầm chung cư có cho đỗ xe điện không ạ?"
+              }
+            ],
+            "reason": "Tư vấn viên đã hỏi về quãng đường đi lại hàng ngày của khách hàng, điều này cho thấy sự chú ý đến nhu cầu của khách. Tuy nhiên, không có sự làm rõ về ưu tiên hoặc sự lo lắng của khách hàng liên quan đến việc sạc pin.",
+            "improvement_suggestion": "Cần hỏi thêm về những lo ngại cụ thể của khách hàng về việc sạc pin, chẳng hạn như tần suất sạc mà họ cảm thấy thoải mái hoặc các giải pháp thay thế mà họ đã nghĩ đến."
+          },
+          {
+            "criterion": "product_knowledge",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có thông tin cụ thể về sản phẩm được cung cấp trong đoạn hội thoại.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "objection_handling",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "86cfcb74-a113-4197-9028-2cc52ba294d5",
+                    "quote": "Em có thể cùng anh kiểm tra điểm sạc trên tuyến chính, thời gian di chuyển và tình trạng trạm, nhưng không dám nói chắc luôn có chỗ."
+                  }
+                ],
+                "reason": "Tư vấn viên đã nhận ra mối quan tâm của khách hàng về việc tìm kiếm trạm sạc và đã đề xuất kiểm tra tình trạng trạm sạc, điều này cho thấy sự phản hồi phù hợp với mối lo ngại của khách hàng."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "86cfcb74-a113-4197-9028-2cc52ba294d5",
+                "quote": "Em có thể cùng anh kiểm tra điểm sạc trên tuyến chính, thời gian di chuyển và tình trạng trạm, nhưng không dám nói chắc luôn có chỗ."
+              }
+            ],
+            "reason": "Tư vấn viên đã nhận ra mối quan tâm của khách hàng về việc tìm kiếm trạm sạc và đã đề xuất kiểm tra tình trạng trạm sạc. Tuy nhiên, cần phải làm rõ hơn về các lựa chọn và giải pháp thay thế cho khách hàng.",
+            "improvement_suggestion": "Cần tìm hiểu sâu hơn về nguyên nhân lo lắng của khách hàng và cung cấp thông tin cụ thể hơn về các lựa chọn sạc có thể có."
+          },
+          {
+            "criterion": "policy_accuracy",
+            "status": "unassessed",
+            "score": null,
+            "checks": [],
+            "evidence": [],
+            "reason": "Không có thông tin về chính sách sạc pin được đề cập trong đoạn hội thoại.",
+            "improvement_suggestion": null
+          },
+          {
+            "criterion": "closing_next_step",
+            "status": "assessed",
+            "score": 2,
+            "checks": [
+              {
+                "check_id": "1",
+                "verdict": "met",
+                "evidence": [
+                  {
+                    "message_id": "53dbe48a-e27e-457c-844c-9fbfa720a1d4",
+                    "quote": "Anh muốn em gửi hai phương án để anh thử trực tiếp một lần trước khi quyết định mua không?"
+                  }
+                ],
+                "reason": "Tư vấn viên đã đề xuất gửi hai phương án cho khách hàng để thử nghiệm, điều này cho thấy sự chủ động trong việc tiến tới bước tiếp theo."
+              }
+            ],
+            "evidence": [
+              {
+                "message_id": "53dbe48a-e27e-457c-844c-9fbfa720a1d4",
+                "quote": "Anh muốn em gửi hai phương án để anh thử trực tiếp một lần trước khi quyết định mua không?"
+              }
+            ],
+            "reason": "Tư vấn viên đã đề xuất gửi hai phương án cho khách hàng để thử nghiệm, điều này cho thấy sự chủ động trong việc tiến tới bước tiếp theo. Tuy nhiên, cần phải đảm bảo rằng khách hàng đồng ý với các phương án đó.",
+            "improvement_suggestion": "Cần xác nhận rõ ràng sự đồng ý của khách hàng về các phương án trước khi tiến hành."
+          }
+        ],
+        "factual_findings": [],
+        "summary_strengths": [
+          "Tư vấn viên đã hỏi về quãng đường đi lại hàng ngày của khách hàng."
+        ],
+        "summary_weaknesses": [
+          "Chưa khai thác sâu về ưu tiên và lo lắng của khách hàng.",
+          "Chưa cung cấp thông tin cụ thể về chính sách sạc pin."
+        ],
+        "recommended_next_practice": {
+          "type": "scenario",
+          "target_id": "SCENARIO_03_VF6_APARTMENT",
+          "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng liên quan đến việc sạc pin."
+        },
+        "review_status": "ai_draft"
+      },
+      "prediction_mode": "schema_evidence_recovered",
+      "recovery": {
+        "protocol_version": "judge-schema-evidence-only-v2",
+        "original_judge_draft": {
+          "evaluations": [
+            {
+              "criterion": "need_discovery",
+              "status": "assessed",
+              "score": 2,
+              "checks": [
+                {
+                  "check_id": "1",
+                  "verdict": "met",
+                  "evidence": [
+                    {
+                      "message_id": "2c6aedb3-13a9-4be0-b967-4cbea45d0f7a",
+                      "quote": "Anh thường đi bao nhiêu km một ngày và hầm chung cư có cho đỗ xe điện không ạ?"
+                    }
+                  ],
+                  "reason": "Tư vấn viên đã hỏi về khoảng cách đi lại hàng ngày của khách hàng, điều này giúp xác định nhu cầu sạc pin. Tuy nhiên, cần khai thác thêm về ưu tiên và sự lo lắng của khách hàng để có thể điều chỉnh câu hỏi cho phù hợp hơn."
+                }
+              ],
+              "evidence": [],
+              "reason": "Tư vấn viên đã hỏi về quãng đường đi lại hàng ngày của khách hàng, điều này cho thấy sự chú ý đến nhu cầu của khách. Tuy nhiên, không có sự làm rõ về ưu tiên hoặc sự lo lắng của khách hàng liên quan đến việc sạc pin.",
+              "improvement_suggestion": "Cần hỏi thêm về những lo ngại cụ thể của khách hàng về việc sạc pin, chẳng hạn như tần suất sạc mà họ cảm thấy thoải mái hoặc các giải pháp thay thế mà họ đã nghĩ đến."
+            },
+            {
+              "criterion": "product_knowledge",
+              "status": "unassessed",
+              "score": null,
+              "checks": [],
+              "evidence": [],
+              "reason": "Không có thông tin cụ thể về sản phẩm được cung cấp trong đoạn hội thoại.",
+              "improvement_suggestion": null
+            },
+            {
+              "criterion": "objection_handling",
+              "status": "assessed",
+              "score": 2,
+              "checks": [
+                {
+                  "check_id": "1",
+                  "verdict": "met",
+                  "evidence": [
+                    {
+                      "message_id": "86cfcb74-a113-4197-9028-2cc52ba294d5",
+                      "quote": "Em có thể cùng anh kiểm tra điểm sạc trên tuyến chính, thời gian di chuyển và tình trạng trạm, nhưng không dám nói chắc luôn có chỗ."
+                    }
+                  ],
+                  "reason": "Tư vấn viên đã nhận ra mối quan tâm của khách hàng về việc tìm kiếm trạm sạc và đã đề xuất kiểm tra tình trạng trạm sạc, điều này cho thấy sự phản hồi phù hợp với mối lo ngại của khách hàng."
+                }
+              ],
+              "evidence": [],
+              "reason": "Tư vấn viên đã nhận ra mối quan tâm của khách hàng về việc tìm kiếm trạm sạc và đã đề xuất kiểm tra tình trạng trạm sạc. Tuy nhiên, cần phải làm rõ hơn về các lựa chọn và giải pháp thay thế cho khách hàng.",
+              "improvement_suggestion": "Cần tìm hiểu sâu hơn về nguyên nhân lo lắng của khách hàng và cung cấp thông tin cụ thể hơn về các lựa chọn sạc có thể có."
+            },
+            {
+              "criterion": "policy_accuracy",
+              "status": "unassessed",
+              "score": null,
+              "checks": [],
+              "evidence": [],
+              "reason": "Không có thông tin về chính sách sạc pin được đề cập trong đoạn hội thoại.",
+              "improvement_suggestion": null
+            },
+            {
+              "criterion": "closing_next_step",
+              "status": "assessed",
+              "score": 2,
+              "checks": [
+                {
+                  "check_id": "1",
+                  "verdict": "met",
+                  "evidence": [
+                    {
+                      "message_id": "53dbe48a-e27e-457c-844c-9fbfa720a1d4",
+                      "quote": "Anh muốn em gửi hai phương án để anh thử trực tiếp một lần trước khi quyết định mua không?"
+                    }
+                  ],
+                  "reason": "Tư vấn viên đã đề xuất gửi hai phương án cho khách hàng để thử nghiệm, điều này cho thấy sự chủ động trong việc tiến tới bước tiếp theo."
+                }
+              ],
+              "evidence": [],
+              "reason": "Tư vấn viên đã đề xuất gửi hai phương án cho khách hàng để thử nghiệm, điều này cho thấy sự chủ động trong việc tiến tới bước tiếp theo. Tuy nhiên, cần phải đảm bảo rằng khách hàng đồng ý với các phương án đó.",
+              "improvement_suggestion": "Cần xác nhận rõ ràng sự đồng ý của khách hàng về các phương án trước khi tiến hành."
+            }
+          ],
+          "factual_findings": [],
+          "summary_strengths": [
+            "Tư vấn viên đã hỏi về quãng đường đi lại hàng ngày của khách hàng."
+          ],
+          "summary_weaknesses": [
+            "Chưa khai thác sâu về ưu tiên và lo lắng của khách hàng.",
+            "Chưa cung cấp thông tin cụ thể về chính sách sạc pin."
+          ],
+          "recommended_next_practice": {
+            "type": "scenario",
+            "target_id": "SCENARIO_03_VF6_APARTMENT",
+            "reason": "Cần cải thiện khả năng khai thác nhu cầu và xử lý phản đối của khách hàng liên quan đến việc sạc pin."
+          }
+        },
+        "evidence_patches": [
+          {
+            "criterion": "need_discovery",
+            "missing_roles": [
+              "advisor"
+            ],
+            "added_message_ids": [
+              "2c6aedb3-13a9-4be0-b967-4cbea45d0f7a"
+            ],
+            "support_explanation": "Tư vấn viên đã hỏi về quãng đường đi lại hàng ngày của khách hàng, điều này cho thấy sự chú ý đến nhu cầu của khách."
+          },
+          {
+            "criterion": "objection_handling",
+            "missing_roles": [
+              "advisor"
+            ],
+            "added_message_ids": [
+              "86cfcb74-a113-4197-9028-2cc52ba294d5"
+            ],
+            "support_explanation": "Tư vấn viên đã nhận ra mối quan tâm của khách hàng về việc tìm kiếm trạm sạc và đã đề xuất kiểm tra tình trạng trạm sạc."
+          },
+          {
+            "criterion": "closing_next_step",
+            "missing_roles": [
+              "advisor"
+            ],
+            "added_message_ids": [
+              "53dbe48a-e27e-457c-844c-9fbfa720a1d4"
+            ],
+            "support_explanation": "Tư vấn viên đã đề xuất gửi hai phương án cho khách hàng để thử nghiệm, điều này cho thấy sự chủ động trong việc tiến tới bước tiếp theo."
+          }
+        ],
+        "expert_labels_in_model_context": false,
+        "predicted_status_and_scores_preserved": true,
+        "strict_schema_revalidated": true
+      }
+    }
+  ],
+  "failures": [
+    {
+      "case_id": "JH26_04_VF5_04",
+      "error_type": "EvidenceRecoveryStageError",
+      "reason": "evidence recovery failed at evidence_patch_validation",
+      "diagnostics": {
+        "failure_stage": "evidence_patch_validation",
+        "failure_kind": "patch_required_role",
+        "exception_chain": [
+          {
+            "exception_type": "EvidenceRecoveryStageError",
+            "recovery_stage": "evidence_patch_validation"
+          },
+          {
+            "exception_type": "EvaluationError"
+          }
+        ],
+        "recovery_stage": "evidence_patch_validation"
+      }
+    },
+    {
+      "case_id": "JH26_08_VF7_08",
+      "error_type": "EvidenceRecoveryStageError",
+      "reason": "evidence recovery failed at evidence_patch_validation",
+      "diagnostics": {
+        "failure_stage": "evidence_patch_validation",
+        "failure_kind": "patch_required_role",
+        "exception_chain": [
+          {
+            "exception_type": "EvidenceRecoveryStageError",
+            "recovery_stage": "evidence_patch_validation"
+          },
+          {
+            "exception_type": "EvaluationError"
+          }
+        ],
+        "recovery_stage": "evidence_patch_validation"
+      }
+    },
+    {
+      "case_id": "JH26_09_VF7_09",
+      "error_type": "EvidenceRecoveryStageError",
+      "reason": "evidence recovery failed at evidence_patch_validation",
+      "diagnostics": {
+        "failure_stage": "evidence_patch_validation",
+        "failure_kind": "patch_required_role",
+        "exception_chain": [
+          {
+            "exception_type": "EvidenceRecoveryStageError",
+            "recovery_stage": "evidence_patch_validation"
+          },
+          {
+            "exception_type": "EvaluationError"
+          }
+        ],
+        "recovery_stage": "evidence_patch_validation"
+      }
+    }
+  ]
+}

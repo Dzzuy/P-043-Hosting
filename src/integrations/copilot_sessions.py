@@ -335,10 +335,20 @@ class SQLCopilotSessionsRepository:
             "expires_at": now + self.ttl,
         }
         with db_connection(self.engine.begin, backend="session") as connection:
-            connection.execute(delete(self.sessions).where(
-                self.sessions.c.expires_at <= now,
-                self._scope(self.sessions, owner_id),
-            ))
+            expired_sids = [
+                r[0]
+                for r in connection.execute(
+                    select(self.sessions.c.session_id).where(
+                        self.sessions.c.expires_at <= now,
+                        self._scope(self.sessions, owner_id),
+                    )
+                ).fetchall()
+            ]
+            if expired_sids:
+                connection.execute(delete(self.sessions).where(self.sessions.c.session_id.in_(expired_sids)))
+                connection.execute(delete(self.conversations).where(self.conversations.c.session_id.in_(expired_sids)))
+                connection.execute(delete(self.messages).where(self.messages.c.session_id.in_(expired_sids)))
+                connection.execute(delete(self.memories).where(self.memories.c.session_id.in_(expired_sids)))
             if revision is None:
                 connection.execute(insert(self.sessions).values(session_id=session_id, owner_id=owner_id, **values))
             else:
@@ -682,31 +692,4 @@ class SQLCopilotSessionsRepository:
                 ).order_by(self.messages.c.seq).limit(20)
             ).mappings()]
 
-    def save_rich_turn(
-        self,
-        session_id: str,
-        owner_id: str,
-        request_id: str,
-        user_query: str,
-        response_data: dict[str, Any],
-        customer_context: str = "",
-        revision: int | None = None,
-    ):
-        """Atomically record user question and assistant response via unified save method."""
-        dialogue = [
-            {"role": "user", "content": user_query},
-            {"role": "assistant", "content": response_data.get("answer", "")[:4000]},
-        ]
-        return self.save(
-            session_id=session_id,
-            owner_id=owner_id,
-            history=dialogue,
-            customer_context=customer_context,
-            revision=revision,
-            rich_turn={
-                "request_id": request_id,
-                "user_query": user_query,
-                "response_data": response_data,
-            },
-        )
 

@@ -1,0 +1,100 @@
+/* Account card opened from the avatar in the shared top bar (advisor + manager). */
+.account-menu { position: relative; }
+
+.account-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 4px 10px 4px 4px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #0B1220;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color .2s ease;
+}
+.account-menu-trigger:hover,
+.account-menu-trigger.is-open { background: #F4F7FE; }
+.account-menu-trigger:focus-visible { outline: 2px solid #2F6BFF; outline-offset: 2px; }
+.account-menu-trigger .user-details { display: flex; flex-direction: column; }
+.account-menu-chevron { width: 14px; height: 14px; color: #566176; transition: transform .2s ease; }
+.account-menu-trigger.is-open .account-menu-chevron { transform: rotate(180deg); }
+
+.account-menu-card {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 60;
+  width: 260px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #FFFFFF;
+  border: 1px solid #DCE4F5;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(11, 18, 32, .16);
+  color: #0B1220;
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+}
+
+.account-menu-identity { display: flex; align-items: center; gap: 12px; }
+.account-menu-avatar {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: #E8EFFF;
+  color: #1646C8;
+  font-size: 16px;
+  font-weight: 700;
+}
+.account-menu-names { display: flex; flex-direction: column; min-width: 0; }
+.account-menu-names strong { font-size: 15px; overflow-wrap: anywhere; }
+.account-menu-names span { font-size: 13px; color: #566176; overflow-wrap: anywhere; }
+
+.account-menu-facts {
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #EEF2FA;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 12px;
+  font-size: 13px;
+}
+.account-menu-facts dt { color: #566176; }
+.account-menu-facts dd { margin: 0; font-weight: 600; }
+
+.account-menu-logout {
+  min-height: 44px;
+  border: 1px solid #DCE4F5;
+  border-radius: 12px;
+  background: #FFFFFF;
+  color: #B42318;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.account-menu-logout svg { width: 16px; height: 16px; }
+.account-menu-logout:hover { background: #FEF3F2; border-color: #F4C7C3; }
+.account-menu-logout:focus-visible { outline: 2px solid #2F6BFF; outline-offset: 2px; }
+
+@media (max-width: 700px) {
+  .account-menu-trigger .user-details { display: none; }
+  .account-menu-card { width: min(260px, calc(100vw - 32px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .account-menu-trigger,
+  .account-menu-chevron { transition: none; }
+}

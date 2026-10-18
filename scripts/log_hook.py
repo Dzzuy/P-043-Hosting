@@ -4,14 +4,18 @@ Shared AI hook logger — works with Claude Code, Gemini CLI, Codex, Cursor, Cop
 Reads JSON from stdin, normalizes to common format, appends to .ai-log/session.jsonl
 """
 
+from __future__ import annotations
+
 import json
 import os
+import shlex
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 VN_TZ = timezone(timedelta(hours=7))
+REPO_ROOT = Path(__file__).resolve().parents[1]
 PROMPT_EVENTS = {
     "claude": "UserPromptSubmit",
     "gemini": "BeforeAgent",
@@ -23,8 +27,12 @@ PROMPT_EVENTS = {
 
 def git(cmd):
     try:
-        return subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL).strip()
-    except Exception:
+        # Trust only this checkout for this invocation; never change global Git trust.
+        args = ["git", "-c", f"safe.directory={REPO_ROOT.as_posix()}", *shlex.split(cmd)[1:]]
+        return subprocess.check_output(
+            args, cwd=REPO_ROOT, text=True, encoding="utf-8", stderr=subprocess.DEVNULL, timeout=3,
+        ).strip()
+    except (OSError, subprocess.SubprocessError):
         return ""
 
 
@@ -43,25 +51,29 @@ def detect_tool(data: dict) -> str:
     if tool_env:
         return tool_env
     # Heuristics
-    if "transcript_path" in data:
+    if "transcript_path" in data or "transcriptPath" in data:
         return "codex"
-    if data.get("hook_event_name", "").startswith(("Before", "After", "Session", "Pre", "Notification")):
+    hook_event = data.get("hook_event_name") or data.get("hookEventName", "")
+    if hook_event.startswith(("Before", "After", "Session", "Pre", "Notification")):
         return "gemini"
-    if data.get("hook_event_name", "")[0:1].islower():
+    if hook_event[0:1].islower():
         # camelCase event names → Cursor or Copilot
         if "workspace_roots" in data:
             return "cursor"
         if "toolName" in data:
             return "copilot"
-    if "hook_event_name" in data:
+    if hook_event:
         return "claude"
     return "unknown"
 
 
 def normalize(data: dict, tool: str) -> dict | None:
     """Normalize tool-specific payload to common log entry."""
-    event = data.get("hook_event_name") or data.get("event", "")
+    event = data.get("hook_event_name") or data.get("hookEventName") or data.get("event", "")
     if event != PROMPT_EVENTS.get(tool):
+        return None
+    prompt = data.get("prompt")
+    if not isinstance(prompt, str) or not prompt.strip():
         return None
     ts = datetime.now(VN_TZ).isoformat()
 
@@ -71,6 +83,7 @@ def normalize(data: dict, tool: str) -> dict | None:
     # queue forever.
     origin = git("git remote get-url origin")
     if not origin:
+        print("[ai-log] Cannot resolve Git origin; prompt was not recorded.", file=sys.stderr)
         return None
     repo = origin.rstrip("/").split("/")[-1]
     if repo.endswith(".git"):
@@ -80,7 +93,7 @@ def normalize(data: dict, tool: str) -> dict | None:
         "ts": ts,
         "tool": tool,
         "event": event,
-        "session_id": (data.get("session_id") or data.get("conversation_id") or data.get("generation_id") or ""),
+        "session_id": (data.get("session_id") or data.get("sessionId") or data.get("conversation_id") or data.get("generation_id") or ""),
         "model": data.get("model", ""),
         "repo": repo,
         "branch": git("git rev-parse --abbrev-ref HEAD"),
@@ -132,8 +145,8 @@ def normalize(data: dict, tool: str) -> dict | None:
         base.update(
             {
                 "prompt": data.get("prompt", "")[:1000],
-                "turn_id": data.get("turn_id", ""),
-                "transcript_path": data.get("transcript_path", ""),
+                "turn_id": (data.get("turn_id") or data.get("turnId") or ""),
+                "transcript_path": (data.get("transcript_path") or data.get("transcriptPath") or ""),
             }
         )
 
@@ -181,7 +194,9 @@ def main():
         sys.exit(0)
 
     log_dir = Path(os.environ.get("AI_LOG_DIR", ".ai-log"))
-    log_dir.mkdir(exist_ok=True)
+    if not log_dir.is_absolute():
+        log_dir = REPO_ROOT / log_dir
+    log_dir.mkdir(parents=True, exist_ok=True)
     log_file = log_dir / "session.jsonl"
 
     with open(log_file, "a", encoding="utf-8") as f:

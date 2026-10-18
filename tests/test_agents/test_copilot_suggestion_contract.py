@@ -4,7 +4,7 @@ import pytest
 from pydantic import ValidationError
 
 from src.agents.copilot import nodes
-from src.agents.copilot.state import ABSTAIN_ANSWER, CopilotResponse, GeneratedAnswer, GroundedClaim, SelfCheckVerdict
+from src.agents.copilot.state import ABSTAIN_ANSWER, CopilotResponse, GeneratedAnswer
 from src.api.copilot import CopilotQueryRequest, query_copilot
 from tests.test_agents.test_copilot_agentic import checked, draft_state, generated, scripted
 
@@ -23,7 +23,7 @@ def test_abstention_cannot_expose_sales_suggestions():
 
 def test_suggestion_count_and_size_are_bounded():
     with pytest.raises(ValidationError):
-        GeneratedAnswer(**generated(), sales_actions=["a"] * 4)
+        GeneratedAnswer(**generated(), suggested_next_question="a" * 501)
     with pytest.raises(ValidationError):
         GeneratedAnswer(**generated(), suggested_message="x" * 501)
 
@@ -33,12 +33,16 @@ def test_suggestion_count_and_size_are_bounded():
 async def test_only_reviewed_suggestions_are_published(monkeypatch, safe):
     state = draft_state()
     state["draft_answer"] = "VF 5 có quãng đường 326 km NEDC [C1]"
-    state["suggested_message"] = "Em có thể gửi tài liệu VF 5 để đối chiếu."
-    state["suggested_next_question"] = "Anh/chị có chỗ sạc ở nhà không?"
+    state["generated_answer"].suggested_message = "Em có thể gửi tài liệu VF 5 để đối chiếu."
+    state["generated_answer"].suggested_next_question = "Anh/chị có chỗ sạc ở nhà không?"
     verdict = checked()
     verdict["suggestions_safe"] = safe
     scripted(monkeypatch, [verdict])
     state.update(await nodes.check_grounding(state))
+    if not safe:
+        assert not state.get("verified_snapshot")
+        assert state["route"] == "generate_answer"
+        return
     result = (await nodes.finalize_response(state))["final_response"]
     assert bool(result.suggested_message) == safe
     assert result.talking_points == [result.answer]
@@ -50,12 +54,9 @@ async def test_finalizer_keeps_whole_long_claims_within_public_limits():
     long_answer = "\n".join("x" * 1000 + " [C1]" for _ in range(12))
     state.update(
         draft_answer=long_answer,
-        self_check=SelfCheckVerdict(grounded=True, missing_information=["Thông tin một phần"]),
     )
-    response = (await nodes.finalize_response(state))["final_response"]
-    assert len(response.answer) <= 12000 and response.status == "partial"
-    assert all(line == "x" * 1000 + " [C1]" for line in response.answer.splitlines())
-    assert response.talking_points == []
+    result = await nodes.finalize_response(state)
+    assert result["route"] == "fallback_response"
 
 
 @pytest.mark.asyncio
@@ -63,7 +64,6 @@ async def test_finalizer_with_rejected_sources_cannot_loop_back():
     state = draft_state()
     state.update(
         draft_answer="VF 5 [C99]",
-        self_check=SelfCheckVerdict(grounded=True),
     )
     state.update(await nodes.finalize_response(state))
     response = (await nodes.fallback_response(state))["final_response"]

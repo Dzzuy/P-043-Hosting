@@ -314,21 +314,38 @@ def validate_prediction(raw: Any, case: dict[str, Any]) -> SessionEvaluationResu
     return result
 
 
-def compare(dataset: dict[str, Any], prediction_file: dict[str, Any]) -> dict[str, Any]:
-    """Compare stored production-schema outputs: {provenance, predictions:[{case_id,evaluation}]}."""
-    report = validate_dataset(dataset)
+def parse_predictions(
+    dataset: dict[str, Any], prediction_file: dict[str, Any]
+) -> tuple[dict[str, SessionEvaluationResult], list[dict[str, Any]]]:
+    """Validate cases independently; reject every occurrence of a duplicate case."""
     prediction_file = obj(prediction_file, "prediction_file")
     nonempty(prediction_file.get("provenance"), "prediction_file.provenance")
     predictions = prediction_file.get("predictions")
     require(isinstance(predictions, list), "predictions must be a list")
     cases = {case["case_id"]: case for case in dataset["cases"]}
     parsed: dict[str, SessionEvaluationResult] = {}
-    for raw in predictions:
-        item = obj(raw, "prediction")
-        case_id = nonempty(item.get("case_id"), "prediction.case_id")
-        require(case_id in cases, f"unknown prediction case_id: {case_id}")
-        require(case_id not in parsed, f"duplicate prediction case_id: {case_id}")
-        parsed[case_id] = validate_prediction(item.get("evaluation"), cases[case_id])
+    errors = []
+    seen: set[str] = set()
+    for index, raw in enumerate(predictions):
+        case_id = None
+        try:
+            item = obj(raw, "prediction")
+            case_id = nonempty(item.get("case_id"), "prediction.case_id")
+            require(case_id in cases, f"unknown prediction case_id: {case_id}")
+            require(case_id not in seen, f"duplicate prediction case_id: {case_id}")
+            seen.add(case_id)
+            parsed[case_id] = validate_prediction(item.get("evaluation"), cases[case_id])
+        except ValueError as exc:
+            parsed.pop(case_id, None)
+            errors.append({"prediction_index": index, "case_id": case_id, "reason": str(exc)})
+    return parsed, errors
+
+
+def compare(dataset: dict[str, Any], prediction_file: dict[str, Any]) -> dict[str, Any]:
+    """Compare stored production-schema outputs: {provenance, predictions:[{case_id,evaluation}]}."""
+    report = validate_dataset(dataset)
+    parsed, errors = parse_predictions(dataset, prediction_file)
+    cases = {case["case_id"]: case for case in dataset["cases"]}
     missing_predictions = sorted(set(cases) - set(parsed))
     scored_total = 0
     absolute_error_sum = 0
@@ -399,21 +416,85 @@ def compare(dataset: dict[str, Any], prediction_file: dict[str, Any]) -> dict[st
         report["diagnostics"].append(f"Missing predictions: {', '.join(missing_predictions)}")
     if report["missing_expert_label_count"]:
         report["diagnostics"].append("Pending expert labels were excluded from all metrics.")
+    if errors:
+        report["validation_errors"] = errors
+        report["diagnostics"].append("Invalid case predictions were excluded from all metrics.")
     return report
+
+
+def mean_metrics(metrics: list[dict[str, Any]]) -> dict[str, Any]:
+    """Average numeric leaves, excluding undefined values rather than treating them as zero."""
+    means = {}
+    for key in metrics[0]:
+        values = [item[key] for item in metrics]
+        if isinstance(values[0], dict):
+            means[key] = mean_metrics(values)
+        else:
+            numeric = [value for value in values if type(value) in (int, float)]
+            means[key] = sum(numeric) / len(numeric) if numeric else None
+    return means
+
+
+def compare_runs(dataset: dict[str, Any], prediction_files: list[dict[str, Any]]) -> dict[str, Any]:
+    """Compare repeated predictions and measure stability only where every run is valid."""
+    require(len(prediction_files) > 1, "stability requires at least two prediction files")
+    runs = [compare(dataset, prediction_file) for prediction_file in prediction_files]
+    parsed = [parse_predictions(dataset, prediction_file)[0] for prediction_file in prediction_files]
+    labels = []
+    compared = identical = flips = 0
+    score_ranges = []
+    for case in dataset["cases"]:
+        for criterion, label in case["expert_labels"].items():
+            if label["review_status"] != APPROVED:
+                continue
+            predictions = []
+            for index, predictions_by_case in enumerate(parsed):
+                result = predictions_by_case.get(case["case_id"])
+                ai = next(item for item in result.evaluations if item.criterion.value == criterion) if result else None
+                predictions.append(
+                    {"run_index": index, "status": ai.status.value if ai else None, "score": ai.score if ai else None}
+                )
+            labels.append({"case_id": case["case_id"], "criterion": criterion, "predictions": predictions})
+            if any(item["status"] is None for item in predictions):
+                continue
+            compared += 1
+            identical += int(len({(item["status"], item["score"]) for item in predictions}) == 1)
+            statuses = {item["status"] for item in predictions}
+            flips += int(len(statuses) > 1)
+            if statuses == {CriterionStatus.ASSESSED.value}:
+                scores = [item["score"] for item in predictions]
+                score_ranges.append(max(scores) - min(scores))
+    return {
+        "mode": "compare",
+        "runs": runs,
+        "mean_metrics": mean_metrics([report["metrics"] for report in runs]),
+        "stability": {
+            "labels_compared": compared,
+            "identical_across_runs": {"count": identical, "rate": identical / compared if compared else None},
+            "status_flip_count": flips,
+            "mean_score_range": sum(score_ranges) / len(score_ranges) if score_ranges else None,
+            "per_label": labels,
+        },
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mode", choices=("validate", "compare", "live"), default="validate")
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
-    parser.add_argument("--predictions", type=Path)
+    parser.add_argument("--predictions", type=Path, nargs="+")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
     try:
         dataset = read_json(args.dataset)
         if args.mode == "compare":
             require(args.predictions is not None, "--predictions is required for compare")
-            report = compare(dataset, read_json(args.predictions))
+            prediction_files = [read_json(path) for path in args.predictions]
+            report = (
+                compare(dataset, prediction_files[0])
+                if len(prediction_files) == 1
+                else compare_runs(dataset, prediction_files)
+            )
         elif args.mode == "live":
             report = validate_dataset(dataset)
             report.update(mode="live", status="NOT_EVALUATED", metrics=None)

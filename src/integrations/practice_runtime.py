@@ -31,6 +31,7 @@ from src.agents.roleplay.turn_analyzer import TurnAnalysis, TurnAnalyzer
 from src.config import Settings, get_settings
 from src.knowledge.retrieval_service import RetrievalService, get_retrieval_service
 from src.knowledge.validity import today_in_vietnam
+from src.roleplay_tracing import get_roleplay_tracing
 from src.services.llm import get_llm
 from src.services.practice import PracticeService
 
@@ -208,6 +209,7 @@ def build_practice_service(
             scenario_ids={item.scenario_id for item in scenarios.list_public()},
         ),
         knowledge_evidence=RetrievalKnowledgeEvidenceProvider(resolved_retrieval),
+        tracing=get_roleplay_tracing(),
     )
 
 

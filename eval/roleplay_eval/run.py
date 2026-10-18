@@ -678,14 +678,14 @@ def factual_observation_checks(case: dict[str, Any], raw: dict[str, Any] | None,
     return checks
 
 
-async def run_live_standard(case: dict[str, Any], run_id: str) -> dict[str, Any]:
+async def run_live_standard(case: dict[str, Any], run_id: str, *, stop_on_termination: bool = False) -> dict[str, Any]:
     result = _case_result(case, "live_models", run_id)
     result["execution_status"] = "COMPLETE"
     result["checkpoints"] = []
     states: dict[int, Any] = {}
     final: Any | None = None
     try:
-        _, CustomerAgent, RoleplayGraph, _, Repository, TurnAnalyzer = _runtime()
+        _, CustomerAgent, RoleplayGraph, ConflictError, Repository, TurnAnalyzer = _runtime()
         from src.integrations.practice_runtime import SharedLLMCustomerModel, SharedLLMTurnAnalysisModel
         graph = RoleplayGraph(Repository(SCENARIOS), TurnAnalyzer(SharedLLMTurnAnalysisModel()),
                              CustomerAgent(SharedLLMCustomerModel()), MemoryCheckpoint())
@@ -694,10 +694,21 @@ async def run_live_standard(case: dict[str, Any], run_id: str) -> dict[str, Any]
         states[0] = await graph.get_session_state(session_id)
         result["checkpoints"].append({"turn": 0, "state": _state_dict(states[0])})
         for number, message in enumerate(case["advisor_messages"], 1):
-            await graph.continue_session(session_id, message)
+            # Golden cases may end the session early (drop-out, misconduct); stop and score that state.
+            if stop_on_termination and _state_dict(states[number - 1])["termination_status"] != "active":
+                break
+            try:
+                await graph.continue_session(session_id, message)
+            except ConflictError:
+                persisted = await graph.get_session_state(session_id)
+                if not stop_on_termination or _state_dict(persisted)["termination_status"] == "active":
+                    raise
+                break
             states[number] = await graph.get_session_state(session_id)
             result["checkpoints"].append({"turn": number, "state": _state_dict(states[number])})
-        final = states.get(len(case["advisor_messages"]))
+        final = states[max(states)] if stop_on_termination else states.get(len(case["advisor_messages"]))
+        if stop_on_termination:
+            result["final_state"] = _state_dict(final)
     except Exception as exc:
         result["execution_status"] = "EXECUTION_ERROR"
         result["diagnostics"].append({"reason": "LIVE_GRAPH_EXECUTION_FAILED", "type": type(exc).__name__, "detail": str(exc)})

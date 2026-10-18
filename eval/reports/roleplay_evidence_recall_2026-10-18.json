@@ -1,0 +1,3455 @@
+{
+  "dataset_version": "1",
+  "mode": "run",
+  "executed_at": "2026-10-17T21:49:22.542645+00:00",
+  "categories": [
+    "product",
+    "price",
+    "promotion",
+    "policy",
+    "warranty",
+    "battery_charging",
+    "other"
+  ],
+  "cells": [
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_6",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_11",
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_16",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Pin cao áp (Mua lần đầu theo xe mới): 8 năm/160.000 km.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_4",
+        "SPECS_VF5_PLUS_2026_3",
+        "PROMOTION_SALES_VINFAST_20260921_16"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Pin cao áp (Mua lần đầu theo xe mới): 8 năm/160.000 km.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_4",
+        "SPECS_VF5_PLUS_2026_3",
+        "PROMOTION_SALES_VINFAST_20260921_16"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Pin cao áp (Mua lần đầu theo xe mới): 8 năm/160.000 km.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_4",
+        "SPECS_VF5_PLUS_2026_3",
+        "PROMOTION_SALES_VINFAST_20260921_16"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Pin cao áp (Mua lần đầu theo xe mới): 8 năm/160.000 km.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_4",
+        "SPECS_VF5_PLUS_2026_3",
+        "PROMOTION_SALES_VINFAST_20260921_16"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Pin cao áp (Mua lần đầu theo xe mới): 8 năm/160.000 km.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_4",
+        "SPECS_VF5_PLUS_2026_3",
+        "PROMOTION_SALES_VINFAST_20260921_16"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Pin cao áp (Mua lần đầu theo xe mới): 8 năm/160.000 km.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_4",
+        "SPECS_VF5_PLUS_2026_3",
+        "PROMOTION_SALES_VINFAST_20260921_16"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Pin cao áp (Mua lần đầu theo xe mới): 8 năm/160.000 km.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_4",
+        "SPECS_VF5_PLUS_2026_3",
+        "PROMOTION_SALES_VINFAST_20260921_16"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_EDGE_FALSE_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_EDGE_FALSE_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_6",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S01_EDGE_FALSE_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_11",
+        "PROMOTION_SALES_VINFAST_20260921_9",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "S01_EDGE_FALSE_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_EDGE_FALSE_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_EDGE_FALSE_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_EDGE_FALSE_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 túi khí",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_9",
+        "PRODUCT_VF7_20260922_15",
+        "PRODUCT_VF7_20260922_2",
+        "PRODUCT_VF7_20260922_14"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 túi khí",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_10",
+        "PRICE_LIST_VINFAST_20260921_9",
+        "PRODUCT_VF7_20260922_14",
+        "PRODUCT_VF7_20260922_9",
+        "PRODUCT_VF7_20260922_15"
+      ],
+      "evidence_count": 5
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 túi khí",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_17",
+        "PROMOTION_SALES_VINFAST_20260921_8",
+        "PRODUCT_VF7_20260922_14",
+        "PRODUCT_VF7_20260922_9",
+        "PRODUCT_VF7_20260922_15"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "policy",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 túi khí",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_38",
+        "PRICE_LIST_VINFAST_20260921_36",
+        "PRICE_LIST_VINFAST_20260921_34"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 túi khí",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_9",
+        "PRODUCT_VF7_20260922_15",
+        "PRODUCT_VF7_20260922_14"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "battery_charging",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 túi khí",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_38",
+        "PRICE_LIST_VINFAST_20260921_36",
+        "PRICE_LIST_VINFAST_20260921_34"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "other",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 túi khí",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_38",
+        "PRICE_LIST_VINFAST_20260921_36",
+        "PRICE_LIST_VINFAST_20260921_34"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "product",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "price",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "promotion",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "policy",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "warranty",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "battery_charging",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_SUPPORTED#1",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "other",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_EDGE_FALSE_WARRANTY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "product",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_EDGE_FALSE_WARRANTY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "price",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_EDGE_FALSE_WARRANTY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "promotion",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_EDGE_FALSE_WARRANTY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "policy",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_EDGE_FALSE_WARRANTY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "warranty",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_EDGE_FALSE_WARRANTY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "battery_charging",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_EDGE_FALSE_WARRANTY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "other",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "7 năm hoặc 160.000km\n\n(Tùy điều kiện nào đến trước)\n\nBảo hành\n\nTừ 788.500.000 VNĐ\n\nDẫn đầu phong cách",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_1",
+        "PRODUCT_VF7_20260922_3",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S03_ON_CHARGING_OBJECTION#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S03_ON_CHARGING_OBJECTION#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S03_ON_CHARGING_OBJECTION#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S03_ON_CHARGING_OBJECTION#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S03_ON_CHARGING_OBJECTION#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_23",
+        "POLICY_CHARGING_VINFAST_20260919_8"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S03_ON_CHARGING_OBJECTION#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S03_ON_CHARGING_OBJECTION#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S04_EDGE_FALSE_PROMO#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Ưu đãi 5% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_2",
+        "PROMOTION_SALES_VINFAST_20260921_8",
+        "PROMOTION_SALES_VINFAST_20260921_12",
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRODUCT_VF6_20260922_5"
+      ],
+      "evidence_count": 5
+    },
+    {
+      "probe_id": "S04_EDGE_FALSE_PROMO#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Ưu đãi 5% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_2",
+        "PROMOTION_SALES_VINFAST_20260921_8",
+        "PROMOTION_SALES_VINFAST_20260921_12",
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRODUCT_VF6_20260922_5"
+      ],
+      "evidence_count": 5
+    },
+    {
+      "probe_id": "S04_EDGE_FALSE_PROMO#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Ưu đãi 5% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_2",
+        "PROMOTION_SALES_VINFAST_20260921_8",
+        "PROMOTION_SALES_VINFAST_20260921_12",
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRODUCT_VF6_20260922_5"
+      ],
+      "evidence_count": 5
+    },
+    {
+      "probe_id": "S04_EDGE_FALSE_PROMO#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Ưu đãi 5% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_2",
+        "PROMOTION_SALES_VINFAST_20260921_8",
+        "PROMOTION_SALES_VINFAST_20260921_12",
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRODUCT_VF6_20260922_5"
+      ],
+      "evidence_count": 5
+    },
+    {
+      "probe_id": "S04_EDGE_FALSE_PROMO#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+      "category": "warranty",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Ưu đãi 5% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_8",
+        "PROMOTION_SALES_VINFAST_20260921_12",
+        "PRODUCT_VF6_20260922_5"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S04_EDGE_FALSE_PROMO#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Ưu đãi 5% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_2",
+        "PROMOTION_SALES_VINFAST_20260921_8",
+        "PROMOTION_SALES_VINFAST_20260921_12",
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRODUCT_VF6_20260922_5"
+      ],
+      "evidence_count": 5
+    },
+    {
+      "probe_id": "S04_EDGE_FALSE_PROMO#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_04_VF6_ECO_PLUS_UPSELL",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PROMOTION_SALES_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Ưu đãi 5% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_2",
+        "PROMOTION_SALES_VINFAST_20260921_8",
+        "PROMOTION_SALES_VINFAST_20260921_12",
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRODUCT_VF6_20260922_5"
+      ],
+      "evidence_count": 5
+    },
+    {
+      "probe_id": "S01_ON_FACT_FAST_CHARGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_FAST_CHARGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_6",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S01_ON_FACT_FAST_CHARGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_11",
+        "PROMOTION_SALES_VINFAST_20260921_2",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "S01_ON_FACT_FAST_CHARGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_FAST_CHARGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_FAST_CHARGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_FAST_CHARGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_BATTERY_CAPACITY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_BATTERY_CAPACITY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_6",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_BATTERY_CAPACITY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_11",
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_8",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_BATTERY_CAPACITY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_BATTERY_CAPACITY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_BATTERY_CAPACITY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S01_ON_FACT_VF5_BATTERY_CAPACITY#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_HOME_CHARGER_PRICE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "product",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_HOME_CHARGER_PRICE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "price",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_10",
+        "PRICE_LIST_VINFAST_20260921_9",
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 5
+    },
+    {
+      "probe_id": "S02_ON_FACT_HOME_CHARGER_PRICE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "promotion",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_17",
+        "PROMOTION_SALES_VINFAST_20260921_11",
+        "PRICE_LIST_VINFAST_20260921_10",
+        "PRICE_LIST_VINFAST_20260921_9",
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 8
+    },
+    {
+      "probe_id": "S02_ON_FACT_HOME_CHARGER_PRICE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_23",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_10"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_HOME_CHARGER_PRICE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "warranty",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_HOME_CHARGER_PRICE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_23",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_10"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_HOME_CHARGER_PRICE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_23",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_10"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_AWD_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "469 km/1 lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_AWD_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "469 km/1 lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_9",
+        "PRICE_LIST_VINFAST_20260921_10",
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 5
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_AWD_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "469 km/1 lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_16",
+        "PROMOTION_SALES_VINFAST_20260921_17",
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_AWD_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "policy",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "469 km/1 lần sạc",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_34",
+        "PRICE_LIST_VINFAST_20260921_38",
+        "PRICE_LIST_VINFAST_20260921_36"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_AWD_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "469 km/1 lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_AWD_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "469 km/1 lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_2"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S02_ON_FACT_VF7_AWD_RANGE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "other",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRODUCT_VF7_20260922",
+          "version": "2026.09.22",
+          "quote": "469 km/1 lần sạc",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_34",
+        "PRICE_LIST_VINFAST_20260921_38",
+        "PRICE_LIST_VINFAST_20260921_36"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S03_ON_FACT_IDLE_FEE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF6_20260922_0",
+        "PRODUCT_VF6_20260922_10",
+        "PRODUCT_VF6_20260922_2",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_23",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "S03_ON_FACT_IDLE_FEE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_7",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_23",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "S03_ON_FACT_IDLE_FEE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_12",
+        "PROMOTION_SALES_VINFAST_20260921_2",
+        "PROMOTION_SALES_VINFAST_20260921_16",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_23",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "S03_ON_FACT_IDLE_FEE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_23",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S03_ON_FACT_IDLE_FEE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_23",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S03_ON_FACT_IDLE_FEE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_23",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "S03_ON_FACT_IDLE_FEE#0",
+      "source": "golden",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_23",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "TARIFF_PER_KWH_WORDS",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "TARIFF_PER_KWH_WORDS",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "TARIFF_PER_KWH_WORDS",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "TARIFF_PER_KWH_WORDS",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "TARIFF_PER_KWH_WORDS",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "PRICE_LIST_VINFAST_20260921_23",
+        "POLICY_CHARGING_VINFAST_20260919_8"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "TARIFF_PER_KWH_WORDS",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "TARIFF_PER_KWH_WORDS",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_8",
+        "POLICY_CHARGING_VINFAST_20260919_7",
+        "PRICE_LIST_VINFAST_20260921_23"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "IDLE_FEE_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF6_20260922_0",
+        "PRODUCT_VF6_20260922_2",
+        "PRODUCT_VF6_20260922_5",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_SALES_CONTRACT_20260720_4",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "IDLE_FEE_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_SALES_CONTRACT_20260720_4",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "IDLE_FEE_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_5",
+        "PROMOTION_SALES_VINFAST_20260921_16",
+        "PROMOTION_SALES_VINFAST_20260921_9",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_SALES_CONTRACT_20260720_4",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "IDLE_FEE_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_SALES_CONTRACT_20260720_4",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "IDLE_FEE_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_SALES_CONTRACT_20260720_4",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "IDLE_FEE_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_SALES_CONTRACT_20260720_4",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "IDLE_FEE_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+          "version": "2026.10.04",
+          "quote": "phút 11–60 là 1.000 VNĐ/phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_SALES_CONTRACT_20260720_4",
+        "POLICY_CHARGING_VINFAST_20260919_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "BATTERY_CAPACITY_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "BATTERY_CAPACITY_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_6",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "BATTERY_CAPACITY_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_11",
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_17",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "BATTERY_CAPACITY_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "BATTERY_CAPACITY_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "BATTERY_CAPACITY_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "BATTERY_CAPACITY_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Dung lượng pin khả dụng\n\n37,23 Kwh",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "FAST_CHARGE_DC_POST",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "product",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_1",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_1",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "FAST_CHARGE_DC_POST",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_1",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_1",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "FAST_CHARGE_DC_POST",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_1",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_1",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "FAST_CHARGE_DC_POST",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_1",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_1",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "FAST_CHARGE_DC_POST",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "warranty",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "FAST_CHARGE_DC_POST",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_1",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_1",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "FAST_CHARGE_DC_POST",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "Thời gian nạp pin nhanh nhất (10%-70%)\n\n33 phút",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "CHARGING_TARIFF_VINFAST_20261004_1",
+        "CHARGING_TARIFF_VINFAST_20261004_0",
+        "POLICY_CHARGING_VINFAST_20260919_1",
+        "SPECS_VF5_PLUS_2026_1",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_3"
+      ],
+      "evidence_count": 6
+    },
+    {
+      "probe_id": "MSRP_VF5",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "product",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MSRP_VF5",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_6",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "MSRP_VF5",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_11",
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_17",
+        "PRICE_LIST_VINFAST_20260921_6",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 7
+    },
+    {
+      "probe_id": "MSRP_VF5",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "policy",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MSRP_VF5",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "warranty",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MSRP_VF5",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "battery_charging",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MSRP_VF5",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "other",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MSRP_VF6_ECO",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "product",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 6 | Eco | Tiêu chuẩn 1 | 646.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF6_20260922_4",
+        "PRODUCT_VF6_20260922_9",
+        "PRODUCT_VF6_20260922_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MSRP_VF6_ECO",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 6 | Eco | Tiêu chuẩn 1 | 646.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRODUCT_VF6_20260922_4",
+        "PRODUCT_VF6_20260922_9",
+        "PRODUCT_VF6_20260922_1"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "MSRP_VF6_ECO",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 6 | Eco | Tiêu chuẩn 1 | 646.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_11",
+        "PROMOTION_SALES_VINFAST_20260921_8",
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRODUCT_VF6_20260922_4",
+        "PRODUCT_VF6_20260922_9",
+        "PRODUCT_VF6_20260922_1"
+      ],
+      "evidence_count": 7
+    },
+    {
+      "probe_id": "MSRP_VF6_ECO",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 6 | Eco | Tiêu chuẩn 1 | 646.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRICE_LIST_VINFAST_20260921_9",
+        "PRICE_LIST_VINFAST_20260921_31"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MSRP_VF6_ECO",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "warranty",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 6 | Eco | Tiêu chuẩn 1 | 646.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF6_20260922_4",
+        "PRODUCT_VF6_20260922_9",
+        "PRODUCT_VF6_20260922_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MSRP_VF6_ECO",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 6 | Eco | Tiêu chuẩn 1 | 646.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRICE_LIST_VINFAST_20260921_9",
+        "PRICE_LIST_VINFAST_20260921_31"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MSRP_VF6_ECO",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_03_VF6_APARTMENT",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 6 | Eco | Tiêu chuẩn 1 | 646.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_7",
+        "PRICE_LIST_VINFAST_20260921_9",
+        "PRICE_LIST_VINFAST_20260921_31"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MIXED_PRICE_AND_RANGE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "product",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": false
+        },
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MIXED_PRICE_AND_RANGE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "price",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": true
+        },
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_6",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "MIXED_PRICE_AND_RANGE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "promotion",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": true
+        },
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_11",
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_17",
+        "PRICE_LIST_VINFAST_20260921_6",
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 7
+    },
+    {
+      "probe_id": "MIXED_PRICE_AND_RANGE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "policy",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": false
+        },
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MIXED_PRICE_AND_RANGE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "warranty",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": false
+        },
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MIXED_PRICE_AND_RANGE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "battery_charging",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": false
+        },
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "MIXED_PRICE_AND_RANGE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "category": "other",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "VF 5 | Plus | Tiêu chuẩn 1 | 496.000.000 VNĐ",
+          "found": false
+        },
+        {
+          "document_id": "SPECS_VF5_PLUS_2026",
+          "version": "2026.09.22",
+          "quote": "326,4 km/lần sạc",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "SPECS_VF5_PLUS_2026_3",
+        "SPECS_VF5_PLUS_2026_0",
+        "SPECS_VF5_PLUS_2026_1"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "HOME_CHARGER_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "product",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_2",
+        "PRODUCT_VF7_20260922_16"
+      ],
+      "evidence_count": 4
+    },
+    {
+      "probe_id": "HOME_CHARGER_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "price",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_10",
+        "PRICE_LIST_VINFAST_20260921_9",
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_16"
+      ],
+      "evidence_count": 5
+    },
+    {
+      "probe_id": "HOME_CHARGER_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "promotion",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PROMOTION_SALES_VINFAST_20260921_7",
+        "PROMOTION_SALES_VINFAST_20260921_17",
+        "PROMOTION_SALES_VINFAST_20260921_11",
+        "PRICE_LIST_VINFAST_20260921_10",
+        "PRICE_LIST_VINFAST_20260921_9",
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_16"
+      ],
+      "evidence_count": 8
+    },
+    {
+      "probe_id": "HOME_CHARGER_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "policy",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_23",
+        "CHARGING_TARIFF_VINFAST_20261004_1",
+        "PRICE_LIST_VINFAST_20260921_38"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "HOME_CHARGER_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "warranty",
+      "passed": false,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": false
+        }
+      ],
+      "evidence_source_ids": [
+        "PRODUCT_VF7_20260922_12",
+        "PRODUCT_VF7_20260922_13",
+        "PRODUCT_VF7_20260922_16"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "HOME_CHARGER_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "battery_charging",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_23",
+        "CHARGING_TARIFF_VINFAST_20261004_1",
+        "PRICE_LIST_VINFAST_20260921_38"
+      ],
+      "evidence_count": 3
+    },
+    {
+      "probe_id": "HOME_CHARGER_PARAPHRASE",
+      "source": "paraphrase",
+      "scenario_id": "SCENARIO_02_VF7_VS_CX5",
+      "category": "other",
+      "passed": true,
+      "expected": [
+        {
+          "document_id": "PRICE_LIST_VINFAST_20260921",
+          "version": "2026.09.21",
+          "quote": "Bộ sạc với công suất AC 11 kW | VF 7 Plus, VF 8, VF 9 | 12.000.000 VNĐ",
+          "found": true
+        }
+      ],
+      "evidence_source_ids": [
+        "PRICE_LIST_VINFAST_20260921_23",
+        "CHARGING_TARIFF_VINFAST_20261004_1",
+        "PRICE_LIST_VINFAST_20260921_38"
+      ],
+      "evidence_count": 3
+    }
+  ],
+  "metrics": {
+    "overall": {
+      "cells": 147,
+      "passing_cells": 107,
+      "recall": 0.7278911564625851,
+      "mean_evidence_chunks": 3.7891156462585034
+    },
+    "by_category": {
+      "product": {
+        "cells": 21,
+        "passing_cells": 14,
+        "recall": 0.6666666666666666,
+        "mean_evidence_chunks": 3.7142857142857144
+      },
+      "price": {
+        "cells": 21,
+        "passing_cells": 17,
+        "recall": 0.8095238095238095,
+        "mean_evidence_chunks": 4.142857142857143
+      },
+      "promotion": {
+        "cells": 21,
+        "passing_cells": 17,
+        "recall": 0.8095238095238095,
+        "mean_evidence_chunks": 5.666666666666667
+      },
+      "policy": {
+        "cells": 21,
+        "passing_cells": 15,
+        "recall": 0.7142857142857143,
+        "mean_evidence_chunks": 3.3333333333333335
+      },
+      "warranty": {
+        "cells": 21,
+        "passing_cells": 13,
+        "recall": 0.6190476190476191,
+        "mean_evidence_chunks": 3.0
+      },
+      "battery_charging": {
+        "cells": 21,
+        "passing_cells": 16,
+        "recall": 0.7619047619047619,
+        "mean_evidence_chunks": 3.3333333333333335
+      },
+      "other": {
+        "cells": 21,
+        "passing_cells": 15,
+        "recall": 0.7142857142857143,
+        "mean_evidence_chunks": 3.3333333333333335
+      }
+    },
+    "by_source": {
+      "golden": {
+        "cells": 91,
+        "passing_cells": 67,
+        "recall": 0.7362637362637363,
+        "mean_evidence_chunks": 3.6483516483516483
+      },
+      "paraphrase": {
+        "cells": 56,
+        "passing_cells": 40,
+        "recall": 0.7142857142857143,
+        "mean_evidence_chunks": 4.017857142857143
+      }
+    },
+    "by_probe": {
+      "S01_ON_FACT_VF5_SUPPORTED#0": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 3.5714285714285716
+      },
+      "S01_ON_FACT_VF5_SUPPORTED#1": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 3.0
+      },
+      "S01_EDGE_FALSE_RANGE#0": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 3.5714285714285716
+      },
+      "S02_ON_FACT_VF7_SUPPORTED#0": {
+        "cells": 7,
+        "passing_cells": 4,
+        "recall": 0.5714285714285714,
+        "mean_evidence_chunks": 3.857142857142857
+      },
+      "S02_ON_FACT_VF7_SUPPORTED#1": {
+        "cells": 7,
+        "passing_cells": 0,
+        "recall": 0.0,
+        "mean_evidence_chunks": 3.0
+      },
+      "S02_EDGE_FALSE_WARRANTY#0": {
+        "cells": 7,
+        "passing_cells": 0,
+        "recall": 0.0,
+        "mean_evidence_chunks": 3.0
+      },
+      "S03_ON_CHARGING_OBJECTION#0": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 3.857142857142857
+      },
+      "S04_EDGE_FALSE_PROMO#0": {
+        "cells": 7,
+        "passing_cells": 6,
+        "recall": 0.8571428571428571,
+        "mean_evidence_chunks": 4.714285714285714
+      },
+      "S01_ON_FACT_FAST_CHARGE#0": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 3.5714285714285716
+      },
+      "S01_ON_FACT_VF5_BATTERY_CAPACITY#0": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 3.5714285714285716
+      },
+      "S02_ON_FACT_HOME_CHARGER_PRICE#0": {
+        "cells": 7,
+        "passing_cells": 3,
+        "recall": 0.42857142857142855,
+        "mean_evidence_chunks": 4.0
+      },
+      "S02_ON_FACT_VF7_AWD_RANGE#0": {
+        "cells": 7,
+        "passing_cells": 5,
+        "recall": 0.7142857142857143,
+        "mean_evidence_chunks": 3.7142857142857144
+      },
+      "S03_ON_FACT_IDLE_FEE#0": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 4.0
+      },
+      "TARIFF_PER_KWH_WORDS": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 3.857142857142857
+      },
+      "IDLE_FEE_PARAPHRASE": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 3.857142857142857
+      },
+      "BATTERY_CAPACITY_PARAPHRASE": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 3.5714285714285716
+      },
+      "FAST_CHARGE_DC_POST": {
+        "cells": 7,
+        "passing_cells": 7,
+        "recall": 1.0,
+        "mean_evidence_chunks": 5.571428571428571
+      },
+      "MSRP_VF5": {
+        "cells": 7,
+        "passing_cells": 2,
+        "recall": 0.2857142857142857,
+        "mean_evidence_chunks": 3.7142857142857144
+      },
+      "MSRP_VF6_ECO": {
+        "cells": 7,
+        "passing_cells": 5,
+        "recall": 0.7142857142857143,
+        "mean_evidence_chunks": 3.7142857142857144
+      },
+      "MIXED_PRICE_AND_RANGE": {
+        "cells": 7,
+        "passing_cells": 2,
+        "recall": 0.2857142857142857,
+        "mean_evidence_chunks": 3.7142857142857144
+      },
+      "HOME_CHARGER_PARAPHRASE": {
+        "cells": 7,
+        "passing_cells": 3,
+        "recall": 0.42857142857142855,
+        "mean_evidence_chunks": 4.142857142857143
+      }
+    }
+  }
+}

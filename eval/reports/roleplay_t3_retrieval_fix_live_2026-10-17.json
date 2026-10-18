@@ -1,0 +1,1451 @@
+{
+  "benchmark_version": "gate4-roleplay-v1",
+  "run_id": "18875fc8-e674-4c8d-ba7b-05cb3db73aaa",
+  "executed_at": "2026-10-17T12:42:22.464612+00:00",
+  "mode": "live",
+  "cases": [
+    {
+      "run_id": "18875fc8-e674-4c8d-ba7b-05cb3db73aaa",
+      "case_id": "T3_SUPPORTED_OBJECTION_HANDLING",
+      "scenario_id": "SCENARIO_01_VF5_TAXI",
+      "scenario_version": "2.5",
+      "provenance": "live_models",
+      "setup_status": "VALID",
+      "execution_status": "COMPLETE",
+      "assertions": [
+        {
+          "assertion_id": "turn_4.turn_count",
+          "expected": 4,
+          "observed": 4,
+          "status": "PASS",
+          "evidence": {},
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "turn_4.active_objections_contains",
+          "expected": {
+            "OBJ_VF5_BATTERY_VS_GAS": true
+          },
+          "observed": {
+            "OBJ_VF5_BATTERY_VS_GAS": true
+          },
+          "status": "PASS",
+          "evidence": {
+            "state_field": "active_objections"
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "turn_4.spoken_concern_message_ids_contains_customer_message_for.OBJ_VF5_BATTERY_VS_GAS",
+          "expected": true,
+          "observed": true,
+          "status": "PASS",
+          "evidence": {
+            "message_id": "6887cc9f-1c3b-4a7e-a7ec-3c750bdba87f",
+            "matching_message_count": 1,
+            "customer_ids_valid": true,
+            "role": "customer",
+            "preceding_advisor_turn": 4,
+            "verification_scope": "structural_message_link_only"
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "turn_4.termination_status",
+          "expected": "active",
+          "observed": "active",
+          "status": "PASS",
+          "evidence": {},
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "final.revealed_facts_contains",
+          "expected": {
+            "registration_location": true,
+            "daily_distance": true,
+            "fuel_cost_month": true
+          },
+          "observed": {
+            "registration_location": true,
+            "daily_distance": true,
+            "fuel_cost_month": true
+          },
+          "status": "PASS",
+          "evidence": {
+            "state_field": "revealed_facts"
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "final.advisor_discoveries_contains",
+          "expected": {
+            "registration_location": true,
+            "daily_distance": true,
+            "fuel_cost_month": true
+          },
+          "observed": {
+            "registration_location": true,
+            "daily_distance": true,
+            "fuel_cost_month": true
+          },
+          "status": "PASS",
+          "evidence": {
+            "state_field": "advisor_discoveries"
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "final.spoken_fact_message_ids_contains_customer_message_for.registration_location",
+          "expected": true,
+          "observed": true,
+          "status": "PASS",
+          "evidence": {
+            "message_id": "ca159d00-a69d-4dd1-8832-025565d53a04",
+            "matching_message_count": 1,
+            "customer_ids_valid": true,
+            "role": "customer",
+            "preceding_advisor_turn": 1,
+            "verification_scope": "structural_message_link_only"
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "final.spoken_fact_message_ids_contains_customer_message_for.daily_distance",
+          "expected": true,
+          "observed": true,
+          "status": "PASS",
+          "evidence": {
+            "message_id": "6a0af0a0-482a-4fa5-ae18-c49b77a0391c",
+            "matching_message_count": 1,
+            "customer_ids_valid": true,
+            "role": "customer",
+            "preceding_advisor_turn": 2,
+            "verification_scope": "structural_message_link_only"
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "final.spoken_fact_message_ids_contains_customer_message_for.fuel_cost_month",
+          "expected": true,
+          "observed": true,
+          "status": "PASS",
+          "evidence": {
+            "message_id": "45607dc7-b7d5-4610-a7f5-720e849b89a6",
+            "matching_message_count": 1,
+            "customer_ids_valid": true,
+            "role": "customer",
+            "preceding_advisor_turn": 3,
+            "verification_scope": "structural_message_link_only"
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "final.resolved_objections_contains",
+          "expected": {
+            "OBJ_VF5_BATTERY_VS_GAS": true
+          },
+          "observed": {
+            "OBJ_VF5_BATTERY_VS_GAS": false
+          },
+          "status": "FAIL",
+          "evidence": {
+            "state_field": "resolved_objections"
+          },
+          "reason": "observed mismatch"
+        },
+        {
+          "assertion_id": "final.active_objections_excludes",
+          "expected": {
+            "OBJ_VF5_BATTERY_VS_GAS": true
+          },
+          "observed": {
+            "OBJ_VF5_BATTERY_VS_GAS": false
+          },
+          "status": "FAIL",
+          "evidence": {
+            "state_field": "active_objections"
+          },
+          "reason": "observed mismatch"
+        },
+        {
+          "assertion_id": "final.unresolved_objections_excludes",
+          "expected": {
+            "OBJ_VF5_BATTERY_VS_GAS": true
+          },
+          "observed": {
+            "OBJ_VF5_BATTERY_VS_GAS": false
+          },
+          "status": "FAIL",
+          "evidence": {
+            "state_field": "unresolved_objections"
+          },
+          "reason": "observed mismatch"
+        },
+        {
+          "assertion_id": "final.turn_count",
+          "expected": 5,
+          "observed": 5,
+          "status": "PASS",
+          "evidence": {},
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "final.termination_status",
+          "expected": "active",
+          "observed": "active",
+          "status": "PASS",
+          "evidence": {},
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "factual.0.claim_extracted",
+          "expected": true,
+          "observed": true,
+          "status": "PASS",
+          "evidence": {
+            "advisor_message_id": "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+            "candidate_claims": [
+              {
+                "message_id": "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+                "text": "Đơn giá tại trạm sạc công cộng VinFast là 3.858 VNĐ/kWh.",
+                "category": "price"
+              }
+            ]
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "factual.0.category",
+          "expected": "battery_charging",
+          "observed": "price",
+          "status": "FAIL",
+          "evidence": {
+            "advisor_message_id": "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+            "candidate_claims": [
+              {
+                "message_id": "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+                "text": "Đơn giá tại trạm sạc công cộng VinFast là 3.858 VNĐ/kWh.",
+                "category": "price"
+              }
+            ]
+          },
+          "reason": "observed mismatch"
+        },
+        {
+          "assertion_id": "factual.0.verdict",
+          "expected": "supported",
+          "observed": "supported",
+          "status": "PASS",
+          "evidence": {
+            "finding": {
+              "claim": "Đơn giá tại trạm sạc công cộng VinFast là 3.858 VNĐ/kWh.",
+              "message_id": "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+              "status": "supported",
+              "source_ids": [
+                "CHARGING_TARIFF_VINFAST_20261004_0"
+              ],
+              "source_references": [
+                {
+                  "source_id": "CHARGING_TARIFF_VINFAST_20261004_0",
+                  "version": "2026.10.04",
+                  "quote": "Trang dịch vụ pin ô tô điện của VinFast công bố đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024."
+                }
+              ],
+              "severity": "info",
+              "reason": "Nguồn công bố đúng mức đơn giá được nêu."
+            },
+            "source_chunks": {
+              "CHARGING_TARIFF_VINFAST_20261004_0": {
+                "chunk_id": "CHARGING_TARIFF_VINFAST_20261004_0",
+                "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+                "version": "2026.10.04",
+                "content": "Trang dịch vụ pin ô tô điện của VinFast công bố đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024. Tiền điện được tính theo kWh thực tế của phiên sạc; không dùng số km hoặc dung lượng pin danh định để khẳng định hóa đơn. Sau khi hoàn thành phiên sạc, xe chiếm trụ được miễn phí 10 phút đầu; phút 11–60 là 1.000 VNĐ/phút, phút 61–120 là 2.000 VNĐ/phút, từ phút 121 là 4.000 VNĐ/phút. VinFast thông báo dừng cung cấp dịch vụ thuê pin đối với ô tô điện từ ngày 01/03/2025; khách hàng đã thuê trước đó có thể tiếp tục sử dụng. Vì vậy, không áp biểu phí thuê pin lịch sử cho một khách mua VF 5 Plus mới theo bảng giá kèm pin",
+                "chunk_index": 0
+              },
+              "POLICY_CHARGING_VINFAST_20260919_8": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_8",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "Đơn vị phối hợp và triển khai:\n\n• | Công ty V-GREEN chịu trách nhiệm triển khai thực hiện.\n\n• | Công ty VinFast Việt Nam đại diện công bố thông tin Chương trình.\n\nVui lòng liên hệ Showroom Đại lý Phân Phối để có thêm thông tin chi tiết.\n\nHotline: 1900 23 23 89",
+                "chunk_index": 8
+              },
+              "POLICY_CHARGING_VINFAST_20260919_7": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_7",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "3. | Chính sách được tài trợ bởi:\n\n- | Với Khách hàng mua xe từ ngày 10/02/2026:\n\no | Chi phí ưu đãi sạc phát sinh đến hết ngày 30/06/2027 theo chính sách này do VinFast chi trả như sau:\n\n• | Xe sản xuất trước ngày 01/07/2026 do CÔNG TY CỔ PHẦN SẢN XUẤT VÀ KINH DOANH VINFAST.\n\n• | Xe sản xuất từ ngày 01/07/2026 do CÔNG TY CỔ PHẦN VINFAST VIỆT NAM.\n\no | Chi phí ưu đãi sạc phát sinh từ ngày 01/07/2027 đến hết 10/02/2029 theo chính sách này do Ông Phạm Nhật Vượng chi trả.\n\n- | Với Khách hàng mua xe trước ngày 10/02/2026: Phần ưu đãi sạc phát sinh thêm so với Chính sách ưu đãi sạc có hiệu lực trước ngày 10/02/2026 do ông Phạm\n\nNhật Vượng chi trả.\n\nĐơn vị phối hợp và triển khai:\n\n• | Công ty V-GREEN chịu trách nhiệm triển khai thực hiện.",
+                "chunk_index": 7
+              },
+              "POLICY_SALES_CONTRACT_20260720_4": {
+                "chunk_id": "POLICY_SALES_CONTRACT_20260720_4",
+                "document_id": "POLICY_SALES_CONTRACT_20260720",
+                "version": "2026.07.20",
+                "content": "Nếu Khách Hàng không thanh toán đúng hạn, Bên Bán có quyền chỉ định bên thứ ba xử lý xe để thu hồi\n\nkhoản nợ. Số tiền thu được được ưu tiên thanh toán cho Hợp đồng này. Khách Hàng chịu mọi chi phí xử lý\n\nxe và thù lao ủy quyền bằng 10% giá trị xe tại thời điểm xử lý.\n\nKhách Hàng chậm thanh toán sẽ phải trả lãi suất quá hạn 15%/năm tương ứng với số tiền và số ngày chậm trả.\n\nPhương thức thanh toán: chuyển khoản, tiền mặt (không áp dụng với mua hàng trực tuyến), hoặc thẻ ngân hàng\n\n(chỉ áp dụng cho Đợt 1 tại Đại lý phân phối (nếu có)). Phí giao dịch thẻ do Bên Bán chịu.",
+                "chunk_index": 4
+              },
+              "PROMOTION_SALES_VINFAST_20260921_5": {
+                "chunk_id": "PROMOTION_SALES_VINFAST_20260921_5",
+                "document_id": "PROMOTION_SALES_VINFAST_20260921",
+                "version": "2026.09.21",
+                "content": "d. | Điều kiện áp dụng:\n\n- | Áp dụng cho chủ sở hữu xe hoặc vợ chồng/con cái /tứ thân phụ mẫu/công ty do họ sở hữu số cổ phần/phần góp lớn nhất.\n\n- | Xe mới có thể được đứng tên bởi chính chủ sở hữu xe hoặc vợ chồng, con cái, tứ thân phụ mẫu; hoặc công ty do họ sở hữu số cổ phần/ phần vốn góp lớn nhất. Trường hợp chủ sở\n\nhữu xe là pháp nhân, xe mới có thể được đứng tên pháp nhân đó hoặc cá nhân sở hữu cổ phần/ phần vốn góp lớn nhất.\n\n- | Mỗi xe chỉ được sử dụng 01 lần để hưởng ưu đãi chuyển đổi sang xe điện VinFast cho toàn bộ chương trình Vì Tương Lai Xanh 2 & Thu xăng đổi điện VinFast đã triển khai.\n\n- | Với Khách hàng sở hữu xe ô tô xăng hoặc xe máy xăng, Khách hàng cam kết chuyển đổi sang xe điện VinFast.",
+                "chunk_index": 5
+              },
+              "CHARGING_TARIFF_VINFAST_20261004_1": {
+                "chunk_id": "CHARGING_TARIFF_VINFAST_20261004_1",
+                "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+                "version": "2026.10.04",
+                "content": ". Vì vậy, không áp biểu phí thuê pin lịch sử cho một khách mua VF 5 Plus mới theo bảng giá kèm pin. Giá sạc và các điều kiện ưu đãi sạc là hai tài liệu khác nhau: kiểm tra chính sách ưu đãi sạc hiệu lực và điều kiện xe biển vàng trước khi ước tính phần điện phải trả. Nguồn: https://vinfastauto.com/vn_vi/dich-vu-pin-oto-dien (đối chiếu ngày 04/10/2026).",
+                "chunk_index": 1
+              },
+              "POLICY_CHARGING_VINFAST_20260919_3": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_3",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "hàng hoàn tất việc bổ sung thông tin.\n\n- | Số lần sạc được tính từ ngày 26 tháng trước đến hết ngày 25 tháng tiếp theo. Tính cho 10 lần sạc đầu tiên trong kì.\n\n- | Riêng Khách hàng đặt cọc trước ngày 10/02/2026 và xuất hóa đơn muộn nhất ngày 28/02/2026 được hưởng Chính sách ưu đãi sạc như sau:\n\no | Từ ngày mua đến ngày 30/6/2027, ưu đãi sạc theo chính sách ưu đãi sạc xe mua trước ngày 10/02/2026 (không giới hạn số lần sạc).\n\no | Từ ngày 01/07/2027 đến hết ngày 10/02/2029, ưu đãi sạc theo chính sách ưu đãi sạc xe mua từ ngày 10/02/2026 (có giới hạn số lần sạc).",
+                "chunk_index": 3
+              },
+              "POLICY_CHARGING_VINFAST_20260919_2": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_2",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "o | Các dòng xe khác: Tất cả Khách hàng được ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029.\n\n- | Với Khách hàng xe biển vàng mua xe từ ngày 20/04/2026, ưu đãi sạc trên được áp dụng như sau:\n\nKhung giờ 23:00 – 06:00 và 14:00 – 16:00 | Các khung giờ còn lại\n\nThứ 6, Thứ 7, Chủ Nhật | Được áp dụng | Không áp dụng\n\nCác ngày còn lại trong tuần | Được áp dụng\n\nKhách hàng cần cung cấp đăng kí xe trong vòng 10 ngày sau ngày xuất hóa đơn để hệ thống VinFast ghi nhận phân loại biển trắng và biển vàng, Trường hợp quá\n\nthời hạn trên mà Khách hàng chưa cung cấp đăng kí xe, hệ thống sẽ tạm thời áp dụng các giới hạn sạc theo chính sách dành cho xe biển vàng cho đến khi Khách",
+                "chunk_index": 2
+              },
+              "POLICY_CHARGING_VINFAST_20260919_1": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_1",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "Nội dung chính sách:\n\n1. | Đối tượng áp dụng: Các xe mua từ ngày 10/02/2026:\n\n- | Ưu đãi:\n\no | EC Van: Tất cả Khách hàng được ưu đãi miễn phí 20 lần sạc đầu tiên/xe/tháng tại trụ sạc V-Green cho đến hết 10/02/2029, áp dụng từ kỳ tính cước\n\nbắtđầu ngày 26/03/2026.\n\no | Minio Green:\n\n• | Xe xuất hóa đơn trước ngày 01/09/2026: Ưu đãi miễn phí 20 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029, áp dụng\n\ntừ kỳ tính cước bắt đầu ngày 26/03/2026.\n\n• | Xe xuất hóa đơn từ ngày 01/09/2026: Ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green đến hết ngày 10/02/2029.\n\no | VF Wild: Ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029.",
+                "chunk_index": 1
+              },
+              "PROMOTION_SALES_VINFAST_20260921_12": {
+                "chunk_id": "PROMOTION_SALES_VINFAST_20260921_12",
+                "document_id": "PROMOTION_SALES_VINFAST_20260921",
+                "version": "2026.09.21",
+                "content": "6. | Chương trình Tri ân Khách hàng xe xăng VinFast chuyển đổi Xanh:\n\n- | Khách hàng là chủ sở hữu đầu tiên của xe xăng VinFast được tặng voucher (định danh theo thông tin khách hàng) để sử dụng khi mua các xe ô tô điện VinFast. Giá trị theo\n\ntừng dòng xe như sau:\n\nDòng xe | Fadil | Lux A2.0 | Lux SA2.0\n\nGiá trị ưu đãi | 30.000.000 VNĐ | 60.000.000 VNĐ | 80.000.000 VNĐ\n\n- | Voucher được phép dùng để quy đổi thành giảm giá khi mua xe điện VinFast mới. Mỗi xe điện VinFast mới được dùng tối đa một voucher.\n\n- | Với Khách hàng mua nhiều xe xăng VinFast, tặng tối đa 2 voucher theo mức giá trị lớn nhất tương ứng với dòng xe xăng mà Khách hàng từng mua.",
+                "chunk_index": 12
+              },
+              "PROMOTION_SALES_VINFAST_20260921_3": {
+                "chunk_id": "PROMOTION_SALES_VINFAST_20260921_3",
+                "document_id": "PROMOTION_SALES_VINFAST_20260921",
+                "version": "2026.09.21",
+                "content": "b. | Đối với các đối tượng đặc biệt:\n\n- | Khách hàng phục vụ trong ngành công an và quân đội, bao gồm: Sĩ quan, quân nhân chuyên nghiệp, hạ sĩ quan, chiến sĩ thuộc Quân đội nhân dân Việt Nam và Công an nhân dân\n\nViệt Nam và người thân (vợ chồng/con cái/ tứ thân phụ mẫu) đang công tác trong biên chế chính thức. Giấy tờ xác định đối tượng hưởng ưu đãi là thẻ ngành: Thẻ sĩ quan/ thẻ quân\n\nnhân/ thẻ Công an nhân dân.\n\n- | Khách hàng là nhân sự của Tổng công ty Bưu điện Việt Nam – VN Post.\n\n- | Mức ưu đãi được áp dụng như sau:\n\n• | Các dòng VF 2, VF 3 & Minio Green: Ưu đãi 6% MSRP.\n\n• | Các dòng VF 7, VF 9, VF 8 Thế hệ mới, Lạc Hồng 900 LX, EC Van & VF Wild: Ưu đãi 7% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+                "chunk_index": 3
+              }
+            }
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "factual.0.document_provenance",
+          "expected": true,
+          "observed": true,
+          "status": "PASS",
+          "evidence": {
+            "expected_document": {
+              "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+              "version": "2026.10.04",
+              "quote": "đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh"
+            },
+            "references": [
+              {
+                "reference": {
+                  "source_id": "CHARGING_TARIFF_VINFAST_20261004_0",
+                  "version": "2026.10.04",
+                  "quote": "Trang dịch vụ pin ô tô điện của VinFast công bố đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024."
+                },
+                "chunk": {
+                  "chunk_id": "CHARGING_TARIFF_VINFAST_20261004_0",
+                  "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+                  "version": "2026.10.04",
+                  "content": "Trang dịch vụ pin ô tô điện của VinFast công bố đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024. Tiền điện được tính theo kWh thực tế của phiên sạc; không dùng số km hoặc dung lượng pin danh định để khẳng định hóa đơn. Sau khi hoàn thành phiên sạc, xe chiếm trụ được miễn phí 10 phút đầu; phút 11–60 là 1.000 VNĐ/phút, phút 61–120 là 2.000 VNĐ/phút, từ phút 121 là 4.000 VNĐ/phút. VinFast thông báo dừng cung cấp dịch vụ thuê pin đối với ô tô điện từ ngày 01/03/2025; khách hàng đã thuê trước đó có thể tiếp tục sử dụng. Vì vậy, không áp biểu phí thuê pin lịch sử cho một khách mua VF 5 Plus mới theo bảng giá kèm pin",
+                  "chunk_index": 0
+                }
+              }
+            ],
+            "reference_integrity": true,
+            "ground_truth_coverage": true,
+            "quote_span": [
+              48,
+              95
+            ],
+            "retrieved_spans": [
+              [
+                0,
+                645
+              ]
+            ],
+            "mapping": "unique_exact_corpus_substrings"
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "factual.1.claim_extracted",
+          "expected": true,
+          "observed": true,
+          "status": "PASS",
+          "evidence": {
+            "advisor_message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+            "candidate_claims": [
+              {
+                "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+                "text": "Tiền điện được tính theo kWh thực tế của phiên sạc.",
+                "category": "battery_charging"
+              }
+            ]
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "factual.1.category",
+          "expected": "battery_charging",
+          "observed": "battery_charging",
+          "status": "PASS",
+          "evidence": {
+            "advisor_message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+            "candidate_claims": [
+              {
+                "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+                "text": "Tiền điện được tính theo kWh thực tế của phiên sạc.",
+                "category": "battery_charging"
+              }
+            ]
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "factual.1.verdict",
+          "expected": "supported",
+          "observed": "supported",
+          "status": "PASS",
+          "evidence": {
+            "finding": {
+              "claim": "Tiền điện được tính theo kWh thực tế của phiên sạc.",
+              "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+              "status": "supported",
+              "source_ids": [
+                "CHARGING_TARIFF_VINFAST_20261004_0"
+              ],
+              "source_references": [
+                {
+                  "source_id": "CHARGING_TARIFF_VINFAST_20261004_0",
+                  "version": "2026.10.04",
+                  "quote": "Tiền điện được tính theo kWh thực tế của phiên sạc; không dùng số km hoặc dung lượng pin danh định để khẳng định hóa đơn."
+                }
+              ],
+              "severity": "info",
+              "reason": "Nguồn nêu rõ tiền điện được tính theo kWh thực tế của phiên sạc."
+            },
+            "source_chunks": {
+              "CHARGING_TARIFF_VINFAST_20261004_0": {
+                "chunk_id": "CHARGING_TARIFF_VINFAST_20261004_0",
+                "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+                "version": "2026.10.04",
+                "content": "Trang dịch vụ pin ô tô điện của VinFast công bố đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024. Tiền điện được tính theo kWh thực tế của phiên sạc; không dùng số km hoặc dung lượng pin danh định để khẳng định hóa đơn. Sau khi hoàn thành phiên sạc, xe chiếm trụ được miễn phí 10 phút đầu; phút 11–60 là 1.000 VNĐ/phút, phút 61–120 là 2.000 VNĐ/phút, từ phút 121 là 4.000 VNĐ/phút. VinFast thông báo dừng cung cấp dịch vụ thuê pin đối với ô tô điện từ ngày 01/03/2025; khách hàng đã thuê trước đó có thể tiếp tục sử dụng. Vì vậy, không áp biểu phí thuê pin lịch sử cho một khách mua VF 5 Plus mới theo bảng giá kèm pin",
+                "chunk_index": 0
+              },
+              "POLICY_CHARGING_VINFAST_20260919_8": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_8",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "Đơn vị phối hợp và triển khai:\n\n• | Công ty V-GREEN chịu trách nhiệm triển khai thực hiện.\n\n• | Công ty VinFast Việt Nam đại diện công bố thông tin Chương trình.\n\nVui lòng liên hệ Showroom Đại lý Phân Phối để có thêm thông tin chi tiết.\n\nHotline: 1900 23 23 89",
+                "chunk_index": 8
+              },
+              "POLICY_CHARGING_VINFAST_20260919_7": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_7",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "3. | Chính sách được tài trợ bởi:\n\n- | Với Khách hàng mua xe từ ngày 10/02/2026:\n\no | Chi phí ưu đãi sạc phát sinh đến hết ngày 30/06/2027 theo chính sách này do VinFast chi trả như sau:\n\n• | Xe sản xuất trước ngày 01/07/2026 do CÔNG TY CỔ PHẦN SẢN XUẤT VÀ KINH DOANH VINFAST.\n\n• | Xe sản xuất từ ngày 01/07/2026 do CÔNG TY CỔ PHẦN VINFAST VIỆT NAM.\n\no | Chi phí ưu đãi sạc phát sinh từ ngày 01/07/2027 đến hết 10/02/2029 theo chính sách này do Ông Phạm Nhật Vượng chi trả.\n\n- | Với Khách hàng mua xe trước ngày 10/02/2026: Phần ưu đãi sạc phát sinh thêm so với Chính sách ưu đãi sạc có hiệu lực trước ngày 10/02/2026 do ông Phạm\n\nNhật Vượng chi trả.\n\nĐơn vị phối hợp và triển khai:\n\n• | Công ty V-GREEN chịu trách nhiệm triển khai thực hiện.",
+                "chunk_index": 7
+              },
+              "POLICY_SALES_CONTRACT_20260720_4": {
+                "chunk_id": "POLICY_SALES_CONTRACT_20260720_4",
+                "document_id": "POLICY_SALES_CONTRACT_20260720",
+                "version": "2026.07.20",
+                "content": "Nếu Khách Hàng không thanh toán đúng hạn, Bên Bán có quyền chỉ định bên thứ ba xử lý xe để thu hồi\n\nkhoản nợ. Số tiền thu được được ưu tiên thanh toán cho Hợp đồng này. Khách Hàng chịu mọi chi phí xử lý\n\nxe và thù lao ủy quyền bằng 10% giá trị xe tại thời điểm xử lý.\n\nKhách Hàng chậm thanh toán sẽ phải trả lãi suất quá hạn 15%/năm tương ứng với số tiền và số ngày chậm trả.\n\nPhương thức thanh toán: chuyển khoản, tiền mặt (không áp dụng với mua hàng trực tuyến), hoặc thẻ ngân hàng\n\n(chỉ áp dụng cho Đợt 1 tại Đại lý phân phối (nếu có)). Phí giao dịch thẻ do Bên Bán chịu.",
+                "chunk_index": 4
+              },
+              "PROMOTION_SALES_VINFAST_20260921_5": {
+                "chunk_id": "PROMOTION_SALES_VINFAST_20260921_5",
+                "document_id": "PROMOTION_SALES_VINFAST_20260921",
+                "version": "2026.09.21",
+                "content": "d. | Điều kiện áp dụng:\n\n- | Áp dụng cho chủ sở hữu xe hoặc vợ chồng/con cái /tứ thân phụ mẫu/công ty do họ sở hữu số cổ phần/phần góp lớn nhất.\n\n- | Xe mới có thể được đứng tên bởi chính chủ sở hữu xe hoặc vợ chồng, con cái, tứ thân phụ mẫu; hoặc công ty do họ sở hữu số cổ phần/ phần vốn góp lớn nhất. Trường hợp chủ sở\n\nhữu xe là pháp nhân, xe mới có thể được đứng tên pháp nhân đó hoặc cá nhân sở hữu cổ phần/ phần vốn góp lớn nhất.\n\n- | Mỗi xe chỉ được sử dụng 01 lần để hưởng ưu đãi chuyển đổi sang xe điện VinFast cho toàn bộ chương trình Vì Tương Lai Xanh 2 & Thu xăng đổi điện VinFast đã triển khai.\n\n- | Với Khách hàng sở hữu xe ô tô xăng hoặc xe máy xăng, Khách hàng cam kết chuyển đổi sang xe điện VinFast.",
+                "chunk_index": 5
+              },
+              "CHARGING_TARIFF_VINFAST_20261004_1": {
+                "chunk_id": "CHARGING_TARIFF_VINFAST_20261004_1",
+                "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+                "version": "2026.10.04",
+                "content": ". Vì vậy, không áp biểu phí thuê pin lịch sử cho một khách mua VF 5 Plus mới theo bảng giá kèm pin. Giá sạc và các điều kiện ưu đãi sạc là hai tài liệu khác nhau: kiểm tra chính sách ưu đãi sạc hiệu lực và điều kiện xe biển vàng trước khi ước tính phần điện phải trả. Nguồn: https://vinfastauto.com/vn_vi/dich-vu-pin-oto-dien (đối chiếu ngày 04/10/2026).",
+                "chunk_index": 1
+              },
+              "POLICY_CHARGING_VINFAST_20260919_3": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_3",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "hàng hoàn tất việc bổ sung thông tin.\n\n- | Số lần sạc được tính từ ngày 26 tháng trước đến hết ngày 25 tháng tiếp theo. Tính cho 10 lần sạc đầu tiên trong kì.\n\n- | Riêng Khách hàng đặt cọc trước ngày 10/02/2026 và xuất hóa đơn muộn nhất ngày 28/02/2026 được hưởng Chính sách ưu đãi sạc như sau:\n\no | Từ ngày mua đến ngày 30/6/2027, ưu đãi sạc theo chính sách ưu đãi sạc xe mua trước ngày 10/02/2026 (không giới hạn số lần sạc).\n\no | Từ ngày 01/07/2027 đến hết ngày 10/02/2029, ưu đãi sạc theo chính sách ưu đãi sạc xe mua từ ngày 10/02/2026 (có giới hạn số lần sạc).",
+                "chunk_index": 3
+              },
+              "POLICY_CHARGING_VINFAST_20260919_2": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_2",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "o | Các dòng xe khác: Tất cả Khách hàng được ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029.\n\n- | Với Khách hàng xe biển vàng mua xe từ ngày 20/04/2026, ưu đãi sạc trên được áp dụng như sau:\n\nKhung giờ 23:00 – 06:00 và 14:00 – 16:00 | Các khung giờ còn lại\n\nThứ 6, Thứ 7, Chủ Nhật | Được áp dụng | Không áp dụng\n\nCác ngày còn lại trong tuần | Được áp dụng\n\nKhách hàng cần cung cấp đăng kí xe trong vòng 10 ngày sau ngày xuất hóa đơn để hệ thống VinFast ghi nhận phân loại biển trắng và biển vàng, Trường hợp quá\n\nthời hạn trên mà Khách hàng chưa cung cấp đăng kí xe, hệ thống sẽ tạm thời áp dụng các giới hạn sạc theo chính sách dành cho xe biển vàng cho đến khi Khách",
+                "chunk_index": 2
+              },
+              "POLICY_CHARGING_VINFAST_20260919_1": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_1",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "Nội dung chính sách:\n\n1. | Đối tượng áp dụng: Các xe mua từ ngày 10/02/2026:\n\n- | Ưu đãi:\n\no | EC Van: Tất cả Khách hàng được ưu đãi miễn phí 20 lần sạc đầu tiên/xe/tháng tại trụ sạc V-Green cho đến hết 10/02/2029, áp dụng từ kỳ tính cước\n\nbắtđầu ngày 26/03/2026.\n\no | Minio Green:\n\n• | Xe xuất hóa đơn trước ngày 01/09/2026: Ưu đãi miễn phí 20 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029, áp dụng\n\ntừ kỳ tính cước bắt đầu ngày 26/03/2026.\n\n• | Xe xuất hóa đơn từ ngày 01/09/2026: Ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green đến hết ngày 10/02/2029.\n\no | VF Wild: Ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029.",
+                "chunk_index": 1
+              },
+              "PROMOTION_SALES_VINFAST_20260921_12": {
+                "chunk_id": "PROMOTION_SALES_VINFAST_20260921_12",
+                "document_id": "PROMOTION_SALES_VINFAST_20260921",
+                "version": "2026.09.21",
+                "content": "6. | Chương trình Tri ân Khách hàng xe xăng VinFast chuyển đổi Xanh:\n\n- | Khách hàng là chủ sở hữu đầu tiên của xe xăng VinFast được tặng voucher (định danh theo thông tin khách hàng) để sử dụng khi mua các xe ô tô điện VinFast. Giá trị theo\n\ntừng dòng xe như sau:\n\nDòng xe | Fadil | Lux A2.0 | Lux SA2.0\n\nGiá trị ưu đãi | 30.000.000 VNĐ | 60.000.000 VNĐ | 80.000.000 VNĐ\n\n- | Voucher được phép dùng để quy đổi thành giảm giá khi mua xe điện VinFast mới. Mỗi xe điện VinFast mới được dùng tối đa một voucher.\n\n- | Với Khách hàng mua nhiều xe xăng VinFast, tặng tối đa 2 voucher theo mức giá trị lớn nhất tương ứng với dòng xe xăng mà Khách hàng từng mua.",
+                "chunk_index": 12
+              },
+              "PROMOTION_SALES_VINFAST_20260921_3": {
+                "chunk_id": "PROMOTION_SALES_VINFAST_20260921_3",
+                "document_id": "PROMOTION_SALES_VINFAST_20260921",
+                "version": "2026.09.21",
+                "content": "b. | Đối với các đối tượng đặc biệt:\n\n- | Khách hàng phục vụ trong ngành công an và quân đội, bao gồm: Sĩ quan, quân nhân chuyên nghiệp, hạ sĩ quan, chiến sĩ thuộc Quân đội nhân dân Việt Nam và Công an nhân dân\n\nViệt Nam và người thân (vợ chồng/con cái/ tứ thân phụ mẫu) đang công tác trong biên chế chính thức. Giấy tờ xác định đối tượng hưởng ưu đãi là thẻ ngành: Thẻ sĩ quan/ thẻ quân\n\nnhân/ thẻ Công an nhân dân.\n\n- | Khách hàng là nhân sự của Tổng công ty Bưu điện Việt Nam – VN Post.\n\n- | Mức ưu đãi được áp dụng như sau:\n\n• | Các dòng VF 2, VF 3 & Minio Green: Ưu đãi 6% MSRP.\n\n• | Các dòng VF 7, VF 9, VF 8 Thế hệ mới, Lạc Hồng 900 LX, EC Van & VF Wild: Ưu đãi 7% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+                "chunk_index": 3
+              }
+            }
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "factual.1.document_provenance",
+          "expected": true,
+          "observed": true,
+          "status": "PASS",
+          "evidence": {
+            "expected_document": {
+              "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+              "version": "2026.10.04",
+              "quote": "Tiền điện được tính theo kWh thực tế của phiên sạc"
+            },
+            "references": [
+              {
+                "reference": {
+                  "source_id": "CHARGING_TARIFF_VINFAST_20261004_0",
+                  "version": "2026.10.04",
+                  "quote": "Tiền điện được tính theo kWh thực tế của phiên sạc; không dùng số km hoặc dung lượng pin danh định để khẳng định hóa đơn."
+                },
+                "chunk": {
+                  "chunk_id": "CHARGING_TARIFF_VINFAST_20261004_0",
+                  "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+                  "version": "2026.10.04",
+                  "content": "Trang dịch vụ pin ô tô điện của VinFast công bố đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024. Tiền điện được tính theo kWh thực tế của phiên sạc; không dùng số km hoặc dung lượng pin danh định để khẳng định hóa đơn. Sau khi hoàn thành phiên sạc, xe chiếm trụ được miễn phí 10 phút đầu; phút 11–60 là 1.000 VNĐ/phút, phút 61–120 là 2.000 VNĐ/phút, từ phút 121 là 4.000 VNĐ/phút. VinFast thông báo dừng cung cấp dịch vụ thuê pin đối với ô tô điện từ ngày 01/03/2025; khách hàng đã thuê trước đó có thể tiếp tục sử dụng. Vì vậy, không áp biểu phí thuê pin lịch sử cho một khách mua VF 5 Plus mới theo bảng giá kèm pin",
+                  "chunk_index": 0
+                }
+              }
+            ],
+            "reference_integrity": true,
+            "ground_truth_coverage": true,
+            "quote_span": [
+              125,
+              175
+            ],
+            "retrieved_spans": [
+              [
+                0,
+                645
+              ]
+            ],
+            "mapping": "unique_exact_corpus_substrings"
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "factual.2.claim_extracted",
+          "expected": true,
+          "observed": true,
+          "status": "PASS",
+          "evidence": {
+            "advisor_message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+            "candidate_claims": [
+              {
+                "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+                "text": "Theo chính sách ngày 19/09/2026, với xe biển vàng mua từ 20/04/2026, ưu đãi sạc vào thứ Sáu đến Chủ nhật chỉ áp dụng trong khung 23:00–06:00 hoặc 14:00–16:00.",
+                "category": "policy"
+              }
+            ]
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "factual.2.category",
+          "expected": "promotion",
+          "observed": "policy",
+          "status": "FAIL",
+          "evidence": {
+            "advisor_message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+            "candidate_claims": [
+              {
+                "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+                "text": "Theo chính sách ngày 19/09/2026, với xe biển vàng mua từ 20/04/2026, ưu đãi sạc vào thứ Sáu đến Chủ nhật chỉ áp dụng trong khung 23:00–06:00 hoặc 14:00–16:00.",
+                "category": "policy"
+              }
+            ]
+          },
+          "reason": "observed mismatch"
+        },
+        {
+          "assertion_id": "factual.2.verdict",
+          "expected": "supported",
+          "observed": "supported",
+          "status": "PASS",
+          "evidence": {
+            "finding": {
+              "claim": "Theo chính sách ngày 19/09/2026, với xe biển vàng mua từ 20/04/2026, ưu đãi sạc vào thứ Sáu đến Chủ nhật chỉ áp dụng trong khung 23:00–06:00 hoặc 14:00–16:00.",
+              "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+              "status": "supported",
+              "source_ids": [
+                "POLICY_CHARGING_VINFAST_20260919_2"
+              ],
+              "source_references": [
+                {
+                  "source_id": "POLICY_CHARGING_VINFAST_20260919_2",
+                  "version": "2026.09.19",
+                  "quote": "Với Khách hàng xe biển vàng mua xe từ ngày 20/04/2026, ưu đãi sạc trên được áp dụng như sau:\n\nKhung giờ 23:00 – 06:00 và 14:00 – 16:00 | Các khung giờ còn lại\n\nThứ 6, Thứ 7, Chủ Nhật | Được áp dụng | Không áp dụng"
+                }
+              ],
+              "severity": "info",
+              "reason": "Chính sách xác nhận xe biển vàng mua từ ngày 20/04/2026 được áp dụng ưu đãi vào thứ Sáu, thứ Bảy và Chủ nhật trong hai khung giờ nêu trên; các khung giờ còn lại không áp dụng."
+            },
+            "source_chunks": {
+              "CHARGING_TARIFF_VINFAST_20261004_0": {
+                "chunk_id": "CHARGING_TARIFF_VINFAST_20261004_0",
+                "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+                "version": "2026.10.04",
+                "content": "Trang dịch vụ pin ô tô điện của VinFast công bố đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024. Tiền điện được tính theo kWh thực tế của phiên sạc; không dùng số km hoặc dung lượng pin danh định để khẳng định hóa đơn. Sau khi hoàn thành phiên sạc, xe chiếm trụ được miễn phí 10 phút đầu; phút 11–60 là 1.000 VNĐ/phút, phút 61–120 là 2.000 VNĐ/phút, từ phút 121 là 4.000 VNĐ/phút. VinFast thông báo dừng cung cấp dịch vụ thuê pin đối với ô tô điện từ ngày 01/03/2025; khách hàng đã thuê trước đó có thể tiếp tục sử dụng. Vì vậy, không áp biểu phí thuê pin lịch sử cho một khách mua VF 5 Plus mới theo bảng giá kèm pin",
+                "chunk_index": 0
+              },
+              "POLICY_CHARGING_VINFAST_20260919_8": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_8",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "Đơn vị phối hợp và triển khai:\n\n• | Công ty V-GREEN chịu trách nhiệm triển khai thực hiện.\n\n• | Công ty VinFast Việt Nam đại diện công bố thông tin Chương trình.\n\nVui lòng liên hệ Showroom Đại lý Phân Phối để có thêm thông tin chi tiết.\n\nHotline: 1900 23 23 89",
+                "chunk_index": 8
+              },
+              "POLICY_CHARGING_VINFAST_20260919_7": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_7",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "3. | Chính sách được tài trợ bởi:\n\n- | Với Khách hàng mua xe từ ngày 10/02/2026:\n\no | Chi phí ưu đãi sạc phát sinh đến hết ngày 30/06/2027 theo chính sách này do VinFast chi trả như sau:\n\n• | Xe sản xuất trước ngày 01/07/2026 do CÔNG TY CỔ PHẦN SẢN XUẤT VÀ KINH DOANH VINFAST.\n\n• | Xe sản xuất từ ngày 01/07/2026 do CÔNG TY CỔ PHẦN VINFAST VIỆT NAM.\n\no | Chi phí ưu đãi sạc phát sinh từ ngày 01/07/2027 đến hết 10/02/2029 theo chính sách này do Ông Phạm Nhật Vượng chi trả.\n\n- | Với Khách hàng mua xe trước ngày 10/02/2026: Phần ưu đãi sạc phát sinh thêm so với Chính sách ưu đãi sạc có hiệu lực trước ngày 10/02/2026 do ông Phạm\n\nNhật Vượng chi trả.\n\nĐơn vị phối hợp và triển khai:\n\n• | Công ty V-GREEN chịu trách nhiệm triển khai thực hiện.",
+                "chunk_index": 7
+              },
+              "POLICY_SALES_CONTRACT_20260720_4": {
+                "chunk_id": "POLICY_SALES_CONTRACT_20260720_4",
+                "document_id": "POLICY_SALES_CONTRACT_20260720",
+                "version": "2026.07.20",
+                "content": "Nếu Khách Hàng không thanh toán đúng hạn, Bên Bán có quyền chỉ định bên thứ ba xử lý xe để thu hồi\n\nkhoản nợ. Số tiền thu được được ưu tiên thanh toán cho Hợp đồng này. Khách Hàng chịu mọi chi phí xử lý\n\nxe và thù lao ủy quyền bằng 10% giá trị xe tại thời điểm xử lý.\n\nKhách Hàng chậm thanh toán sẽ phải trả lãi suất quá hạn 15%/năm tương ứng với số tiền và số ngày chậm trả.\n\nPhương thức thanh toán: chuyển khoản, tiền mặt (không áp dụng với mua hàng trực tuyến), hoặc thẻ ngân hàng\n\n(chỉ áp dụng cho Đợt 1 tại Đại lý phân phối (nếu có)). Phí giao dịch thẻ do Bên Bán chịu.",
+                "chunk_index": 4
+              },
+              "PROMOTION_SALES_VINFAST_20260921_5": {
+                "chunk_id": "PROMOTION_SALES_VINFAST_20260921_5",
+                "document_id": "PROMOTION_SALES_VINFAST_20260921",
+                "version": "2026.09.21",
+                "content": "d. | Điều kiện áp dụng:\n\n- | Áp dụng cho chủ sở hữu xe hoặc vợ chồng/con cái /tứ thân phụ mẫu/công ty do họ sở hữu số cổ phần/phần góp lớn nhất.\n\n- | Xe mới có thể được đứng tên bởi chính chủ sở hữu xe hoặc vợ chồng, con cái, tứ thân phụ mẫu; hoặc công ty do họ sở hữu số cổ phần/ phần vốn góp lớn nhất. Trường hợp chủ sở\n\nhữu xe là pháp nhân, xe mới có thể được đứng tên pháp nhân đó hoặc cá nhân sở hữu cổ phần/ phần vốn góp lớn nhất.\n\n- | Mỗi xe chỉ được sử dụng 01 lần để hưởng ưu đãi chuyển đổi sang xe điện VinFast cho toàn bộ chương trình Vì Tương Lai Xanh 2 & Thu xăng đổi điện VinFast đã triển khai.\n\n- | Với Khách hàng sở hữu xe ô tô xăng hoặc xe máy xăng, Khách hàng cam kết chuyển đổi sang xe điện VinFast.",
+                "chunk_index": 5
+              },
+              "CHARGING_TARIFF_VINFAST_20261004_1": {
+                "chunk_id": "CHARGING_TARIFF_VINFAST_20261004_1",
+                "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+                "version": "2026.10.04",
+                "content": ". Vì vậy, không áp biểu phí thuê pin lịch sử cho một khách mua VF 5 Plus mới theo bảng giá kèm pin. Giá sạc và các điều kiện ưu đãi sạc là hai tài liệu khác nhau: kiểm tra chính sách ưu đãi sạc hiệu lực và điều kiện xe biển vàng trước khi ước tính phần điện phải trả. Nguồn: https://vinfastauto.com/vn_vi/dich-vu-pin-oto-dien (đối chiếu ngày 04/10/2026).",
+                "chunk_index": 1
+              },
+              "POLICY_CHARGING_VINFAST_20260919_3": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_3",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "hàng hoàn tất việc bổ sung thông tin.\n\n- | Số lần sạc được tính từ ngày 26 tháng trước đến hết ngày 25 tháng tiếp theo. Tính cho 10 lần sạc đầu tiên trong kì.\n\n- | Riêng Khách hàng đặt cọc trước ngày 10/02/2026 và xuất hóa đơn muộn nhất ngày 28/02/2026 được hưởng Chính sách ưu đãi sạc như sau:\n\no | Từ ngày mua đến ngày 30/6/2027, ưu đãi sạc theo chính sách ưu đãi sạc xe mua trước ngày 10/02/2026 (không giới hạn số lần sạc).\n\no | Từ ngày 01/07/2027 đến hết ngày 10/02/2029, ưu đãi sạc theo chính sách ưu đãi sạc xe mua từ ngày 10/02/2026 (có giới hạn số lần sạc).",
+                "chunk_index": 3
+              },
+              "POLICY_CHARGING_VINFAST_20260919_2": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_2",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "o | Các dòng xe khác: Tất cả Khách hàng được ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029.\n\n- | Với Khách hàng xe biển vàng mua xe từ ngày 20/04/2026, ưu đãi sạc trên được áp dụng như sau:\n\nKhung giờ 23:00 – 06:00 và 14:00 – 16:00 | Các khung giờ còn lại\n\nThứ 6, Thứ 7, Chủ Nhật | Được áp dụng | Không áp dụng\n\nCác ngày còn lại trong tuần | Được áp dụng\n\nKhách hàng cần cung cấp đăng kí xe trong vòng 10 ngày sau ngày xuất hóa đơn để hệ thống VinFast ghi nhận phân loại biển trắng và biển vàng, Trường hợp quá\n\nthời hạn trên mà Khách hàng chưa cung cấp đăng kí xe, hệ thống sẽ tạm thời áp dụng các giới hạn sạc theo chính sách dành cho xe biển vàng cho đến khi Khách",
+                "chunk_index": 2
+              },
+              "POLICY_CHARGING_VINFAST_20260919_1": {
+                "chunk_id": "POLICY_CHARGING_VINFAST_20260919_1",
+                "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                "version": "2026.09.19",
+                "content": "Nội dung chính sách:\n\n1. | Đối tượng áp dụng: Các xe mua từ ngày 10/02/2026:\n\n- | Ưu đãi:\n\no | EC Van: Tất cả Khách hàng được ưu đãi miễn phí 20 lần sạc đầu tiên/xe/tháng tại trụ sạc V-Green cho đến hết 10/02/2029, áp dụng từ kỳ tính cước\n\nbắtđầu ngày 26/03/2026.\n\no | Minio Green:\n\n• | Xe xuất hóa đơn trước ngày 01/09/2026: Ưu đãi miễn phí 20 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029, áp dụng\n\ntừ kỳ tính cước bắt đầu ngày 26/03/2026.\n\n• | Xe xuất hóa đơn từ ngày 01/09/2026: Ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green đến hết ngày 10/02/2029.\n\no | VF Wild: Ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029.",
+                "chunk_index": 1
+              },
+              "PROMOTION_SALES_VINFAST_20260921_12": {
+                "chunk_id": "PROMOTION_SALES_VINFAST_20260921_12",
+                "document_id": "PROMOTION_SALES_VINFAST_20260921",
+                "version": "2026.09.21",
+                "content": "6. | Chương trình Tri ân Khách hàng xe xăng VinFast chuyển đổi Xanh:\n\n- | Khách hàng là chủ sở hữu đầu tiên của xe xăng VinFast được tặng voucher (định danh theo thông tin khách hàng) để sử dụng khi mua các xe ô tô điện VinFast. Giá trị theo\n\ntừng dòng xe như sau:\n\nDòng xe | Fadil | Lux A2.0 | Lux SA2.0\n\nGiá trị ưu đãi | 30.000.000 VNĐ | 60.000.000 VNĐ | 80.000.000 VNĐ\n\n- | Voucher được phép dùng để quy đổi thành giảm giá khi mua xe điện VinFast mới. Mỗi xe điện VinFast mới được dùng tối đa một voucher.\n\n- | Với Khách hàng mua nhiều xe xăng VinFast, tặng tối đa 2 voucher theo mức giá trị lớn nhất tương ứng với dòng xe xăng mà Khách hàng từng mua.",
+                "chunk_index": 12
+              },
+              "PROMOTION_SALES_VINFAST_20260921_3": {
+                "chunk_id": "PROMOTION_SALES_VINFAST_20260921_3",
+                "document_id": "PROMOTION_SALES_VINFAST_20260921",
+                "version": "2026.09.21",
+                "content": "b. | Đối với các đối tượng đặc biệt:\n\n- | Khách hàng phục vụ trong ngành công an và quân đội, bao gồm: Sĩ quan, quân nhân chuyên nghiệp, hạ sĩ quan, chiến sĩ thuộc Quân đội nhân dân Việt Nam và Công an nhân dân\n\nViệt Nam và người thân (vợ chồng/con cái/ tứ thân phụ mẫu) đang công tác trong biên chế chính thức. Giấy tờ xác định đối tượng hưởng ưu đãi là thẻ ngành: Thẻ sĩ quan/ thẻ quân\n\nnhân/ thẻ Công an nhân dân.\n\n- | Khách hàng là nhân sự của Tổng công ty Bưu điện Việt Nam – VN Post.\n\n- | Mức ưu đãi được áp dụng như sau:\n\n• | Các dòng VF 2, VF 3 & Minio Green: Ưu đãi 6% MSRP.\n\n• | Các dòng VF 7, VF 9, VF 8 Thế hệ mới, Lạc Hồng 900 LX, EC Van & VF Wild: Ưu đãi 7% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+                "chunk_index": 3
+              }
+            }
+          },
+          "reason": "matched"
+        },
+        {
+          "assertion_id": "factual.2.document_provenance",
+          "expected": true,
+          "observed": true,
+          "status": "PASS",
+          "evidence": {
+            "expected_document": {
+              "document_id": "POLICY_CHARGING_VINFAST_20260919",
+              "version": "2026.09.19",
+              "quote": "Với Khách hàng xe biển vàng mua xe từ ngày 20/04/2026, ưu đãi sạc trên được áp dụng như sau:\n\nKhung giờ 23:00 – 06:00 và 14:00 – 16:00 | Các khung giờ còn lại\n\nThứ 6, Thứ 7, Chủ Nhật | Được áp dụng | Không áp dụng"
+            },
+            "references": [
+              {
+                "reference": {
+                  "source_id": "POLICY_CHARGING_VINFAST_20260919_2",
+                  "version": "2026.09.19",
+                  "quote": "Với Khách hàng xe biển vàng mua xe từ ngày 20/04/2026, ưu đãi sạc trên được áp dụng như sau:\n\nKhung giờ 23:00 – 06:00 và 14:00 – 16:00 | Các khung giờ còn lại\n\nThứ 6, Thứ 7, Chủ Nhật | Được áp dụng | Không áp dụng"
+                },
+                "chunk": {
+                  "chunk_id": "POLICY_CHARGING_VINFAST_20260919_2",
+                  "document_id": "POLICY_CHARGING_VINFAST_20260919",
+                  "version": "2026.09.19",
+                  "content": "o | Các dòng xe khác: Tất cả Khách hàng được ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029.\n\n- | Với Khách hàng xe biển vàng mua xe từ ngày 20/04/2026, ưu đãi sạc trên được áp dụng như sau:\n\nKhung giờ 23:00 – 06:00 và 14:00 – 16:00 | Các khung giờ còn lại\n\nThứ 6, Thứ 7, Chủ Nhật | Được áp dụng | Không áp dụng\n\nCác ngày còn lại trong tuần | Được áp dụng\n\nKhách hàng cần cung cấp đăng kí xe trong vòng 10 ngày sau ngày xuất hóa đơn để hệ thống VinFast ghi nhận phân loại biển trắng và biển vàng, Trường hợp quá\n\nthời hạn trên mà Khách hàng chưa cung cấp đăng kí xe, hệ thống sẽ tạm thời áp dụng các giới hạn sạc theo chính sách dành cho xe biển vàng cho đến khi Khách",
+                  "chunk_index": 2
+                }
+              }
+            ],
+            "reference_integrity": true,
+            "ground_truth_coverage": true,
+            "quote_span": [
+              1178,
+              1391
+            ],
+            "retrieved_spans": [
+              [
+                1032,
+                1748
+              ]
+            ],
+            "mapping": "unique_exact_corpus_substrings"
+          },
+          "reason": "matched"
+        }
+      ],
+      "diagnostics": [
+        {
+          "reason": "POST_FINISH_FACTUAL_EVALUATION",
+          "checkpoint_termination_status": "active",
+          "evaluation_termination_status": "advisor_ended",
+          "transcript_message_ids": [
+            "317b84c5-b522-42bf-912e-0d79db7effb4",
+            "ca159d00-a69d-4dd1-8832-025565d53a04",
+            "7b673ab5-2187-4f13-b344-3fcf359cb63b",
+            "6a0af0a0-482a-4fa5-ae18-c49b77a0391c",
+            "37a6e9ca-a537-4179-a9b5-360ed0de3b72",
+            "45607dc7-b7d5-4610-a7f5-720e849b89a6",
+            "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+            "6887cc9f-1c3b-4a7e-a7ec-3c750bdba87f",
+            "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+            "cfa68b05-c68b-4340-b963-76758c528dc7"
+          ],
+          "claim_message_ids": [
+            "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+            "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+            "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+            "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+            "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42"
+          ],
+          "supplied_chunks": [
+            {
+              "chunk_id": "CHARGING_TARIFF_VINFAST_20261004_0",
+              "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+              "version": "2026.10.04",
+              "content": "Trang dịch vụ pin ô tô điện của VinFast công bố đơn giá tại trạm sạc công cộng là 3.858 VNĐ/kWh, áp dụng từ ngày 19/03/2024. Tiền điện được tính theo kWh thực tế của phiên sạc; không dùng số km hoặc dung lượng pin danh định để khẳng định hóa đơn. Sau khi hoàn thành phiên sạc, xe chiếm trụ được miễn phí 10 phút đầu; phút 11–60 là 1.000 VNĐ/phút, phút 61–120 là 2.000 VNĐ/phút, từ phút 121 là 4.000 VNĐ/phút. VinFast thông báo dừng cung cấp dịch vụ thuê pin đối với ô tô điện từ ngày 01/03/2025; khách hàng đã thuê trước đó có thể tiếp tục sử dụng. Vì vậy, không áp biểu phí thuê pin lịch sử cho một khách mua VF 5 Plus mới theo bảng giá kèm pin",
+              "chunk_index": 0
+            },
+            {
+              "chunk_id": "POLICY_CHARGING_VINFAST_20260919_8",
+              "document_id": "POLICY_CHARGING_VINFAST_20260919",
+              "version": "2026.09.19",
+              "content": "Đơn vị phối hợp và triển khai:\n\n• | Công ty V-GREEN chịu trách nhiệm triển khai thực hiện.\n\n• | Công ty VinFast Việt Nam đại diện công bố thông tin Chương trình.\n\nVui lòng liên hệ Showroom Đại lý Phân Phối để có thêm thông tin chi tiết.\n\nHotline: 1900 23 23 89",
+              "chunk_index": 8
+            },
+            {
+              "chunk_id": "POLICY_CHARGING_VINFAST_20260919_7",
+              "document_id": "POLICY_CHARGING_VINFAST_20260919",
+              "version": "2026.09.19",
+              "content": "3. | Chính sách được tài trợ bởi:\n\n- | Với Khách hàng mua xe từ ngày 10/02/2026:\n\no | Chi phí ưu đãi sạc phát sinh đến hết ngày 30/06/2027 theo chính sách này do VinFast chi trả như sau:\n\n• | Xe sản xuất trước ngày 01/07/2026 do CÔNG TY CỔ PHẦN SẢN XUẤT VÀ KINH DOANH VINFAST.\n\n• | Xe sản xuất từ ngày 01/07/2026 do CÔNG TY CỔ PHẦN VINFAST VIỆT NAM.\n\no | Chi phí ưu đãi sạc phát sinh từ ngày 01/07/2027 đến hết 10/02/2029 theo chính sách này do Ông Phạm Nhật Vượng chi trả.\n\n- | Với Khách hàng mua xe trước ngày 10/02/2026: Phần ưu đãi sạc phát sinh thêm so với Chính sách ưu đãi sạc có hiệu lực trước ngày 10/02/2026 do ông Phạm\n\nNhật Vượng chi trả.\n\nĐơn vị phối hợp và triển khai:\n\n• | Công ty V-GREEN chịu trách nhiệm triển khai thực hiện.",
+              "chunk_index": 7
+            },
+            {
+              "chunk_id": "POLICY_SALES_CONTRACT_20260720_4",
+              "document_id": "POLICY_SALES_CONTRACT_20260720",
+              "version": "2026.07.20",
+              "content": "Nếu Khách Hàng không thanh toán đúng hạn, Bên Bán có quyền chỉ định bên thứ ba xử lý xe để thu hồi\n\nkhoản nợ. Số tiền thu được được ưu tiên thanh toán cho Hợp đồng này. Khách Hàng chịu mọi chi phí xử lý\n\nxe và thù lao ủy quyền bằng 10% giá trị xe tại thời điểm xử lý.\n\nKhách Hàng chậm thanh toán sẽ phải trả lãi suất quá hạn 15%/năm tương ứng với số tiền và số ngày chậm trả.\n\nPhương thức thanh toán: chuyển khoản, tiền mặt (không áp dụng với mua hàng trực tuyến), hoặc thẻ ngân hàng\n\n(chỉ áp dụng cho Đợt 1 tại Đại lý phân phối (nếu có)). Phí giao dịch thẻ do Bên Bán chịu.",
+              "chunk_index": 4
+            },
+            {
+              "chunk_id": "PROMOTION_SALES_VINFAST_20260921_5",
+              "document_id": "PROMOTION_SALES_VINFAST_20260921",
+              "version": "2026.09.21",
+              "content": "d. | Điều kiện áp dụng:\n\n- | Áp dụng cho chủ sở hữu xe hoặc vợ chồng/con cái /tứ thân phụ mẫu/công ty do họ sở hữu số cổ phần/phần góp lớn nhất.\n\n- | Xe mới có thể được đứng tên bởi chính chủ sở hữu xe hoặc vợ chồng, con cái, tứ thân phụ mẫu; hoặc công ty do họ sở hữu số cổ phần/ phần vốn góp lớn nhất. Trường hợp chủ sở\n\nhữu xe là pháp nhân, xe mới có thể được đứng tên pháp nhân đó hoặc cá nhân sở hữu cổ phần/ phần vốn góp lớn nhất.\n\n- | Mỗi xe chỉ được sử dụng 01 lần để hưởng ưu đãi chuyển đổi sang xe điện VinFast cho toàn bộ chương trình Vì Tương Lai Xanh 2 & Thu xăng đổi điện VinFast đã triển khai.\n\n- | Với Khách hàng sở hữu xe ô tô xăng hoặc xe máy xăng, Khách hàng cam kết chuyển đổi sang xe điện VinFast.",
+              "chunk_index": 5
+            },
+            {
+              "chunk_id": "CHARGING_TARIFF_VINFAST_20261004_1",
+              "document_id": "CHARGING_TARIFF_VINFAST_20261004",
+              "version": "2026.10.04",
+              "content": ". Vì vậy, không áp biểu phí thuê pin lịch sử cho một khách mua VF 5 Plus mới theo bảng giá kèm pin. Giá sạc và các điều kiện ưu đãi sạc là hai tài liệu khác nhau: kiểm tra chính sách ưu đãi sạc hiệu lực và điều kiện xe biển vàng trước khi ước tính phần điện phải trả. Nguồn: https://vinfastauto.com/vn_vi/dich-vu-pin-oto-dien (đối chiếu ngày 04/10/2026).",
+              "chunk_index": 1
+            },
+            {
+              "chunk_id": "POLICY_CHARGING_VINFAST_20260919_3",
+              "document_id": "POLICY_CHARGING_VINFAST_20260919",
+              "version": "2026.09.19",
+              "content": "hàng hoàn tất việc bổ sung thông tin.\n\n- | Số lần sạc được tính từ ngày 26 tháng trước đến hết ngày 25 tháng tiếp theo. Tính cho 10 lần sạc đầu tiên trong kì.\n\n- | Riêng Khách hàng đặt cọc trước ngày 10/02/2026 và xuất hóa đơn muộn nhất ngày 28/02/2026 được hưởng Chính sách ưu đãi sạc như sau:\n\no | Từ ngày mua đến ngày 30/6/2027, ưu đãi sạc theo chính sách ưu đãi sạc xe mua trước ngày 10/02/2026 (không giới hạn số lần sạc).\n\no | Từ ngày 01/07/2027 đến hết ngày 10/02/2029, ưu đãi sạc theo chính sách ưu đãi sạc xe mua từ ngày 10/02/2026 (có giới hạn số lần sạc).",
+              "chunk_index": 3
+            },
+            {
+              "chunk_id": "POLICY_CHARGING_VINFAST_20260919_2",
+              "document_id": "POLICY_CHARGING_VINFAST_20260919",
+              "version": "2026.09.19",
+              "content": "o | Các dòng xe khác: Tất cả Khách hàng được ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029.\n\n- | Với Khách hàng xe biển vàng mua xe từ ngày 20/04/2026, ưu đãi sạc trên được áp dụng như sau:\n\nKhung giờ 23:00 – 06:00 và 14:00 – 16:00 | Các khung giờ còn lại\n\nThứ 6, Thứ 7, Chủ Nhật | Được áp dụng | Không áp dụng\n\nCác ngày còn lại trong tuần | Được áp dụng\n\nKhách hàng cần cung cấp đăng kí xe trong vòng 10 ngày sau ngày xuất hóa đơn để hệ thống VinFast ghi nhận phân loại biển trắng và biển vàng, Trường hợp quá\n\nthời hạn trên mà Khách hàng chưa cung cấp đăng kí xe, hệ thống sẽ tạm thời áp dụng các giới hạn sạc theo chính sách dành cho xe biển vàng cho đến khi Khách",
+              "chunk_index": 2
+            },
+            {
+              "chunk_id": "POLICY_CHARGING_VINFAST_20260919_1",
+              "document_id": "POLICY_CHARGING_VINFAST_20260919",
+              "version": "2026.09.19",
+              "content": "Nội dung chính sách:\n\n1. | Đối tượng áp dụng: Các xe mua từ ngày 10/02/2026:\n\n- | Ưu đãi:\n\no | EC Van: Tất cả Khách hàng được ưu đãi miễn phí 20 lần sạc đầu tiên/xe/tháng tại trụ sạc V-Green cho đến hết 10/02/2029, áp dụng từ kỳ tính cước\n\nbắtđầu ngày 26/03/2026.\n\no | Minio Green:\n\n• | Xe xuất hóa đơn trước ngày 01/09/2026: Ưu đãi miễn phí 20 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029, áp dụng\n\ntừ kỳ tính cước bắt đầu ngày 26/03/2026.\n\n• | Xe xuất hóa đơn từ ngày 01/09/2026: Ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green đến hết ngày 10/02/2029.\n\no | VF Wild: Ưu đãi miễn phí 10 lần sạc đầu tiên/ xe/ tháng tại trụ sạc V-Green cho đến hết ngày 10/02/2029.",
+              "chunk_index": 1
+            },
+            {
+              "chunk_id": "PROMOTION_SALES_VINFAST_20260921_12",
+              "document_id": "PROMOTION_SALES_VINFAST_20260921",
+              "version": "2026.09.21",
+              "content": "6. | Chương trình Tri ân Khách hàng xe xăng VinFast chuyển đổi Xanh:\n\n- | Khách hàng là chủ sở hữu đầu tiên của xe xăng VinFast được tặng voucher (định danh theo thông tin khách hàng) để sử dụng khi mua các xe ô tô điện VinFast. Giá trị theo\n\ntừng dòng xe như sau:\n\nDòng xe | Fadil | Lux A2.0 | Lux SA2.0\n\nGiá trị ưu đãi | 30.000.000 VNĐ | 60.000.000 VNĐ | 80.000.000 VNĐ\n\n- | Voucher được phép dùng để quy đổi thành giảm giá khi mua xe điện VinFast mới. Mỗi xe điện VinFast mới được dùng tối đa một voucher.\n\n- | Với Khách hàng mua nhiều xe xăng VinFast, tặng tối đa 2 voucher theo mức giá trị lớn nhất tương ứng với dòng xe xăng mà Khách hàng từng mua.",
+              "chunk_index": 12
+            },
+            {
+              "chunk_id": "PROMOTION_SALES_VINFAST_20260921_3",
+              "document_id": "PROMOTION_SALES_VINFAST_20260921",
+              "version": "2026.09.21",
+              "content": "b. | Đối với các đối tượng đặc biệt:\n\n- | Khách hàng phục vụ trong ngành công an và quân đội, bao gồm: Sĩ quan, quân nhân chuyên nghiệp, hạ sĩ quan, chiến sĩ thuộc Quân đội nhân dân Việt Nam và Công an nhân dân\n\nViệt Nam và người thân (vợ chồng/con cái/ tứ thân phụ mẫu) đang công tác trong biên chế chính thức. Giấy tờ xác định đối tượng hưởng ưu đãi là thẻ ngành: Thẻ sĩ quan/ thẻ quân\n\nnhân/ thẻ Công an nhân dân.\n\n- | Khách hàng là nhân sự của Tổng công ty Bưu điện Việt Nam – VN Post.\n\n- | Mức ưu đãi được áp dụng như sau:\n\n• | Các dòng VF 2, VF 3 & Minio Green: Ưu đãi 6% MSRP.\n\n• | Các dòng VF 7, VF 9, VF 8 Thế hệ mới, Lạc Hồng 900 LX, EC Van & VF Wild: Ưu đãi 7% MSRP.\n\n• | Các dòng xe còn lại: Ưu đãi 9% MSRP.",
+              "chunk_index": 3
+            }
+          ]
+        }
+      ],
+      "case_result": "FAIL",
+      "checkpoints": [
+        {
+          "turn": 0,
+          "state": {
+            "session_id": "18875fc8-e674-4c8d-ba7b-05cb3db73aaa:T3_SUPPORTED_OBJECTION_HANDLING",
+            "created_at": "2026-10-17T12:42:23.542104Z",
+            "scenario_id": "SCENARIO_01_VF5_TAXI",
+            "difficulty": "Medium",
+            "sales_channel": "Fanpage",
+            "training_objective": "Khai thác nhu cầu chạy dịch vụ, trao đổi chi phí sử dụng một cách trung thực và chốt bước kiểm chứng phù hợp.",
+            "persona": {
+              "name": "Anh Nam",
+              "age": 35,
+              "current_car": "Toyota Vios 2017",
+              "communication_style": "Thực dụng, nói ngắn gọn, quan tâm thu nhập ròng và thời gian không chạy khách; hỏi ước lượng trước, chỉ muốn bảng tính chi tiết khi thấy đáng cân nhắc"
+            },
+            "conversation_stage": "opening",
+            "turn_count": 0,
+            "trust_level": 3,
+            "interest_level": 3,
+            "visible_context": "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
+            "hidden_facts": {
+              "budget": "Có sẵn khoảng 300 triệu để trả trước, cân nhắc vay phần còn lại",
+              "daily_distance": "Chạy trung bình 180 km/ngày (khoảng 5.000 km/tháng)",
+              "fuel_cost_month": "Theo ghi chép chi tiêu ba tháng gần đây, tiền xăng Vios khoảng 8,5 triệu đồng mỗi tháng; đây là dữ kiện giả lập của khách, không phải thông số Toyota",
+              "registration_location": "Anh dự định đăng ký xe tại Hà Nội và chạy biển vàng",
+              "work_schedule": "Anh thường chạy từ sáng sớm, nghỉ ngắn khoảng 12 giờ 30 đến 14 giờ rồi tiếp tục chạy tới tối; sợ phải chờ trụ sạc lúc đang có cuốc",
+              "real_concern": "Sợ tiền sạc, khoản trả góp và thời gian dừng sạc làm giảm thu nhập ròng so với chiếc Vios đang dùng"
+            },
+            "revealed_facts": [],
+            "spoken_fact_message_ids": {},
+            "spoken_concern_message_ids": {},
+            "concern_prompt_counts": {},
+            "max_turns": 15,
+            "advisor_discoveries": [],
+            "active_objections": [],
+            "resolved_objections": [],
+            "unresolved_objections": [
+              "OBJ_VF5_BATTERY_VS_GAS",
+              "OBJ_VF5_CHARGING_TIME"
+            ],
+            "customer_goals": "So chi phí sử dụng theo quãng đường thực tế với Vios, kiểm tra điều kiện sạc cho xe biển vàng và chọn bước xác minh trước khi đổi xe",
+            "current_intent": "Cân nhắc mua VF 5 Plus kèm pin để chạy dịch vụ, muốn biết tiền sạc, trả góp và thời gian dừng sạc ảnh hưởng thu nhập ra sao",
+            "current_topic": null,
+            "pending_next_step_attempted": false,
+            "consecutive_off_topic_turns": 0,
+            "termination_status": "active",
+            "termination_reason": null,
+            "closing_outcome": null,
+            "linked_benefits": [],
+            "policy_mentions": [],
+            "misconduct_reason": null,
+            "evaluation_status": "not_started",
+            "evaluation_result": null,
+            "messages": [],
+            "factual_claims": []
+          }
+        },
+        {
+          "turn": 1,
+          "state": {
+            "session_id": "18875fc8-e674-4c8d-ba7b-05cb3db73aaa:T3_SUPPORTED_OBJECTION_HANDLING",
+            "created_at": "2026-10-17T12:42:23.542104Z",
+            "scenario_id": "SCENARIO_01_VF5_TAXI",
+            "difficulty": "Medium",
+            "sales_channel": "Fanpage",
+            "training_objective": "Khai thác nhu cầu chạy dịch vụ, trao đổi chi phí sử dụng một cách trung thực và chốt bước kiểm chứng phù hợp.",
+            "persona": {
+              "name": "Anh Nam",
+              "age": 35,
+              "current_car": "Toyota Vios 2017",
+              "communication_style": "Thực dụng, nói ngắn gọn, quan tâm thu nhập ròng và thời gian không chạy khách; hỏi ước lượng trước, chỉ muốn bảng tính chi tiết khi thấy đáng cân nhắc"
+            },
+            "conversation_stage": "discovery",
+            "turn_count": 1,
+            "trust_level": 4,
+            "interest_level": 3,
+            "visible_context": "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
+            "hidden_facts": {
+              "budget": "Có sẵn khoảng 300 triệu để trả trước, cân nhắc vay phần còn lại",
+              "daily_distance": "Chạy trung bình 180 km/ngày (khoảng 5.000 km/tháng)",
+              "fuel_cost_month": "Theo ghi chép chi tiêu ba tháng gần đây, tiền xăng Vios khoảng 8,5 triệu đồng mỗi tháng; đây là dữ kiện giả lập của khách, không phải thông số Toyota",
+              "registration_location": "Anh dự định đăng ký xe tại Hà Nội và chạy biển vàng",
+              "work_schedule": "Anh thường chạy từ sáng sớm, nghỉ ngắn khoảng 12 giờ 30 đến 14 giờ rồi tiếp tục chạy tới tối; sợ phải chờ trụ sạc lúc đang có cuốc",
+              "real_concern": "Sợ tiền sạc, khoản trả góp và thời gian dừng sạc làm giảm thu nhập ròng so với chiếc Vios đang dùng"
+            },
+            "revealed_facts": [
+              "registration_location"
+            ],
+            "spoken_fact_message_ids": {
+              "registration_location": "ca159d00-a69d-4dd1-8832-025565d53a04"
+            },
+            "spoken_concern_message_ids": {},
+            "concern_prompt_counts": {},
+            "max_turns": 15,
+            "advisor_discoveries": [
+              "registration_location"
+            ],
+            "active_objections": [],
+            "resolved_objections": [],
+            "unresolved_objections": [
+              "OBJ_VF5_BATTERY_VS_GAS",
+              "OBJ_VF5_CHARGING_TIME"
+            ],
+            "customer_goals": "So chi phí sử dụng theo quãng đường thực tế với Vios, kiểm tra điều kiện sạc cho xe biển vàng và chọn bước xác minh trước khi đổi xe",
+            "current_intent": "ask_registration_location_and_plate",
+            "current_topic": "registration_location",
+            "pending_next_step_attempted": false,
+            "consecutive_off_topic_turns": 0,
+            "termination_status": "active",
+            "termination_reason": null,
+            "closing_outcome": null,
+            "linked_benefits": [],
+            "policy_mentions": [],
+            "misconduct_reason": null,
+            "evaluation_status": "not_started",
+            "evaluation_result": null,
+            "messages": [
+              {
+                "message_id": "317b84c5-b522-42bf-912e-0d79db7effb4",
+                "role": "advisor",
+                "content": "Để báo giá lăn bánh theo đúng địa phương và kiểm tra điều kiện sạc khi chạy dịch vụ, anh định đăng ký xe ở đâu và sẽ dùng biển vàng hay trắng ạ?"
+              },
+              {
+                "message_id": "ca159d00-a69d-4dd1-8832-025565d53a04",
+                "role": "customer",
+                "content": "Anh đang xem VF 5 Plus để đổi từ Vios chạy dịch vụ, dự kiến dùng biển vàng. Địa phương đăng ký anh chưa chốt; trước mắt em giúp anh so chi phí theo quãng đường chạy thực tế với Vios và kiểm tra điều kiện sạc cho biển vàng nhé. Anh định đăng ký xe ở Hà Nội và chạy biển vàng để chở khách."
+              }
+            ],
+            "factual_claims": []
+          }
+        },
+        {
+          "turn": 2,
+          "state": {
+            "session_id": "18875fc8-e674-4c8d-ba7b-05cb3db73aaa:T3_SUPPORTED_OBJECTION_HANDLING",
+            "created_at": "2026-10-17T12:42:23.542104Z",
+            "scenario_id": "SCENARIO_01_VF5_TAXI",
+            "difficulty": "Medium",
+            "sales_channel": "Fanpage",
+            "training_objective": "Khai thác nhu cầu chạy dịch vụ, trao đổi chi phí sử dụng một cách trung thực và chốt bước kiểm chứng phù hợp.",
+            "persona": {
+              "name": "Anh Nam",
+              "age": 35,
+              "current_car": "Toyota Vios 2017",
+              "communication_style": "Thực dụng, nói ngắn gọn, quan tâm thu nhập ròng và thời gian không chạy khách; hỏi ước lượng trước, chỉ muốn bảng tính chi tiết khi thấy đáng cân nhắc"
+            },
+            "conversation_stage": "discovery",
+            "turn_count": 2,
+            "trust_level": 5,
+            "interest_level": 3,
+            "visible_context": "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
+            "hidden_facts": {
+              "budget": "Có sẵn khoảng 300 triệu để trả trước, cân nhắc vay phần còn lại",
+              "daily_distance": "Chạy trung bình 180 km/ngày (khoảng 5.000 km/tháng)",
+              "fuel_cost_month": "Theo ghi chép chi tiêu ba tháng gần đây, tiền xăng Vios khoảng 8,5 triệu đồng mỗi tháng; đây là dữ kiện giả lập của khách, không phải thông số Toyota",
+              "registration_location": "Anh dự định đăng ký xe tại Hà Nội và chạy biển vàng",
+              "work_schedule": "Anh thường chạy từ sáng sớm, nghỉ ngắn khoảng 12 giờ 30 đến 14 giờ rồi tiếp tục chạy tới tối; sợ phải chờ trụ sạc lúc đang có cuốc",
+              "real_concern": "Sợ tiền sạc, khoản trả góp và thời gian dừng sạc làm giảm thu nhập ròng so với chiếc Vios đang dùng"
+            },
+            "revealed_facts": [
+              "registration_location",
+              "daily_distance"
+            ],
+            "spoken_fact_message_ids": {
+              "registration_location": "ca159d00-a69d-4dd1-8832-025565d53a04",
+              "daily_distance": "6a0af0a0-482a-4fa5-ae18-c49b77a0391c"
+            },
+            "spoken_concern_message_ids": {},
+            "concern_prompt_counts": {},
+            "max_turns": 15,
+            "advisor_discoveries": [
+              "registration_location",
+              "daily_distance"
+            ],
+            "active_objections": [],
+            "resolved_objections": [],
+            "unresolved_objections": [
+              "OBJ_VF5_BATTERY_VS_GAS",
+              "OBJ_VF5_CHARGING_TIME"
+            ],
+            "customer_goals": "So chi phí sử dụng theo quãng đường thực tế với Vios, kiểm tra điều kiện sạc cho xe biển vàng và chọn bước xác minh trước khi đổi xe",
+            "current_intent": "ask_daily_travel_distance",
+            "current_topic": "daily_distance",
+            "pending_next_step_attempted": false,
+            "consecutive_off_topic_turns": 0,
+            "termination_status": "active",
+            "termination_reason": null,
+            "closing_outcome": null,
+            "linked_benefits": [],
+            "policy_mentions": [],
+            "misconduct_reason": null,
+            "evaluation_status": "not_started",
+            "evaluation_result": null,
+            "messages": [
+              {
+                "message_id": "317b84c5-b522-42bf-912e-0d79db7effb4",
+                "role": "advisor",
+                "content": "Để báo giá lăn bánh theo đúng địa phương và kiểm tra điều kiện sạc khi chạy dịch vụ, anh định đăng ký xe ở đâu và sẽ dùng biển vàng hay trắng ạ?"
+              },
+              {
+                "message_id": "ca159d00-a69d-4dd1-8832-025565d53a04",
+                "role": "customer",
+                "content": "Anh đang xem VF 5 Plus để đổi từ Vios chạy dịch vụ, dự kiến dùng biển vàng. Địa phương đăng ký anh chưa chốt; trước mắt em giúp anh so chi phí theo quãng đường chạy thực tế với Vios và kiểm tra điều kiện sạc cho biển vàng nhé. Anh định đăng ký xe ở Hà Nội và chạy biển vàng để chở khách."
+              },
+              {
+                "message_id": "7b673ab5-2187-4f13-b344-3fcf359cb63b",
+                "role": "advisor",
+                "content": "Để so với chiếc Vios anh đang chạy, mỗi ngày anh đi khoảng bao nhiêu km ạ?"
+              },
+              {
+                "message_id": "6a0af0a0-482a-4fa5-ae18-c49b77a0391c",
+                "role": "customer",
+                "content": "Mỗi ngày anh chạy túc tắc cũng tầm 180 đến 200 cây số em ạ, tháng cũng ngót nghét 5.000 cây."
+              }
+            ],
+            "factual_claims": []
+          }
+        },
+        {
+          "turn": 3,
+          "state": {
+            "session_id": "18875fc8-e674-4c8d-ba7b-05cb3db73aaa:T3_SUPPORTED_OBJECTION_HANDLING",
+            "created_at": "2026-10-17T12:42:23.542104Z",
+            "scenario_id": "SCENARIO_01_VF5_TAXI",
+            "difficulty": "Medium",
+            "sales_channel": "Fanpage",
+            "training_objective": "Khai thác nhu cầu chạy dịch vụ, trao đổi chi phí sử dụng một cách trung thực và chốt bước kiểm chứng phù hợp.",
+            "persona": {
+              "name": "Anh Nam",
+              "age": 35,
+              "current_car": "Toyota Vios 2017",
+              "communication_style": "Thực dụng, nói ngắn gọn, quan tâm thu nhập ròng và thời gian không chạy khách; hỏi ước lượng trước, chỉ muốn bảng tính chi tiết khi thấy đáng cân nhắc"
+            },
+            "conversation_stage": "discovery",
+            "turn_count": 3,
+            "trust_level": 5,
+            "interest_level": 3,
+            "visible_context": "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
+            "hidden_facts": {
+              "budget": "Có sẵn khoảng 300 triệu để trả trước, cân nhắc vay phần còn lại",
+              "daily_distance": "Chạy trung bình 180 km/ngày (khoảng 5.000 km/tháng)",
+              "fuel_cost_month": "Theo ghi chép chi tiêu ba tháng gần đây, tiền xăng Vios khoảng 8,5 triệu đồng mỗi tháng; đây là dữ kiện giả lập của khách, không phải thông số Toyota",
+              "registration_location": "Anh dự định đăng ký xe tại Hà Nội và chạy biển vàng",
+              "work_schedule": "Anh thường chạy từ sáng sớm, nghỉ ngắn khoảng 12 giờ 30 đến 14 giờ rồi tiếp tục chạy tới tối; sợ phải chờ trụ sạc lúc đang có cuốc",
+              "real_concern": "Sợ tiền sạc, khoản trả góp và thời gian dừng sạc làm giảm thu nhập ròng so với chiếc Vios đang dùng"
+            },
+            "revealed_facts": [
+              "registration_location",
+              "daily_distance",
+              "fuel_cost_month"
+            ],
+            "spoken_fact_message_ids": {
+              "registration_location": "ca159d00-a69d-4dd1-8832-025565d53a04",
+              "daily_distance": "6a0af0a0-482a-4fa5-ae18-c49b77a0391c",
+              "fuel_cost_month": "45607dc7-b7d5-4610-a7f5-720e849b89a6"
+            },
+            "spoken_concern_message_ids": {},
+            "concern_prompt_counts": {},
+            "max_turns": 15,
+            "advisor_discoveries": [
+              "registration_location",
+              "daily_distance",
+              "fuel_cost_month"
+            ],
+            "active_objections": [],
+            "resolved_objections": [],
+            "unresolved_objections": [
+              "OBJ_VF5_BATTERY_VS_GAS",
+              "OBJ_VF5_CHARGING_TIME"
+            ],
+            "customer_goals": "So chi phí sử dụng theo quãng đường thực tế với Vios, kiểm tra điều kiện sạc cho xe biển vàng và chọn bước xác minh trước khi đổi xe",
+            "current_intent": "ask_actual_fuel_spend",
+            "current_topic": "fuel_cost_month",
+            "pending_next_step_attempted": false,
+            "consecutive_off_topic_turns": 0,
+            "termination_status": "active",
+            "termination_reason": null,
+            "closing_outcome": null,
+            "linked_benefits": [],
+            "policy_mentions": [],
+            "misconduct_reason": null,
+            "evaluation_status": "not_started",
+            "evaluation_result": null,
+            "messages": [
+              {
+                "message_id": "317b84c5-b522-42bf-912e-0d79db7effb4",
+                "role": "advisor",
+                "content": "Để báo giá lăn bánh theo đúng địa phương và kiểm tra điều kiện sạc khi chạy dịch vụ, anh định đăng ký xe ở đâu và sẽ dùng biển vàng hay trắng ạ?"
+              },
+              {
+                "message_id": "ca159d00-a69d-4dd1-8832-025565d53a04",
+                "role": "customer",
+                "content": "Anh đang xem VF 5 Plus để đổi từ Vios chạy dịch vụ, dự kiến dùng biển vàng. Địa phương đăng ký anh chưa chốt; trước mắt em giúp anh so chi phí theo quãng đường chạy thực tế với Vios và kiểm tra điều kiện sạc cho biển vàng nhé. Anh định đăng ký xe ở Hà Nội và chạy biển vàng để chở khách."
+              },
+              {
+                "message_id": "7b673ab5-2187-4f13-b344-3fcf359cb63b",
+                "role": "advisor",
+                "content": "Để so với chiếc Vios anh đang chạy, mỗi ngày anh đi khoảng bao nhiêu km ạ?"
+              },
+              {
+                "message_id": "6a0af0a0-482a-4fa5-ae18-c49b77a0391c",
+                "role": "customer",
+                "content": "Mỗi ngày anh chạy túc tắc cũng tầm 180 đến 200 cây số em ạ, tháng cũng ngót nghét 5.000 cây."
+              },
+              {
+                "message_id": "37a6e9ca-a537-4179-a9b5-360ed0de3b72",
+                "role": "advisor",
+                "content": "Theo ghi chép của anh, tiền xăng Vios mỗi tháng khoảng bao nhiêu ạ?"
+              },
+              {
+                "message_id": "45607dc7-b7d5-4610-a7f5-720e849b89a6",
+                "role": "customer",
+                "content": "Anh có ghi lại chi tiêu mấy tháng gần đây, trung bình tiền xăng Vios khoảng 8,5 triệu một tháng."
+              }
+            ],
+            "factual_claims": []
+          }
+        },
+        {
+          "turn": 4,
+          "state": {
+            "session_id": "18875fc8-e674-4c8d-ba7b-05cb3db73aaa:T3_SUPPORTED_OBJECTION_HANDLING",
+            "created_at": "2026-10-17T12:42:23.542104Z",
+            "scenario_id": "SCENARIO_01_VF5_TAXI",
+            "difficulty": "Medium",
+            "sales_channel": "Fanpage",
+            "training_objective": "Khai thác nhu cầu chạy dịch vụ, trao đổi chi phí sử dụng một cách trung thực và chốt bước kiểm chứng phù hợp.",
+            "persona": {
+              "name": "Anh Nam",
+              "age": 35,
+              "current_car": "Toyota Vios 2017",
+              "communication_style": "Thực dụng, nói ngắn gọn, quan tâm thu nhập ròng và thời gian không chạy khách; hỏi ước lượng trước, chỉ muốn bảng tính chi tiết khi thấy đáng cân nhắc"
+            },
+            "conversation_stage": "objection_handling",
+            "turn_count": 4,
+            "trust_level": 5,
+            "interest_level": 3,
+            "visible_context": "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
+            "hidden_facts": {
+              "budget": "Có sẵn khoảng 300 triệu để trả trước, cân nhắc vay phần còn lại",
+              "daily_distance": "Chạy trung bình 180 km/ngày (khoảng 5.000 km/tháng)",
+              "fuel_cost_month": "Theo ghi chép chi tiêu ba tháng gần đây, tiền xăng Vios khoảng 8,5 triệu đồng mỗi tháng; đây là dữ kiện giả lập của khách, không phải thông số Toyota",
+              "registration_location": "Anh dự định đăng ký xe tại Hà Nội và chạy biển vàng",
+              "work_schedule": "Anh thường chạy từ sáng sớm, nghỉ ngắn khoảng 12 giờ 30 đến 14 giờ rồi tiếp tục chạy tới tối; sợ phải chờ trụ sạc lúc đang có cuốc",
+              "real_concern": "Sợ tiền sạc, khoản trả góp và thời gian dừng sạc làm giảm thu nhập ròng so với chiếc Vios đang dùng"
+            },
+            "revealed_facts": [
+              "registration_location",
+              "daily_distance",
+              "fuel_cost_month"
+            ],
+            "spoken_fact_message_ids": {
+              "registration_location": "ca159d00-a69d-4dd1-8832-025565d53a04",
+              "daily_distance": "6a0af0a0-482a-4fa5-ae18-c49b77a0391c",
+              "fuel_cost_month": "45607dc7-b7d5-4610-a7f5-720e849b89a6"
+            },
+            "spoken_concern_message_ids": {
+              "OBJ_VF5_BATTERY_VS_GAS": "6887cc9f-1c3b-4a7e-a7ec-3c750bdba87f"
+            },
+            "concern_prompt_counts": {},
+            "max_turns": 15,
+            "advisor_discoveries": [
+              "registration_location",
+              "daily_distance",
+              "fuel_cost_month"
+            ],
+            "active_objections": [
+              "OBJ_VF5_BATTERY_VS_GAS"
+            ],
+            "resolved_objections": [],
+            "unresolved_objections": [
+              "OBJ_VF5_BATTERY_VS_GAS",
+              "OBJ_VF5_CHARGING_TIME"
+            ],
+            "customer_goals": "So chi phí sử dụng theo quãng đường thực tế với Vios, kiểm tra điều kiện sạc cho xe biển vàng và chọn bước xác minh trước khi đổi xe",
+            "current_intent": "ask_actual_fuel_spend",
+            "current_topic": "fuel_cost_month",
+            "pending_next_step_attempted": false,
+            "consecutive_off_topic_turns": 0,
+            "termination_status": "active",
+            "termination_reason": null,
+            "closing_outcome": null,
+            "linked_benefits": [],
+            "policy_mentions": [],
+            "misconduct_reason": null,
+            "evaluation_status": "not_started",
+            "evaluation_result": null,
+            "messages": [
+              {
+                "message_id": "317b84c5-b522-42bf-912e-0d79db7effb4",
+                "role": "advisor",
+                "content": "Để báo giá lăn bánh theo đúng địa phương và kiểm tra điều kiện sạc khi chạy dịch vụ, anh định đăng ký xe ở đâu và sẽ dùng biển vàng hay trắng ạ?"
+              },
+              {
+                "message_id": "ca159d00-a69d-4dd1-8832-025565d53a04",
+                "role": "customer",
+                "content": "Anh đang xem VF 5 Plus để đổi từ Vios chạy dịch vụ, dự kiến dùng biển vàng. Địa phương đăng ký anh chưa chốt; trước mắt em giúp anh so chi phí theo quãng đường chạy thực tế với Vios và kiểm tra điều kiện sạc cho biển vàng nhé. Anh định đăng ký xe ở Hà Nội và chạy biển vàng để chở khách."
+              },
+              {
+                "message_id": "7b673ab5-2187-4f13-b344-3fcf359cb63b",
+                "role": "advisor",
+                "content": "Để so với chiếc Vios anh đang chạy, mỗi ngày anh đi khoảng bao nhiêu km ạ?"
+              },
+              {
+                "message_id": "6a0af0a0-482a-4fa5-ae18-c49b77a0391c",
+                "role": "customer",
+                "content": "Mỗi ngày anh chạy túc tắc cũng tầm 180 đến 200 cây số em ạ, tháng cũng ngót nghét 5.000 cây."
+              },
+              {
+                "message_id": "37a6e9ca-a537-4179-a9b5-360ed0de3b72",
+                "role": "advisor",
+                "content": "Theo ghi chép của anh, tiền xăng Vios mỗi tháng khoảng bao nhiêu ạ?"
+              },
+              {
+                "message_id": "45607dc7-b7d5-4610-a7f5-720e849b89a6",
+                "role": "customer",
+                "content": "Anh có ghi lại chi tiêu mấy tháng gần đây, trung bình tiền xăng Vios khoảng 8,5 triệu một tháng."
+              },
+              {
+                "message_id": "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+                "role": "advisor",
+                "content": "Đơn giá tại trạm sạc công cộng VinFast là 3.858 VNĐ/kWh."
+              },
+              {
+                "message_id": "6887cc9f-1c3b-4a7e-a7ec-3c750bdba87f",
+                "role": "customer",
+                "content": "Em cho anh ước tính tiền sạc mỗi tháng với quãng đường gần 5.000 km nhé; giá mỗi kWh anh biết rồi nhưng muốn xem so với 8,5 triệu tiền xăng, cộng cả trả góp thì có đáng đổi không."
+              }
+            ],
+            "factual_claims": [
+              {
+                "message_id": "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+                "text": "Đơn giá tại trạm sạc công cộng VinFast là 3.858 VNĐ/kWh.",
+                "category": "price"
+              }
+            ]
+          }
+        },
+        {
+          "turn": 5,
+          "state": {
+            "session_id": "18875fc8-e674-4c8d-ba7b-05cb3db73aaa:T3_SUPPORTED_OBJECTION_HANDLING",
+            "created_at": "2026-10-17T12:42:23.542104Z",
+            "scenario_id": "SCENARIO_01_VF5_TAXI",
+            "difficulty": "Medium",
+            "sales_channel": "Fanpage",
+            "training_objective": "Khai thác nhu cầu chạy dịch vụ, trao đổi chi phí sử dụng một cách trung thực và chốt bước kiểm chứng phù hợp.",
+            "persona": {
+              "name": "Anh Nam",
+              "age": 35,
+              "current_car": "Toyota Vios 2017",
+              "communication_style": "Thực dụng, nói ngắn gọn, quan tâm thu nhập ròng và thời gian không chạy khách; hỏi ước lượng trước, chỉ muốn bảng tính chi tiết khi thấy đáng cân nhắc"
+            },
+            "conversation_stage": "objection_handling",
+            "turn_count": 5,
+            "trust_level": 5,
+            "interest_level": 4,
+            "visible_context": "Khách nhắn tin qua Fanpage hỏi: 'VF 5 Plus lăn bánh bao nhiêu em? Anh đang chạy Vios dịch vụ tính đổi sang xe điện mà sợ không ăn thua.'",
+            "hidden_facts": {
+              "budget": "Có sẵn khoảng 300 triệu để trả trước, cân nhắc vay phần còn lại",
+              "daily_distance": "Chạy trung bình 180 km/ngày (khoảng 5.000 km/tháng)",
+              "fuel_cost_month": "Theo ghi chép chi tiêu ba tháng gần đây, tiền xăng Vios khoảng 8,5 triệu đồng mỗi tháng; đây là dữ kiện giả lập của khách, không phải thông số Toyota",
+              "registration_location": "Anh dự định đăng ký xe tại Hà Nội và chạy biển vàng",
+              "work_schedule": "Anh thường chạy từ sáng sớm, nghỉ ngắn khoảng 12 giờ 30 đến 14 giờ rồi tiếp tục chạy tới tối; sợ phải chờ trụ sạc lúc đang có cuốc",
+              "real_concern": "Sợ tiền sạc, khoản trả góp và thời gian dừng sạc làm giảm thu nhập ròng so với chiếc Vios đang dùng"
+            },
+            "revealed_facts": [
+              "registration_location",
+              "daily_distance",
+              "fuel_cost_month"
+            ],
+            "spoken_fact_message_ids": {
+              "registration_location": "ca159d00-a69d-4dd1-8832-025565d53a04",
+              "daily_distance": "6a0af0a0-482a-4fa5-ae18-c49b77a0391c",
+              "fuel_cost_month": "45607dc7-b7d5-4610-a7f5-720e849b89a6"
+            },
+            "spoken_concern_message_ids": {
+              "OBJ_VF5_BATTERY_VS_GAS": "6887cc9f-1c3b-4a7e-a7ec-3c750bdba87f"
+            },
+            "concern_prompt_counts": {
+              "OBJ_VF5_BATTERY_VS_GAS": 1
+            },
+            "max_turns": 15,
+            "advisor_discoveries": [
+              "registration_location",
+              "daily_distance",
+              "fuel_cost_month"
+            ],
+            "active_objections": [
+              "OBJ_VF5_BATTERY_VS_GAS"
+            ],
+            "resolved_objections": [],
+            "unresolved_objections": [
+              "OBJ_VF5_BATTERY_VS_GAS",
+              "OBJ_VF5_CHARGING_TIME"
+            ],
+            "customer_goals": "So chi phí sử dụng theo quãng đường thực tế với Vios, kiểm tra điều kiện sạc cho xe biển vàng và chọn bước xác minh trước khi đổi xe",
+            "current_intent": "ask_actual_fuel_spend",
+            "current_topic": "fuel_cost_month",
+            "pending_next_step_attempted": false,
+            "consecutive_off_topic_turns": 0,
+            "termination_status": "active",
+            "termination_reason": null,
+            "closing_outcome": null,
+            "linked_benefits": [],
+            "policy_mentions": [
+              "charging"
+            ],
+            "misconduct_reason": null,
+            "evaluation_status": "not_started",
+            "evaluation_result": null,
+            "messages": [
+              {
+                "message_id": "317b84c5-b522-42bf-912e-0d79db7effb4",
+                "role": "advisor",
+                "content": "Để báo giá lăn bánh theo đúng địa phương và kiểm tra điều kiện sạc khi chạy dịch vụ, anh định đăng ký xe ở đâu và sẽ dùng biển vàng hay trắng ạ?"
+              },
+              {
+                "message_id": "ca159d00-a69d-4dd1-8832-025565d53a04",
+                "role": "customer",
+                "content": "Anh đang xem VF 5 Plus để đổi từ Vios chạy dịch vụ, dự kiến dùng biển vàng. Địa phương đăng ký anh chưa chốt; trước mắt em giúp anh so chi phí theo quãng đường chạy thực tế với Vios và kiểm tra điều kiện sạc cho biển vàng nhé. Anh định đăng ký xe ở Hà Nội và chạy biển vàng để chở khách."
+              },
+              {
+                "message_id": "7b673ab5-2187-4f13-b344-3fcf359cb63b",
+                "role": "advisor",
+                "content": "Để so với chiếc Vios anh đang chạy, mỗi ngày anh đi khoảng bao nhiêu km ạ?"
+              },
+              {
+                "message_id": "6a0af0a0-482a-4fa5-ae18-c49b77a0391c",
+                "role": "customer",
+                "content": "Mỗi ngày anh chạy túc tắc cũng tầm 180 đến 200 cây số em ạ, tháng cũng ngót nghét 5.000 cây."
+              },
+              {
+                "message_id": "37a6e9ca-a537-4179-a9b5-360ed0de3b72",
+                "role": "advisor",
+                "content": "Theo ghi chép của anh, tiền xăng Vios mỗi tháng khoảng bao nhiêu ạ?"
+              },
+              {
+                "message_id": "45607dc7-b7d5-4610-a7f5-720e849b89a6",
+                "role": "customer",
+                "content": "Anh có ghi lại chi tiêu mấy tháng gần đây, trung bình tiền xăng Vios khoảng 8,5 triệu một tháng."
+              },
+              {
+                "message_id": "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+                "role": "advisor",
+                "content": "Đơn giá tại trạm sạc công cộng VinFast là 3.858 VNĐ/kWh."
+              },
+              {
+                "message_id": "6887cc9f-1c3b-4a7e-a7ec-3c750bdba87f",
+                "role": "customer",
+                "content": "Em cho anh ước tính tiền sạc mỗi tháng với quãng đường gần 5.000 km nhé; giá mỗi kWh anh biết rồi nhưng muốn xem so với 8,5 triệu tiền xăng, cộng cả trả góp thì có đáng đổi không."
+              },
+              {
+                "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+                "role": "advisor",
+                "content": "Em hiểu anh lo tiền sạc cộng trả góp sẽ làm giảm thu nhập ròng so với Vios. Mình lấy quãng đường anh vừa nói để ước lượng lượng điện cần sạc và lấy tiền xăng Vios anh ghi lại làm mốc đối chiếu; khoản trả góp và thời gian dừng chạy phải tính riêng, nên chưa thể kết luận anh tiết kiệm bao nhiêu. Tiền điện được tính theo kWh thực tế của phiên sạc. Theo chính sách ngày 19/09/2026, với xe biển vàng mua từ 20/04/2026, ưu đãi sạc vào thứ Sáu đến Chủ nhật chỉ áp dụng trong khung 23:00–06:00 hoặc 14:00–16:00. Vì anh dự định chạy biển vàng, còn phải đối chiếu ngày mua, số lượt và giờ sạc trước khi tính ưu đãi; em không hứa trước mức tiết kiệm."
+              },
+              {
+                "message_id": "cfa68b05-c68b-4340-b963-76758c528dc7",
+                "role": "customer",
+                "content": "Ừ, điều kiện giờ sạc biển vàng anh hiểu rồi. Nhưng hiện vẫn chưa có con số ước tính tiền sạc cho gần 5.000 km/tháng để anh so với 8,5 triệu tiền xăng, rồi cân đối thêm khoản trả góp; em ước lượng sơ bộ được không?"
+              }
+            ],
+            "factual_claims": [
+              {
+                "message_id": "3e6ac501-efae-4c50-8ab2-29b2523e9cc6",
+                "text": "Đơn giá tại trạm sạc công cộng VinFast là 3.858 VNĐ/kWh.",
+                "category": "price"
+              },
+              {
+                "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+                "text": "Mình lấy quãng đường anh vừa nói để ước lượng lượng điện cần sạc và lấy tiền xăng Vios anh ghi lại làm mốc đối chiếu; khoản trả góp và thời gian dừng chạy phải tính riêng, nên chưa thể kết luận anh tiết kiệm bao nhiêu.",
+                "category": "other"
+              },
+              {
+                "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+                "text": "Tiền điện được tính theo kWh thực tế của phiên sạc.",
+                "category": "battery_charging"
+              },
+              {
+                "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+                "text": "Theo chính sách ngày 19/09/2026, với xe biển vàng mua từ 20/04/2026, ưu đãi sạc vào thứ Sáu đến Chủ nhật chỉ áp dụng trong khung 23:00–06:00 hoặc 14:00–16:00.",
+                "category": "policy"
+              },
+              {
+                "message_id": "8b2bf62b-74a7-4de7-8b1e-303de0d2fb42",
+                "text": "Vì anh dự định chạy biển vàng, còn phải đối chiếu ngày mua, số lượt và giờ sạc trước khi tính ưu đãi; em không hứa trước mức tiết kiệm.",
+                "category": "policy"
+              }
+            ]
+          }
+        }
+      ],
+      "overall_status": "FAIL"
+    }
+  ],
+  "overall_status": "FAIL"
+}

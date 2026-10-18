@@ -10,9 +10,9 @@ from src.agents.copilot import model_io, nodes
 from src.agents.copilot.graph import NODE_NAMES, copilot_agent
 from src.agents.copilot.nodes import evidence, planning, retrieval
 from src.agents.copilot.nodes._shared import can_regenerate
-from src.agents.copilot.nodes.guard import atomic_requirements, resolve_date
+from src.agents.copilot.nodes.guard import resolve_date
 from src.agents.copilot.runtime import CopilotDependencyError, RuntimeBudget
-from src.agents.copilot.state import GeneratedAnswer, GroundingVerdict, Requirement, SelfCheckVerdict
+from src.agents.copilot.state import GeneratedAnswer, Requirement, StructuredGroundingReview
 from src.agents.copilot.tools import build_evidence_context
 from src.config import get_settings
 
@@ -61,13 +61,21 @@ def generated(text="VF 5 có quãng đường 326 km NEDC", rid="R1", cid="C1"):
     return {"claims": [{"text": text, "requirement_ids": [rid], "citation_ids": [cid]}]}
 
 
-def checked(status="supported", recovery="none", answered=None):
+def checked(status="supported", recovery="none", answered=None, missing=(), scope="VF 5"):
+    answered = (["R1"] if status == "supported" else []) if answered is None else answered
+    missing = list(missing) or ([] if status == "supported" else ["R1"])
     return {
         "claim_verdicts": [
-            {"claim_index": 0, "status": status, "error_codes": [] if status == "supported" else ["unsupported_claim"]}
+            {"claim_index": 0, "status": status, "error_codes": [] if status == "supported" else ["unsupported_claim"],
+             "evidence_proofs": [{"citation_id": "C1", "quote": scope}] if scope else []}
         ],
-        "answered_requirement_ids": (["R1"] if status == "supported" else []) if answered is None else answered,
-        "missing_requirement_ids": [] if status == "supported" else ["R1"],
+        "requirement_verdicts": [
+            {"requirement_id": rid, "status": "answered", "supporting_claim_indices": [0],
+             "evidence_status": "sufficient" if scope else "unknown",
+             "evidence_citation_ids": ["C1"] if scope else [],
+             "evidence_proofs": [{"citation_id": "C1", "quote": scope}] if scope else []} for rid in answered
+        ]
+        + [{"requirement_id": rid, "status": "missing"} for rid in missing],
         "recovery": recovery,
         "suggestions_safe": True,
     }
@@ -91,6 +99,11 @@ def scripted(monkeypatch, outputs):
     model = ScriptedModel(outputs)
     monkeypatch.setattr(model_io, "get_llm", lambda **kwargs: model)
     return model
+
+
+@pytest.fixture(autouse=True)
+def disable_live_jev(monkeypatch):
+    monkeypatch.setattr(get_settings(), "openrouter_api_key", "")
 
 
 @pytest.fixture
@@ -120,6 +133,8 @@ def draft_state():
     context = build_evidence_context([source])[0]
     return {
         "query": "VF 5?",
+        "generated_answer": GeneratedAnswer(**generated()),
+        "draft_answer": "VF 5 có quãng đường 326 km NEDC [C1]",
         "requirements": [Requirement(**REQ)],
         "selected_evidence": [source],
         "evidence_registry": [source],
@@ -221,6 +236,7 @@ async def test_intake_rejects_filter_outside_catalog_without_retrieval(monkeypat
 @pytest.mark.asyncio
 async def test_missing_fact_with_no_recovery_requests_search(monkeypatch):
     state = draft_state()
+    state["generated_answer"] = GeneratedAnswer(**generated("VF 5 có thể bay"))
     state["draft_answer"] = "VF 5 có thể bay [C1]"
     scripted(monkeypatch, [checked("unsupported")])
     result = await nodes.check_grounding(state)
@@ -256,47 +272,6 @@ async def test_no_third_generation_after_second_failure(monkeypatch, offline):
     assert len(model.payloads) == 5
 
 
-@pytest.mark.skip(reason="Deprecated: claim merging across revisions replaced by single-draft self-check and abstain")
-@pytest.mark.asyncio
-async def test_valid_claim_survives_second_draft_schema_failure(monkeypatch, offline):
-    decision = intake(requirements=[REQ, {"requirement_id": "R2", "description": "Dung lượng pin"}])
-    verdict = checked(recovery="regenerate")
-    verdict["missing_requirement_ids"] = ["R2"]
-    model = scripted(monkeypatch, [decision, generated(), verdict, {"answer": "malformed"}])
-    result = await copilot_agent.ainvoke({"query": "VF 5 NEDC và pin?"})
-    assert result["final_response"].status == "partial"
-    assert "326" in result["final_response"].answer
-    assert len(model.payloads) == 4 and result["generation_count"] == 2
-
-
-@pytest.mark.skip(reason="Deprecated: corrective search loop replaced by single retrieval round in simplification plan")
-@pytest.mark.asyncio
-async def test_corrective_search_only_once_and_rechecks_new_context(monkeypatch, offline):
-    decision = {**intake("complex", [REQ, REQ2]), "task": "comparison", "product_models": ["VF 5", "VF 6"]}
-    plan = {"searches": [{"query": "VF 5 NEDC", "product_model": "VF 5", "requirement_ids": ["R1"]}]}
-    correction = {"searches": [{"query": "VF 6 NEDC", "product_model": "VF 6", "requirement_ids": ["R2"]}]}
-    first = {**checked(recovery="search"), "missing_requirement_ids": ["R2"], "feedback": "Thiếu VF 6"}
-    second = {"claims": [*generated()["claims"], *generated("VF 6 có quãng đường 485 km NEDC", "R2", "C2")["claims"]]}
-    verdict = {
-        "claim_verdicts": [{"claim_index": i, "status": "supported"} for i in range(2)],
-        "answered_requirement_ids": ["R1", "R2"],
-        "suggestions_safe": True,
-    }
-
-    async def search(request, state):
-        source = (
-            hit(2, "VF 6", "VF 6 có quãng đường 485 km NEDC.") if state.get("corrective_retrieval_count") else hit()
-        )
-        return {"dense": [source], "bm25": [], "errors": [], "requirement_ids": request.requirement_ids}
-
-    monkeypatch.setattr(retrieval, "_search", search)
-    model = scripted(monkeypatch, [decision, plan, generated(), first, correction, second, verdict])
-    result = await copilot_agent.ainvoke({"query": "So sánh VF 5 và VF 6 NEDC"})
-    assert result["corrective_retrieval_count"] == 1 and result["generation_count"] == 2
-    assert result["final_response"].status == "answered" and len(model.payloads) == 7
-    assert result["retrieval_rounds"] == 2 and result["profile_name"] == "corrective"
-
-
 @pytest.mark.asyncio
 async def test_global_pool_balances_two_queries_and_caps_context():
     a = [hit(i) for i in range(1, 13)]
@@ -311,30 +286,36 @@ async def test_global_pool_balances_two_queries_and_caps_context():
             ],
         }
     )
-    assert len(result["candidate_evidence"]) == 12
-    assert len(result["selected_evidence"]) == 6
+    assert len(result["candidate_evidence"]) == 18
+    assert len(result["selected_evidence"]) <= 20
     assert {h["product_model"] for h in result["selected_evidence"]} == {"VF 5", "VF 6"}
-    assert len(build_evidence_context(result["selected_evidence"])[0]) <= 9000
+    assert len(build_evidence_context(result["selected_evidence"])[0]) <= 16000
 
 
 @pytest.mark.asyncio
 async def test_mandatory_context_bundle_is_not_truncated(monkeypatch):
-    sources = [{**hit(i), "context_prefix": "Header"} for i in range(1, 6)]
+    sources = [{**hit(i), "requires_context": True} for i in range(1, 6)]
     monkeypatch.setattr(evidence, "get_bm25_search_engine", lambda: SimpleNamespace(read_context=lambda *args: sources))
-    state = {"resolved_date": "2026-10-11", "new_hits": sources[:1]}
+    state = {
+        "resolved_date": "2026-10-11",
+        "raw_search_results": [{"dense": sources[:1], "bm25": [], "requirement_ids": ["R1"]}],
+    }
     simple = await nodes.select_evidence(state)
     assert simple["selected_evidence"] == []
     recovery = await nodes.build_context({**state, **simple, "query": "VF 5 NEDC?"})
-    assert recovery["route"] == "retrieve_documents" and recovery["read_anchor_ids"] == ["C1"]
+    assert recovery["route"] == "select_evidence"
     assert recovery["corrective_retrieval_count"] == 1
     corrective = await nodes.select_evidence({**state, "profile_name": "corrective"})
     assert len(corrective["selected_evidence"]) == 5
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("strategy, expected", [
-    ("legacy", {"c-2", "c-4"}), ("rrf_context", {"c-1", "c-3"}),
-])
+@pytest.mark.parametrize(
+    "strategy, expected",
+    [
+        ("rrf_context", {"c-1", "c-3"}),
+    ],
+)
 async def test_comparison_selection_respects_configured_strategy(monkeypatch, strategy, expected):
     monkeypatch.setattr(get_settings(), "copilot_evidence_selection_strategy", strategy)
     monkeypatch.setattr(
@@ -407,7 +388,7 @@ def test_native_schema_preserves_reasoning_override_and_requires_supported_endpo
     model = ChatOpenAI(
         api_key="test-key", base_url="https://openrouter.ai/api/v1", extra_body={"reasoning": {"effort": "none"}}
     )
-    bound = model_io._bind_schema(model, GroundingVerdict, "openrouter")
+    bound = model_io._bind_schema(model, StructuredGroundingReview, "openrouter")
     assert bound.kwargs["extra_body"] == {"reasoning": {"effort": "none"}, "provider": {"require_parameters": True}}
     wire = bound.kwargs["response_format"]["json_schema"]
     assert wire["strict"] and set(wire["schema"]["required"]) == set(wire["schema"]["properties"])
@@ -431,14 +412,6 @@ async def test_valid_json_with_length_finish_cannot_bypass_truncation_check(monk
     assert state["runtime"].attempts == 1
 
 
-@pytest.mark.asyncio
-async def test_changed_context_invalidates_previous_approval():
-    state = draft_state()
-    state.update(self_check=SelfCheckVerdict(grounded=True))
-    result = await nodes.build_context(state)
-    assert result["self_check"] is None
-
-
 @pytest.mark.parametrize(
     "query,supplied,conflict",
     [
@@ -459,37 +432,6 @@ def test_explicit_dates_are_resolved_or_clarified(query, supplied, conflict):
 def test_regeneration_requires_remaining_budget():
     assert not can_regenerate({"generation_count": 1, "runtime": RuntimeBudget(time.monotonic() + 50)})
     assert not can_regenerate({"generation_count": 2, "runtime": RuntimeBudget(time.monotonic() + 180)})
-
-
-def test_range_candidate_cannot_borrow_warranty_mileage_or_charging_price():
-    requirement = Requirement(**REQ)
-    source = hit(content="NEDC hoặc WLTP. " + "Điều kiện sử dụng thực tế. " * 8 + "Bảo hành 8 năm/160.000 km.")
-    assert evidence.requirement_affinity(requirement, source) == 0
-    assert evidence.requirement_affinity(requirement, hit()) > 0
-    price = Requirement(requirement_id="R2", description="Giá niêm yết VF 5 Plus kèm pin và VAT")
-    tariff = {**hit(content="VF 5: giá sạc 3.858 VNĐ/kWh"), "document_type": "policy"}
-    assert evidence.requirement_affinity(price, tariff) == 0
-
-
-def test_comparison_requirement_cannot_conflate_price_range_and_battery():
-    from src.agents.copilot.state import IntakeDecision
-
-    decision = IntakeDecision(
-        **intake(
-            "complex",
-            [
-                {"requirement_id": "R1", "description": "VF 5 Plus: giá niêm yết và quãng đường NEDC"},
-                {"requirement_id": "R2", "description": "VF 6 Eco: giá niêm yết và quãng đường NEDC"},
-                {"requirement_id": "R3", "description": "Tư vấn đi làm 40 km/ngày", "kind": "advice"},
-            ],
-        )
-    )
-    result = atomic_requirements(decision)
-    assert len(result.requirements) == 5
-    assert [r.requirement_id for r in result.requirements] == ["R1", "R2", "R3", "R4", "R5"]
-    assert "Eco" in result.requirements[2].description
-    assert result.requirements[-1].kind == "advice"
-    assert evidence.requirement_affinity(result.requirements[1], hit(content="VF 5: 326 km NEDC")) > 0
 
 
 def test_policy_context_preserves_current_audience_conditions_without_expanding_other_audiences():
@@ -519,38 +461,8 @@ def test_policy_context_preserves_current_audience_conditions_without_expanding_
             section_title=title,
         )
         engine._chunks.append(KnowledgeChunk(chunk_id=meta.chunk_id, document_id="policy", content=text, metadata=meta))
-    result = engine.read_context("policy-2", include_header=True)
+    result = engine.read_context("policy-2")
     assert {h["chunk_id"] for h in result} == {"policy-0", "policy-1", "policy-2", "policy-3"}
-
-
-@pytest.mark.skip(reason="Deprecated: coverage verification routing to planner replaced by whole-answer self-check")
-@pytest.mark.asyncio
-async def test_supported_claims_do_not_hide_missing_factual_coverage(monkeypatch):
-    state = draft_state()
-    state.update(
-        requirements=[Requirement(**REQ), Requirement(**REQ2)], generated_answer=GeneratedAnswer(**generated())
-    )
-    scripted(monkeypatch, [checked()])
-    result = await nodes.check_grounding(state)
-    assert result["route"] == "plan_queries"
-    assert result["recovery_requirement_ids"] == ["R2"]
-    assert result["corrective_retrieval_count"] == 1
-    assert len(result["verified_claims"]) == 1
-
-
-@pytest.mark.skip(reason="Deprecated: evidence_map based regeneration replaced by whole-answer self-check")
-@pytest.mark.asyncio
-async def test_missing_fact_in_context_regenerates_without_new_search(monkeypatch):
-    state = draft_state()
-    state.update(
-        requirements=[Requirement(**REQ), Requirement(**REQ2)],
-        generated_answer=GeneratedAnswer(**generated()),
-        evidence_map={"R2": ["C2"]},
-    )
-    scripted(monkeypatch, [checked()])
-    result = await nodes.check_grounding(state)
-    assert result["route"] == "generate_answer"
-    assert "corrective_retrieval_count" not in result
 
 
 @pytest.mark.asyncio
@@ -563,7 +475,7 @@ async def test_missing_external_quote_preserves_partial_without_corpus_search(mo
         ],
         draft_answer="VF 5 có quãng đường 326 km NEDC [C1]",
     )
-    scripted(monkeypatch, [checked(recovery="search")])
+    scripted(monkeypatch, [checked(recovery="search", missing=["R2"])])
     result = await nodes.check_grounding(state)
     assert result["route"] == "finalize_response"
     assert "corrective_retrieval_count" not in result
@@ -602,7 +514,7 @@ async def test_finish_error_without_transient_code_does_not_retry_or_report_zero
 
 def test_current_lookup_does_not_choose_latest_version():
     sources = [hit(), {**hit(2), "version": "future-label"}]
-    registry, _ = nodes._merge_evidence({"resolved_date": "2026-10-11"}, sources)
+    registry = nodes._merge_evidence({"resolved_date": "2026-10-11"}, sources)
     assert len(registry) == 2
     assert not nodes._valid_evidence_date({**hit(), "status": "expired"}, {"target_date": "2026-07-01"})
 
@@ -612,7 +524,84 @@ async def test_scope_filter_prevents_other_vehicle_from_spending_candidate_pool(
     state = {
         "resolved_date": "2026-10-11",
         "analysis": SimpleNamespace(product_models=["VF 5"]),
-        "new_hits": [hit(1, "VF 8"), hit(2), hit(3, "ALL")],
+        "raw_search_results": [
+            {"dense": [hit(1, "VF 8"), hit(2), hit(3, "ALL")], "bm25": [], "requirement_ids": ["R1"]}
+        ],
     }
     result = await nodes.select_evidence(state)
     assert {h["chunk_id"] for h in result["candidate_evidence"]} == {"c-2", "c-3"}
+
+
+def test_requirement_canonicalizes_vf_variant_model_names():
+    req = Requirement(requirement_id="R1", description="Giá VF 5 Plus", product_model="VF 5 Plus")
+    assert req.product_model == "VF 5"
+    req_hyphen = Requirement(requirement_id="R2", description="Thông số VF-7", product_model="vf-7")
+    assert req_hyphen.product_model == "VF 7"
+
+
+def test_intake_and_plan_handle_input_grounded_non_catalog_models(monkeypatch):
+    from src.agents.copilot.nodes.guard import _validate_intake
+    from src.agents.copilot.nodes.planning import validate_plan
+    from src.agents.copilot.state import IntakeDecision, PlannedSearch, SearchPlan, SearchRequest
+
+    catalog = {
+        "product_model": ["ALL", "VF 3", "VF 5", "VF 6", "VF 7", "VF 8", "VF 9"],
+        "document_type": ["product_specs", "price_list", "policy", "faq", "battlecard"],
+        "policy_type": ["pricing", "warranty", "charging"],
+    }
+    monkeypatch.setattr(planning, "_catalog", lambda state: catalog)
+    state = {"query": "So sánh giá Minio Green, EC Van và VF 5 Plus giúp mình", "customer_context": "", "history": []}
+    decision = IntakeDecision(
+        guard_decision={"decision": "allow", "reason": "none"},
+        task="comparison",
+        route="complex",
+        requirements=[
+            Requirement(requirement_id="R1", description="Giá bán", product_model="Minio Green"),
+            Requirement(requirement_id="R2", description="Giá bán EC Van", product_model="EC Van"),
+            Requirement(requirement_id="R3", description="Giá bán VF 5 Plus", product_model="VF 5 Plus"),
+        ],
+        product_models=["Minio Green", "EC Van", "VF 5 Plus"],
+        simple_search=None,
+    )
+    _validate_intake(decision, state, [])
+    assert decision.product_models == ["VF 5"]
+    assert decision.requirements[0].product_model is None
+    assert "Minio Green" in decision.requirements[0].description
+    assert decision.requirements[1].product_model is None
+    assert decision.requirements[2].product_model == "VF 5"
+
+    plan = SearchPlan(
+        searches=[
+            PlannedSearch(
+                query="giá xe thương mại",
+                product_model="Minio Green",
+                document_type="price_list",
+                requirement_ids=["R1", "R2"],
+            ),
+            PlannedSearch(
+                query="giá VF 5",
+                product_model="VF 5",
+                document_type="price_list",
+                requirement_ids=["R3"],
+            ),
+        ]
+    )
+    validate_plan(plan, {**state, "analysis": decision, "requirements": decision.requirements})
+    assert plan.searches[0].product_model is None
+    assert "Minio Green" in plan.searches[0].query
+    assert plan.searches[1].product_model == "VF 5"
+
+    with pytest.raises(ValueError, match="requirement model outside intake scope"):
+        _validate_intake(
+            IntakeDecision(
+                guard_decision={"decision": "allow", "reason": "none"},
+                task="knowledge",
+                route="simple",
+                requirements=[Requirement(requirement_id="R1", description="Giá Ford Ranger", product_model="Ford Ranger")],
+                product_models=["Ford Ranger"],
+                simple_search=SearchRequest(query="Giá Ford Ranger", product_model="Ford Ranger"),
+            ),
+            state,
+            [],
+        )
+

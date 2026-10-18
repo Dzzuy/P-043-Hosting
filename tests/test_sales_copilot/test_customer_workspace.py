@@ -12,7 +12,7 @@ from sqlalchemy.pool import StaticPool
 from src.api.sales_copilot import get_current_user, router
 from src.integrations.sales_copilot_repository import SQLSalesCopilotRepository
 from src.models.auth import AuthenticatedUser
-from src.models.sales_copilot import CustomerProfileSnapshot, LeadStatus, SalesPreferences
+from src.models.sales_copilot import CustomerProfileSnapshot, LeadStatus
 from src.services.sales_conversation_service import SalesConversationService
 
 
@@ -49,18 +49,18 @@ def test_sales_stage_survives_ai_reanalysis_and_can_be_reset(workspace):
     _, other_id = make_conversation(repo, 2)
     repo.save_lead_score(LeadStatus(customer_id=customer_id, stage="considering", score=65, rationale="Cần so sánh xe"))
     result = client.patch(f"/api/v1/sales-copilot/conversations/{conversation_id}/lead-stage",
-                          json={"stage": "appointment", "reason": "Khách đã hẹn xem xe"})
+                          json={"stage": "qualified", "reason": "Khách đã hẹn xem xe"})
     assert result.status_code == 200
     assert result.json()["stage_source"] == "sales"
-    assert result.json()["score"] == 65
+    assert "score" not in result.json()
     repo.save_lead_score(LeadStatus(customer_id=customer_id, stage="negotiating", score=75))
     lead = service.get_conversation_details(conversation_id).lead_status
-    assert lead["stage"] == "appointment"
+    assert lead["stage"] == "qualified"
     assert lead["ai_stage"] == "negotiating"
-    assert lead["score"] == 75
+    assert "score" not in lead
     assert service.get_conversation_details(other_id).lead_status.get("stage") is None
     listed = {item["conversation_id"]: item for item in service.list_advisor_conversations("workspace_advisor")}
-    assert listed[conversation_id]["lead_stage"] == "appointment"
+    assert listed[conversation_id]["lead_stage"] == "qualified"
     reset = client.patch(f"/api/v1/sales-copilot/conversations/{conversation_id}/lead-stage", json={"stage": None})
     assert reset.json()["stage"] == "negotiating"
     assert reset.json()["stage_source"] == "ai"
@@ -71,137 +71,15 @@ def test_stage_update_validates_input_and_missing_conversation(workspace):
     repo, _, client = workspace
     _, conversation_id = make_conversation(repo)
     assert client.patch(f"/api/v1/sales-copilot/conversations/{conversation_id}/lead-stage", json={"stage": "unknown"}).status_code == 422
-    assert client.patch("/api/v1/sales-copilot/conversations/missing/lead-stage", json={"stage": "appointment"}).status_code == 404
+    assert client.patch("/api/v1/sales-copilot/conversations/missing/lead-stage", json={"stage": "qualified"}).status_code == 404
 
 
-def test_memory_tracks_messages_actually_analyzed_not_generation_finish_time(workspace, monkeypatch):
-    from src.services.sales_copilot_analyzer import SalesCopilotAnalyzer
-
-    repo, service, _ = workspace
-    _, conversation_id = make_conversation(repo)
-    analyzer = SalesCopilotAnalyzer(repo)
-
-    async def analyze(_):
-        repo.add_message(conversation_id, "customer", "Tin mới trong lúc AI đang chạy")
-        original_id = repo.list_messages(conversation_id)[0].id
-        return {"profile": {"usage_purpose": "Đi làm", "facts": [
-            {"field": "usage_purpose", "value": "Đi làm", "source_message_ids": [original_id, "other-conversation"]},
-        ]}, "memory": {"quick_summary": "Nhu cầu cũ", "timeline": [
-            {"title": "Nhu cầu", "description": "Đi làm", "source_message_id": original_id},
-            {"title": "Sai nguồn", "description": "Khác", "source_message_id": "other-conversation"},
-        ]}}
-
-    monkeypatch.setattr(analyzer, "_call_llm_analysis", analyze)
-    asyncio.run(analyzer.analyze_conversation(conversation_id, "workspace_advisor"))
-    detail = service.get_conversation_details(conversation_id)
-    assert detail.memory["analyzed_through_seq"] == 1
-    assert detail.messages[-1].seq == 2
-    assert detail.profile["facts"][0]["source_message_ids"] == [detail.messages[0].id]
-    assert detail.memory["timeline"][1]["source_message_id"] is None
-    # A legacy memory write must not inherit a cursor from a different version.
-    repo.save_memory(conversation_id, "Cũ", "", [], [], [])
-    assert repo.get_memory(conversation_id)["analyzed_through_seq"] is None
 
 
-def test_customer_intelligence_uses_one_analysis_and_resolution_needs_customer_source(workspace, monkeypatch):
-    from src.services.sales_copilot_analyzer import SalesCopilotAnalyzer
-
-    repo, service, _ = workspace
-    _, conversation_id = make_conversation(repo)
-    sales = repo.add_message(conversation_id, "sales", "Đã giải thích phương án vay")
-    customer = repo.add_message(conversation_id, "customer", "Tôi đã hiểu phương án vay")
-    analyzer = SalesCopilotAnalyzer(repo)
-    calls = []
-
-    async def analyze(transcript):
-        calls.append(transcript)
-        return {"profile": {"budget_vnd": 300000000}, "memory": {
-            "quick_summary": "Khách mua xe với ngân sách 300 triệu.",
-            "detailed_summary": "Đã tư vấn phương án vay, khách xác nhận đã hiểu.",
-            "timeline": [
-                {"title": "Tư vấn vay", "description": "Đã tư vấn", "event_type": "consulted", "source_message_id": sales.id},
-                {"title": "Khách xác nhận", "description": "Đã giải quyết", "event_type": "resolved", "source_message_id": customer.id},
-                {"title": "Sales trả lời", "description": "Chưa có xác nhận", "event_type": "resolved", "source_message_id": sales.id},
-            ], "pending_items": ["Chờ hồ sơ vay"], "key_promises": ["Sales gửi bảng tính"],
-        }}
-
-    monkeypatch.setattr(analyzer, "_call_llm_analysis", analyze)
-    result = asyncio.run(analyzer.analyze_conversation(conversation_id, "workspace_advisor"))
-    assert len(calls) == 1
-    detail = service.get_conversation_details(conversation_id)
-    assert detail.profile["budget_vnd"] == 300000000
-    assert detail.memory["detailed_summary"] == result["memory"]["detailed_summary"]
-    assert [event["event_type"] for event in detail.memory["timeline"]] == ["consulted", "resolved", "general"]
-    assert result["memory"]["timeline"] == detail.memory["timeline"]
-    assert detail.memory["pending_items"] == ["Chờ hồ sơ vay"]
 
 
-def test_concise_intelligence_round_trips_with_evidence_and_legacy_dashboard_data(workspace, monkeypatch):
-    from src.services.sales_copilot_analyzer import SalesCopilotAnalyzer
-
-    repo, service, _ = workspace
-    _, conversation_id = make_conversation(repo)
-    sales = repo.add_message(conversation_id, "sales", "Tôi gửi bảng tính chiều nay")
-    customer = repo.add_message(conversation_id, "customer", "Tôi chọn VF 6, còn điểm sạc thế nào?")
-    analyzer = SalesCopilotAnalyzer(repo)
-
-    async def analyze(_):
-        return {"profile": {"interested_models": ["VF 6"]}, "memory": {
-            "quick_summary": "Khách chọn VF 6, đang tìm hiểu điểm sạc.",
-            "pending_items": ["Kiểm tra điểm sạc"], "customer_intelligence": {
-                "key_points": [
-                    {"topic": "Sạc", "answer": "Cũ", "status": "answered", "source_message_ids": [sales.id]},
-                    {"topic": "SẠC.", "question": "Điểm sạc thế nào?", "status": "open", "source_message_ids": [customer.id, "outside"]},
-                ],
-                "outcomes": [
-                    {"text": "Khách chọn VF 6", "source_message_ids": [customer.id]},
-                    {"text": "Khách chọn VF 6.", "source_message_ids": [customer.id]},
-                    {"text": "Sales đề xuất đã chốt", "source_message_ids": [sales.id]},
-                ],
-                "commitments": [
-                    {"actor": "Sales", "action": "Gửi bảng tính", "time": "Chiều nay", "source_message_ids": [sales.id]},
-                    {"action": "Hứa không có nguồn", "source_message_ids": ["outside"]},
-                ],
-            },
-        }}
-
-    monkeypatch.setattr(analyzer, "_call_llm_analysis", analyze)
-    result = asyncio.run(analyzer.analyze_conversation(conversation_id, "workspace_advisor"))
-    memory = service.get_conversation_details(conversation_id).memory
-    intelligence = memory["customer_intelligence"]
-    assert intelligence == result["memory"]["customer_intelligence"]
-    assert len(intelligence["key_points"]) == 1
-    assert intelligence["key_points"][0]["source_message_ids"] == [customer.id]
-    assert len(intelligence["outcomes"]) == 1
-    assert len(intelligence["commitments"]) == 1
-    assert memory["pending_items"] == ["Kiểm tra điểm sạc", "Điểm sạc thế nào?"]
-    assert memory["key_promises"] == ["Sales — Gửi bảng tính — Chiều nay"]
-    assert service.get_conversation_details(conversation_id).tasks == []
-    repo.save_memory(conversation_id, "Bản cũ", "", [], [], [])
-    assert repo.get_memory(conversation_id)["customer_intelligence"] is None
 
 
-def test_generated_draft_keeps_original_message_cursor(workspace, monkeypatch):
-    from src.services.sales_copilot_assistant import SalesCopilotAssistant
-
-    repo, _, _ = workspace
-    _, conversation_id = make_conversation(repo)
-    repo.update_preferences(SalesPreferences(advisor_id="workspace_advisor", draft_enabled=True))
-    assistant = SalesCopilotAssistant(repo)
-
-    def no_retrieval():
-        raise RuntimeError("No external retrieval in this test")
-
-    async def draft(*_):
-        repo.add_message(conversation_id, "customer", "Thêm câu hỏi khi bản nháp đang được tạo")
-        return {"text": "Cần kiểm tra thêm thông tin", "sources": []}
-
-    monkeypatch.setattr("src.services.sales_copilot_assistant.get_retrieval_service", no_retrieval)
-    monkeypatch.setattr(assistant, "_call_llm_draft", draft)
-    response = asyncio.run(assistant.generate_message_draft(conversation_id, "workspace_advisor"))
-    assert response.based_on_message_seq == 1
-    assert response.generated_at.tzinfo is not None
-    assert repo.get_latest_recommendation(conversation_id, "draft")["based_on_message_seq"] == 1
 
 
 @pytest.mark.parametrize("customer_count", [3, 20])
@@ -244,7 +122,7 @@ def test_detail_reuses_one_connection_and_preserves_all_sections(workspace):
     repo.save_facts_and_snapshot(customer_id, [], CustomerProfileSnapshot(interested_models=["VF 6"], budget_vnd=700_000_000))
     repo.save_memory(conversation_id, "Tóm tắt", "Chi tiết", [], ["Hỏi giá"], ["Gửi báo giá"])
     repo.save_lead_score(LeadStatus(customer_id=customer_id, stage="considering", score=65))
-    repo.save_recommendation_or_draft(conversation_id, "lead_stage_override", {"stage": "appointment"})
+    repo.save_recommendation_or_draft(conversation_id, "lead_stage_override", {"stage": "qualified"})
     task = service.create_followup_task(conversation_id, "workspace_advisor", title="Gửi báo giá")
     expected_messages = repo.list_messages(conversation_id)
     expected_memory = repo.get_memory(conversation_id)
@@ -269,12 +147,12 @@ def test_detail_reuses_one_connection_and_preserves_all_sections(workspace):
         event.remove(repo.engine.pool, "checkin", checkin)
         event.remove(repo.engine, "before_cursor_execute", count)
     assert len(checkouts) == len(checkins) == 1
-    assert len(statements) == 3 and all(sql.lstrip().upper().startswith("SELECT") for sql in statements)
+    assert len(statements) == 4 and all(sql.lstrip().upper().startswith("SELECT") for sql in statements)
     assert detail.messages == expected_messages
     assert detail.profile["budget_vnd"] == 700_000_000
     assert detail.memory == expected_memory
     assert detail.tasks[0]["id"] == task["id"]
-    assert detail.lead_status["stage"] == "appointment"
+    assert detail.lead_status["stage"] == "qualified"
     assert detail.lead_status["ai_stage"] == "considering"
 
 
@@ -385,7 +263,7 @@ def test_customer_reads_and_mutations_cannot_cross_advisors(workspace):
         ("POST", base + "/tasks", {"title": "Không được tạo"}),
         ("POST", base + "/analyze", None), ("POST", base + "/draft", None),
         ("POST", base + "/recommendations", None),
-        ("PATCH", base + "/lead-stage", {"stage": "appointment"}),
+        ("PATCH", base + "/lead-stage", {"stage": "qualified"}),
         ("PATCH", f"/api/v1/sales-copilot/tasks/{task['id']}", {"status": "completed"}),
     ]
     for method, path, payload in calls:
@@ -499,34 +377,3 @@ def test_new_endpoints_cannot_cross_advisor_ownership(workspace):
     base = f"/api/v1/sales-copilot/conversations/{conversation}"
     assert client.get(base + "/messages").status_code == 404
     assert client.patch(base + "/profile-fact", json={"field": "usage_purpose", "value": "Không được sửa"}).status_code == 404
-
-
-def test_ai_tasks_require_enabled_rule_evidence_and_review_without_invented_deadlines(workspace, monkeypatch):
-    from types import SimpleNamespace
-
-    from src.services import sales_copilot_analyzer as module
-
-    repo, _, _ = workspace
-    customer, conversation = make_conversation(repo)
-    message_id = repo.list_messages(conversation)[0].id
-    analyzer = module.SalesCopilotAnalyzer(repo)
-    enabled = SimpleNamespace(sales_ai_task_rules="")
-    monkeypatch.setattr(module, "get_settings", lambda: enabled)
-
-    async def analysis(_):
-        return {"profile": {"usage_purpose": "Đi làm"}, "memory": {}, "tasks": [
-            {"task_type": "send_quote", "title": "Gửi báo giá đã hẹn", "source_message_ids": [message_id]},
-            {"task_type": "send_quote", "title": "Không có bằng chứng", "source_message_ids": ["foreign"]},
-            {"task_type": "answer_question", "title": "Câu hỏi cần trả lời ngay", "source_message_ids": [message_id]},
-        ]}
-
-    monkeypatch.setattr(analyzer, "_call_llm_analysis", analysis)
-    asyncio.run(analyzer.analyze_conversation(conversation, "workspace_advisor"))
-    assert repo.list_tasks_for_customer(customer) == []
-    enabled.sales_ai_task_rules = "send_quote,answer_question"
-    asyncio.run(analyzer.analyze_conversation(conversation, "workspace_advisor"))
-    asyncio.run(analyzer.analyze_conversation(conversation, "workspace_advisor"))
-    tasks = repo.list_tasks_for_customer(customer)
-    assert len(tasks) == 1
-    assert tasks[0]["status"] == "needs_review" and tasks[0]["due_at"] is None
-    assert tasks[0]["source_message_ids"] == [message_id]

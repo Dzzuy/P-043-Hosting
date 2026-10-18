@@ -20,13 +20,20 @@ from src.models.auth import AuthenticatedUser
 from src.services.practice import PracticeResultView, PracticeSessionView
 from src.services.practice_records import (
     AdvisorPerformance,
+    AdvisorProgress,
     AssignmentRecord,
     AttemptNotFoundError,
     AttemptSummary,
     CreateAssignmentInput,
+    CreateTodoInput,
+    ManagerDashboard,
     ManagerReviewDecision,
     ManagerReviewRecord,
+    ManagerTodo,
+    ReviewValidationError,
     TeamOverview,
+    TodoNotFoundError,
+    UpdateTodoInput,
 )
 from src.services.recorded_practice import RecordedAttemptDetail, RecordedPracticeService
 from src.services.voice import (
@@ -90,6 +97,11 @@ def create_recorded_practice_routers(
     async def history(identity: actor, scenario_id: str | None = Query(None, max_length=120)) -> list[AttemptSummary]:
         require_role(identity, "advisor")
         return await service.history(identity.user_id, scenario_id)
+
+    @practice.get("/progress", response_model=AdvisorProgress)
+    async def advisor_progress(identity: actor) -> AdvisorProgress:
+        require_role(identity, "advisor")
+        return await service.advisor_progress(identity.user_id)
 
     @practice.post("/{session_id}/message", response_model=PracticeSessionView)
     async def send_message(
@@ -213,6 +225,31 @@ def create_recorded_practice_routers(
         require_role(identity, "manager")
         return await service.team_overview()
 
+    @manager.get("/dashboard", response_model=ManagerDashboard)
+    async def manager_dashboard(identity: actor, weeks: int = Query(8, ge=1, le=26)) -> ManagerDashboard:
+        require_role(identity, "manager")
+        return await service.manager_dashboard(weeks)
+
+    @manager.get("/todos", response_model=list[ManagerTodo])
+    async def list_todos(identity: actor) -> list[ManagerTodo]:
+        require_role(identity, "manager")
+        return await service.list_todos(identity.user_id)
+
+    @manager.post("/todos", response_model=ManagerTodo, status_code=status.HTTP_201_CREATED)
+    async def create_todo(request: CreateTodoInput, identity: actor) -> ManagerTodo:
+        require_role(identity, "manager")
+        return await service.create_todo(identity.user_id, request.text)
+
+    @manager.patch("/todos/{todo_id}", response_model=ManagerTodo)
+    async def update_todo(
+        todo_id: Annotated[str, Path(min_length=1, max_length=120)], request: UpdateTodoInput, identity: actor
+    ) -> ManagerTodo:
+        require_role(identity, "manager")
+        try:
+            return await service.set_todo_done(identity.user_id, todo_id, request.done)
+        except TodoNotFoundError as exc:
+            raise PracticeAPIError("todo_not_found") from exc
+
     @manager.get("/advisors", response_model=list[AdvisorPerformance])
     async def advisor_performance(identity: actor) -> list[AdvisorPerformance]:
         require_role(identity, "manager")
@@ -253,5 +290,7 @@ def create_recorded_practice_routers(
             return await service.approve(session_id, identity.user_id, decision)
         except AttemptNotFoundError as exc:
             raise PracticeAPIError("session_not_found") from exc
+        except ReviewValidationError as exc:
+            raise PracticeAPIError("validation_error", detail=str(exc)) from exc
 
     return practice, manager

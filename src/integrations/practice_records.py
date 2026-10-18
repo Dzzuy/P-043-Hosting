@@ -11,6 +11,7 @@ from threading import Lock
 from uuid import uuid4
 
 from sqlalchemy import (
+    Boolean,
     Column,
     Date,
     DateTime,
@@ -41,9 +42,12 @@ from src.services.practice_records import (
     CreateAssignmentInput,
     ManagerReviewDecision,
     ManagerReviewRecord,
+    ManagerTodo,
     ReviewConflictError,
+    ScoredAttempt,
     SkillSummary,
     TeamOverview,
+    TodoNotFoundError,
     approved_evaluation,
 )
 
@@ -94,6 +98,16 @@ class SQLPracticeRecordsRepository:
                 nullable=False,
                 index=True,
             ),
+        )
+        self._todos = Table(
+            "manager_todos",
+            metadata,
+            Column("todo_id", String(120), primary_key=True),
+            Column("manager_id", String(120), nullable=False, index=True),
+            Column("text", String(300), nullable=False),
+            Column("done", Boolean, nullable=False, default=False),
+            Column("created_at", DateTime(timezone=True), nullable=False),
+            Column("done_at", DateTime(timezone=True)),
         )
         self._metadata = metadata
         self._schema_ready = False
@@ -359,6 +373,7 @@ class SQLPracticeRecordsRepository:
             manager_id=row.manager_id,
             reviewed_at=row.reviewed_at,
             change_reason=row.change_reason,
+            general_comment=row.change_reason.strip() or None,
             ai_draft=SessionEvaluationResult.model_validate_json(row.ai_draft_json),
             approved_result=SessionEvaluationResult.model_validate_json(row.approved_result_json),
         )
@@ -425,6 +440,74 @@ class SQLPracticeRecordsRepository:
                 if values
             ],
         )
+
+    async def scored_attempts(self, advisor_id: str | None = None) -> list[ScoredAttempt]:
+        """Completed attempts with parsed AI and approved results; aggregation happens in the service."""
+        self._ensure_schema()
+        query = self._summary_query().where(self._attempts.c.completed_at.is_not(None))
+        if advisor_id is not None:
+            query = query.where(self._attempts.c.advisor_id == advisor_id)
+        with self._engine.connect() as connection:
+            rows = list(connection.execute(query).mappings())
+        return [
+            ScoredAttempt(
+                session_id=row.session_id,
+                advisor_id=row.advisor_id,
+                scenario_id=row.scenario_id,
+                completed_at=row.completed_at,
+                evaluation_status=row.evaluation_status,
+                ai_draft=SessionEvaluationResult.model_validate_json(row.ai_draft_json) if row.ai_draft_json else None,
+                approved=(
+                    SessionEvaluationResult.model_validate_json(row.approved_result_json)
+                    if row.approved_result_json
+                    else None
+                ),
+            )
+            for row in rows
+        ]
+
+    @staticmethod
+    def _to_todo(row) -> ManagerTodo:
+        return ManagerTodo(
+            todo_id=row.todo_id, text=row.text, done=bool(row.done), created_at=row.created_at, done_at=row.done_at
+        )
+
+    async def list_todos(self, manager_id: str) -> list[ManagerTodo]:
+        self._ensure_schema()
+        query = select(self._todos).where(self._todos.c.manager_id == manager_id)
+        with self._engine.connect() as connection:
+            todos = [self._to_todo(row) for row in connection.execute(query).mappings()]
+        todos.sort(key=lambda item: item.created_at, reverse=True)
+        todos.sort(key=lambda item: item.done)
+        return todos
+
+    async def create_todo(self, manager_id: str, text: str) -> ManagerTodo:
+        self._ensure_schema()
+        todo = ManagerTodo(todo_id=str(uuid4()), text=text, done=False, created_at=datetime.now(UTC))
+        with self._engine.begin() as connection:
+            connection.execute(
+                insert(self._todos).values(
+                    todo_id=todo.todo_id,
+                    manager_id=manager_id,
+                    text=todo.text,
+                    done=False,
+                    created_at=todo.created_at,
+                )
+            )
+        return todo
+
+    async def set_todo_done(self, manager_id: str, todo_id: str, done: bool) -> ManagerTodo:
+        self._ensure_schema()
+        with self._engine.begin() as connection:
+            changed = connection.execute(
+                update(self._todos)
+                .where(self._todos.c.todo_id == todo_id, self._todos.c.manager_id == manager_id)
+                .values(done=done, done_at=datetime.now(UTC) if done else None)
+            )
+            if changed.rowcount == 0:
+                raise TodoNotFoundError(todo_id)
+            row = connection.execute(select(self._todos).where(self._todos.c.todo_id == todo_id)).mappings().one()
+        return self._to_todo(row)
 
     async def advisor_performance(self) -> dict[str, AdvisorPerformance]:
         """Aggregate only persisted manager-approved scores, grouped by advisor."""
@@ -508,7 +591,7 @@ class SQLPracticeRecordsRepository:
                         session_id=session_id,
                         manager_id=manager_id,
                         reviewed_at=reviewed_at,
-                        change_reason=decision.change_reason.strip(),
+                        change_reason=decision.stored_comment(),
                         approved_result_json=approved.model_dump_json(),
                     )
                 )
@@ -518,7 +601,8 @@ class SQLPracticeRecordsRepository:
             session_id=session_id,
             manager_id=manager_id,
             reviewed_at=reviewed_at,
-            change_reason=decision.change_reason.strip(),
+            change_reason=decision.stored_comment(),
+            general_comment=decision.stored_comment() or None,
             ai_draft=draft,
             approved_result=approved,
         )

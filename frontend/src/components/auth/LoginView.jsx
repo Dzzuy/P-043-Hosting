@@ -1,18 +1,75 @@
 import { useState } from 'react';
 
-function FieldIcon({ type }) {
-  if (type === 'password') {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="5" y="10" width="14" height="10" rx="2" />
-        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-      </svg>
-    );
-  }
+const DEMO_ACCOUNTS = [
+  { role: 'advisor', label: 'Tư vấn viên', username: 'advisor.demo', password: 'DemoAdvisor123!' },
+  { role: 'manager', label: 'Quản lý', username: 'manager.demo', password: 'DemoManager123!' },
+];
+
+function Icon({ name, size = 18, strokeWidth = 1.8 }) {
+  const paths = {
+    mail: (
+      <>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="M3 7l9 6 9-6" />
+      </>
+    ),
+    lock: (
+      <>
+        <rect x="4" y="11" width="16" height="10" rx="2" />
+        <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+      </>
+    ),
+    arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
+    chevron: <path d="M9 6l6 6-6 6" />,
+    advisor: (
+      <>
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" />
+      </>
+    ),
+    manager: (
+      <>
+        <circle cx="9" cy="8" r="3.5" />
+        <path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6" />
+        <path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5c2.2.6 3.5 2.4 3.5 5.5" />
+      </>
+    ),
+    lookup: (
+      <>
+        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4" />
+        <path d="M14 3l5 5v3" />
+        <path d="M14 3v5h5" />
+        <circle cx="16" cy="17" r="3" />
+        <path d="M21 22l-3-3" />
+      </>
+    ),
+    practice: (
+      <>
+        <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        <path d="M8 8h8M8 12h5" />
+      </>
+    ),
+    evaluate: (
+      <>
+        <rect x="4" y="11" width="4" height="9" rx="1" />
+        <rect x="10" y="4" width="4" height="16" rx="1" />
+        <rect x="16" y="8" width="4" height="12" rx="1" />
+      </>
+    ),
+  };
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="m4 7 8 6 8-6" />
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {paths[name]}
     </svg>
   );
 }
@@ -51,6 +108,8 @@ export function LoginView({ onLogin }) {
   return (
     <main className="login-shell">
       <section className="login-showcase" aria-label="Giới thiệu AI Sales Coach">
+        <img className="login-showcase-car" src="/login-car-showroom.jpg" alt="" />
+
         <div className="login-brand">
           <span className="login-logo"><img src="/vinfast-official-logo.png?v=silver" alt="VinFast" /></span>
           <div>
@@ -59,32 +118,25 @@ export function LoginView({ onLogin }) {
           </div>
         </div>
 
+        <h1 className="login-headline">Luyện tập tốt hơn.<br />Tư vấn tự tin hơn.</h1>
+
         <div className="login-pitch">
-          <h1>Luyện tập tốt hơn.<br />Tư vấn tự tin hơn.</h1>
-          <p>
-            Mô phỏng hội thoại khách hàng, tra cứu thông tin có nguồn<br className="login-desktop-break" />
-            {' '}và đánh giá kỹ năng trong một hệ thống thống nhất.
-          </p>
+          <p>Mô phỏng hội thoại khách hàng, tra cứu thông tin có nguồn và đánh giá kỹ năng trong một hệ thống thống nhất.</p>
           <div className="login-features">
             <article>
-              <span className="login-feature-icon"><img src="/tra-cuu-co-nguon.svg" alt="" /></span>
+              <span className="login-feature-icon"><Icon name="lookup" size={28} strokeWidth={1.5} /></span>
               <strong>Tra cứu<br />có nguồn</strong>
             </article>
             <article>
-              <span className="login-feature-icon"><img src="/luyen-tap-tinh-huong.svg" alt="" /></span>
+              <span className="login-feature-icon"><Icon name="practice" size={28} strokeWidth={1.5} /></span>
               <strong>Luyện tập<br />theo tình huống</strong>
             </article>
             <article>
-              <span className="login-feature-icon"><img src="/danh-gia-ky-nang.svg" alt="" /></span>
+              <span className="login-feature-icon"><Icon name="evaluate" size={28} strokeWidth={1.5} /></span>
               <strong>Đánh giá<br />kỹ năng</strong>
             </article>
           </div>
         </div>
-
-        <footer className="login-footer">
-          Đồng hành cùng đội ngũ bán hàng<br />
-          kiến tạo trải nghiệm khách hàng xuất sắc.
-        </footer>
       </section>
 
       <section className="login-panel">
@@ -104,7 +156,7 @@ export function LoginView({ onLogin }) {
             <label>
               <span>Email hoặc tên đăng nhập</span>
               <span className="login-input-wrap">
-                <span className="login-field-icon"><FieldIcon type="username" /></span>
+                <span className="login-field-icon"><Icon name="mail" /></span>
                 <input
                   autoComplete="username"
                   value={username}
@@ -118,7 +170,7 @@ export function LoginView({ onLogin }) {
             <label>
               <span>Mật khẩu</span>
               <span className="login-input-wrap">
-                <span className="login-field-icon"><FieldIcon type="password" /></span>
+                <span className="login-field-icon"><Icon name="lock" /></span>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
@@ -139,46 +191,38 @@ export function LoginView({ onLogin }) {
             </label>
 
             <button className="login-submit" type="submit" disabled={isLoading}>
-              {isLoading ? 'Đang đăng nhập…' : 'Đăng nhập  →'}
+              {isLoading ? 'Đang đăng nhập…' : <>Đăng nhập <Icon name="arrow" strokeWidth={2} /></>}
             </button>
           </form>
 
           <div className="login-divider" aria-hidden="true"><span>Hoặc</span></div>
 
           <div className="login-demo">
-            <span>Dùng thử nhanh</span>
+            <h3>Dùng thử nhanh</h3>
             <p>Chọn tài khoản mẫu theo vai trò.</p>
             <div className="login-demo-cards">
-              <button
-                type="button"
-                className={`login-demo-card advisor${username === 'advisor.demo' && password === 'DemoAdvisor123!' ? ' selected' : ''}`}
-                aria-pressed={username === 'advisor.demo' && password === 'DemoAdvisor123!'}
-                onClick={() => selectDemoAccount('advisor.demo', 'DemoAdvisor123!')}
-                disabled={isLoading}
-              >
-                <span className="login-demo-card-heading">
-                  <span className="login-demo-card-icon"><img src="/advisor-logo.png" alt="" /></span>
-                  <strong>Tư vấn viên</strong>
-                  <span className="login-demo-card-arrow" aria-hidden="true">›</span>
-                </span>
-                <span className="login-demo-card-detail"><span>Tài khoản:</span><span>advisor.demo</span></span>
-                <span className="login-demo-card-detail"><span>Mật khẩu:</span><span>DemoAdvisor123!</span></span>
-              </button>
-              <button
-                type="button"
-                className={`login-demo-card manager${username === 'manager.demo' && password === 'DemoManager123!' ? ' selected' : ''}`}
-                aria-pressed={username === 'manager.demo' && password === 'DemoManager123!'}
-                onClick={() => selectDemoAccount('manager.demo', 'DemoManager123!')}
-                disabled={isLoading}
-              >
-                <span className="login-demo-card-heading">
-                  <span className="login-demo-card-icon"><img src="/manager-logo.png" alt="" /></span>
-                  <strong>Quản lý</strong>
-                  <span className="login-demo-card-arrow" aria-hidden="true">›</span>
-                </span>
-                <span className="login-demo-card-detail"><span>Tài khoản:</span><span>manager.demo</span></span>
-                <span className="login-demo-card-detail"><span>Mật khẩu:</span><span>DemoManager123!</span></span>
-              </button>
+              {DEMO_ACCOUNTS.map((account) => {
+                const selected = username === account.username && password === account.password;
+                return (
+                  <button
+                    key={account.role}
+                    type="button"
+                    className={`login-demo-card ${account.role}${selected ? ' selected' : ''}`}
+                    aria-pressed={selected}
+                    onClick={() => selectDemoAccount(account.username, account.password)}
+                    disabled={isLoading}
+                  >
+                    <span className="login-demo-card-heading">
+                      <strong><Icon name={account.role} />{account.label}</strong>
+                      <Icon name="chevron" size={16} strokeWidth={2} />
+                    </span>
+                    <span className="login-demo-card-details">
+                      <span>Tài khoản:</span><span>{account.username}</span>
+                      <span>Mật khẩu:</span><span>{account.password}</span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

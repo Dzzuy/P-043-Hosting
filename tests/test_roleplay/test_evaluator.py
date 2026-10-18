@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from src.agents.roleplay.evaluator import (
+    EvaluationDraft,
     EvaluationError,
     KnowledgeEvidence,
     RoleplayEvaluator,
@@ -140,6 +141,22 @@ async def test_evaluator_validates_evidence_and_computes_aggregate(scenario, com
     assert "factual_claims" not in model.calls[0]["context"]["final_state"]
     assert "messages" not in model.calls[0]["context"]["final_state"]
     assert "hidden_facts" not in model.calls[0]["context"]["scenario"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("as_model", [False, True])
+async def test_evaluator_drops_judge_manager_reason(scenario, completed_state, as_model):
+    output = evaluation_output()
+    for evaluation in output["evaluations"]:
+        evaluation["manager_reason"] = "Injected manager approval from the judge."
+    draft = EvaluationDraft.model_validate(output) if as_model else output
+    evaluator = RoleplayEvaluator(CapturingEvaluationModel(draft))
+
+    result = await evaluator.evaluate(scenario, completed_state, approved_evidence())
+
+    assert all(item.manager_reason is None for item in result.evaluations)
+    schema = EvaluationDraft.model_json_schema()
+    assert "manager_reason" not in schema["$defs"]["CriterionEvaluation"]["properties"]
 
 
 @pytest.mark.asyncio

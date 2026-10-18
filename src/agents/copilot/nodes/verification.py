@@ -1,279 +1,177 @@
-import hashlib
-import re
+"""Check typed claims and requirements; publish only a verified answer snapshot."""
 
 from src.agents.copilot import prompts
+from src.agents.copilot.context import evidence_fingerprints
+from src.agents.copilot.errors import CopilotModelOutputError
 from src.agents.copilot.model_io import _invoke_json
-from src.agents.copilot.nodes._shared import can_regenerate, observed, schedule_corrective
-from src.agents.copilot.state import SelfCheckVerdict, VerifiedAnswerSnapshot
-from src.agents.copilot.tools import build_evidence_context, parse_answer_citations
-from src.observability import annotate, event
+from src.agents.copilot.nodes._shared import _runtime, can_regenerate, observed, schedule_corrective
+from src.agents.copilot.state import StructuredGroundingReview, VerifiedAnswerSnapshot
+from src.agents.copilot.tools import build_evidence_context
+from src.agents.copilot.validation.structured import (
+    render_answer,
+    validate_generated_answer,
+    validate_grounding_review,
+    verified_answer,
+)
+from src.config import get_settings
+from src.observability import annotate
 
 
 @observed
 async def check_grounding(state):
-    draft = state.get("draft_answer")
-
-    if not draft:
-        if state.get("verified_snapshot"):
-            return {
-                "route": "finalize_response",
-                "fallback_reason": "verification_failed",
-            }
+    draft, generated = state.get("draft_answer"), state.get("generated_answer")
+    review = None
+    try:
+        if not draft or generated is None:
+            raise ValueError("missing structured draft")
+        validate_generated_answer(generated, state)
+        if render_answer(generated) != draft:
+            raise ValueError("draft differs from structured claims")
+    except ValueError:
         return {
-            "feedback": "Không nhận được câu trả lời hợp lệ; vui lòng sinh lại.",
+            "grounding_review": None,
+            "feedback": (state.get("feedback") if not draft else None)
+            or "Câu trả lời phải khớp các phát biểu có cấu trúc và nguồn đã chọn; vui lòng sinh lại.",
             "fallback_reason": "verification_failed",
-            "route": "generate_answer" if can_regenerate(state) else "fallback_response",
+            "route": "generate_answer"
+            if not draft and can_regenerate(state)
+            else "finalize_response"
+            if state.get("verified_snapshot")
+            else "fallback_response",
         }
-
-    # Context and evidence check
-    allowed_ids = set()
-    all_citations = []
-    if state.get("selected_evidence"):
-        _, all_citations = build_evidence_context(state["selected_evidence"])
-        allowed_ids.update(c.citation_id for c in all_citations)
-    if state.get("answer_context"):
-        allowed_ids.update(re.findall(r"\[(C\d+)\]", state["answer_context"]))
-
-    # Shared citation parser checking both unknown IDs and malformed markers
-    parsed_cits = parse_answer_citations(draft, allowed_cids=allowed_ids if allowed_ids else None)
-    invalid_markers = parsed_cits["malformed"] + parsed_cits["unknown_ids"]
-    if invalid_markers:
-        verdict = SelfCheckVerdict(
-            grounded=False,
-            feedback=f"Trích dẫn không hợp lệ hoặc sai định dạng: {', '.join(invalid_markers)}.",
-            unsupported_claims=[f"Marker sai: {cid}" for cid in invalid_markers[:5]],
-            missing_information=[],
-            answered_requirement_ids=[],
-            missing_requirement_ids=[r.requirement_id for r in state.get("requirements", [])],
-            recovery="regenerate",
-            suggestions_safe=False,
+    try:
+        last_call = next((e for e in reversed(_runtime(state).events) if e.get("llm")), {})
+        review, _ = await _invoke_json(
+            state,
+            prompts.CHECK_PROMPT,
+            {
+                "query": state["query"],
+                "requirements": [r.model_dump() for r in state.get("requirements", [])],
+                "sources": state.get("answer_context", ""),
+                "history": state.get("history", [])[-6:],
+                "generated_answer": generated.model_dump(),
+                "source_ids": [h["citation_id"] for h in state.get("selected_evidence", [])],
+                "lookup_date": state["resolved_date"],
+                "customer_context": state.get("customer_context", ""),
+                "memory_summary": state.get("memory_summary") or "",
+                "validation_feedback": state.get("feedback", "")
+                if last_call.get("node") == "check_grounding" and last_call.get("failure_kind") == "output_contract"
+                else "",
+            },
+            StructuredGroundingReview,
+            node="check_grounding",
+            validator=lambda review: validate_grounding_review(review, state),
         )
-        if can_regenerate(state):
-            return {
-                "self_check": verdict,
-                "feedback": verdict.feedback,
-                "unsupported_claims": verdict.unsupported_claims,
-                "fallback_reason": "verification_failed",
-                "route": "generate_answer",
-            }
-        if state.get("verified_snapshot"):
-            return {
-                "self_check": verdict,
-                "fallback_reason": "verification_failed",
-                "route": "finalize_response",
-            }
+        publishable, verdict = verified_answer(review, state)
+    except CopilotModelOutputError:
+        runtime, settings = _runtime(state), get_settings()
+        failures = [
+            e for e in runtime.events
+            if e.get("llm") and e.get("node") == "check_grounding" and e.get("failure_kind") == "output_contract"
+        ]
+        # A broken review does not establish that a valid draft needs rewriting.
+        # Retry this review once, inside the same request-wide attempt budget.
+        retry = (
+            len(failures) == 1
+            and runtime.attempts < runtime.max_attempts
+            and runtime.remaining() > settings.copilot_check_timeout_seconds + runtime.reserve_seconds
+        )
+        feedback = "Kiểm tra lại cùng generated_answer: đánh giá mỗi claim và requirement đúng một lần; chỉ dẫn claim supported có liên kết đúng requirement_id. Không tự thêm liên kết."
+        if failures and failures[-1].get("validation_code"):
+            feedback = "Lỗi hợp đồng trước: " + failures[-1]["validation_code"] + ". " + feedback
+        if failures and failures[-1].get("validation_code") == "json_invalid":
+            feedback = "Lần trước JSON không hợp lệ. Chỉ xuất MỘT object theo schema, không nối hai object hoặc thêm token/văn bản sau dấu đóng cuối. " + feedback
+        elif failures and failures[-1].get("validation_code") == "evidence_quote_not_found_in_cited_source":
+            feedback = "Quote chứng cứ lần trước không có nguyên văn trong citation. Trích một đoạn liên tục trong content HOẶC title/section/context_prefix; không ghép các trường, không thêm 'section:' vào quote. Dùng header cùng citation để xác định phạm vi của dòng giá trị. " + feedback
         return {
-            "self_check": verdict,
-            "feedback": verdict.feedback,
-            "unsupported_claims": verdict.unsupported_claims,
-            "fallback_reason": "verification_failed",
-            "route": "fallback_response",
+            "grounding_review": None,
+            "feedback": feedback,
+            "route": "check_grounding"
+            if retry
+            else ("finalize_response" if state.get("verified_snapshot") else "fallback_response"),
+            **({"fallback_reason": "verification_failed"} if not retry else {}),
         }
-
-    req_list = [
-        {"requirement_id": r.requirement_id, "kind": r.kind, "description": r.description}
-        for r in state.get("requirements", [])
-    ]
-
-    verdict, _ = await _invoke_json(
-        state,
-        prompts.CHECK_PROMPT,
-        {
-            "query": state["query"],
-            "requirements": req_list,
-            "history": state.get("history", [])[-6:],
-            "draft_answer": draft,
-            "sources": state.get("answer_context", "") or "",
-            "lookup_date": state["resolved_date"],
-            "customer_context": state.get("customer_context", ""),
-            "memory_summary": state.get("memory_summary") or "",
-            "unsupported_claims": state.get("unsupported_claims", []),
-        },
-        SelfCheckVerdict,
-        node="check_grounding",
-    )
-
-    event(
-        "verification.self_check",
-        grounded=verdict.grounded,
-        unsupported_count=len(verdict.unsupported_claims),
-        generation_attempt=state.get("generation_count", 0),
-    )
-
+    result = {"grounding_review": review, "unsupported_claims": verdict.unsupported_claims}
     annotate(
         grounded=verdict.grounded,
         unsupported_count=len(verdict.unsupported_claims),
+        supported_count=len(verdict.supported_claim_indices),
         generation_attempt=state.get("generation_count", 0),
     )
-
     req_map = {r.requirement_id: r for r in state.get("requirements", [])}
-    all_req_ids = set(req_map.keys())
-    missing_ids = list(getattr(verdict, "missing_requirement_ids", []) or [])
-    answered_ids = list(getattr(verdict, "answered_requirement_ids", []) or [])
+    missing_fact_ids = [rid for rid in verdict.missing_requirement_ids if req_map[rid].kind == "fact"]
 
-    # Invariant: reject unknown requirement IDs (e.g. R99 cannot make R1 answered)
-    if not (set(answered_ids) <= all_req_ids) or not (set(missing_ids) <= all_req_ids):
-        verdict = verdict.model_copy(
-            update={
-                "grounded": False,
-                "feedback": "Phát hiện mã yêu cầu không hợp lệ trong kết quả kiểm tra.",
-            }
-        )
-    else:
-        # Tự động bổ sung các IDs còn thiếu vào missing_requirement_ids nếu checker bỏ sót
-        unmentioned = all_req_ids - (set(answered_ids) | set(missing_ids))
-        if unmentioned:
-            missing_ids.extend(sorted(unmentioned))
+    if publishable is not None:
+        _, citations = build_evidence_context(state.get("selected_evidence", []))
+        used = {cid for claim in publishable.claims for cid in claim.citation_ids}
+        diagnostic_ids = {cid for v in verdict.requirement_diagnostics for cid in v.evidence_citation_ids}
+        citations = [c.model_copy(deep=True) for c in citations if c.citation_id in used | diagnostic_ids]
+        # A supported limitation alone is not a factual answer. Keep searching or
+        # abstain without replacing an earlier usable snapshot with an empty one.
+        if used or state.get("answer_kind") == "coaching":
+            status = "partial" if verdict.missing_requirement_ids else "answered"
+            candidate_snapshot = VerifiedAnswerSnapshot(
+                answer=render_answer(publishable),
+                resolved_date=state["resolved_date"],
+                citations=citations,
+                answered_requirement_ids=verdict.answered_requirement_ids,
+                missing_requirement_ids=verdict.missing_requirement_ids,
+                missing_information=verdict.missing_information,
+                status=status,
+                reason_code="insufficient_evidence" if status == "partial" else None,
+                answer_kind=state.get("answer_kind", "factual"),
+                suggested_message=publishable.suggested_message,
+                suggested_next_question=publishable.suggested_next_question,
+                requirement_diagnostics=verdict.requirement_diagnostics,
+                evidence_fingerprints=evidence_fingerprints(
+                    state.get("selected_evidence", []), state.get("jev_conflict_chunk_ids", [])
+                ),
+            )
+            previous = state.get("verified_snapshot")
+            if previous is None or set(previous.answered_requirement_ids) <= set(candidate_snapshot.answered_requirement_ids):
+                result["verified_snapshot"] = candidate_snapshot
+            if not missing_fact_ids:
+                return {**result, "feedback": "", "unsupported_claims": [], "route": "finalize_response"}
 
-    missing_fact_ids = [rid for rid in missing_ids if req_map.get(rid) and req_map[rid].kind == "fact"]
-    has_missing_fact = bool(missing_fact_ids)
-    if not missing_ids and verdict.missing_information:
-        # Keep the conservative outcome, but expose inconsistent checker coverage.
-        event("verification.inconsistent_coverage", missing_information_count=len(verdict.missing_information))
-
-    # Invariant: an answer with 0 citations when evidence exists and fact requirements exist cannot be grounded
-    registry = {c.citation_id: c for c in all_citations}
-    used_cids = [cid for cid in parsed_cits["cited_ids"] if cid in registry]
-    if (
-        verdict.grounded
-        and not used_cids
-        and state.get("selected_evidence")
-        and any(r.kind == "fact" for r in state.get("requirements", []))
-    ):
-        verdict = verdict.model_copy(
-            update={"grounded": False, "feedback": "Câu trả lời thiếu trích dẫn nguồn cho các dữ kiện."}
-        )
-    if verdict.grounded and verdict.unsupported_claims:
-        verdict = verdict.model_copy(
-            update={
-                "grounded": False,
-                "feedback": verdict.feedback or "Phát hiện phát biểu không được tài liệu nguồn hỗ trợ.",
-            }
-        )
-
-    if verdict.grounded:
-        # Build snapshot for current grounded draft
-        draft_hash = hashlib.sha256(draft.encode()).hexdigest()
-        context_hash = hashlib.sha256(state.get("answer_context", "").encode()).hexdigest()
-        req_str = "|".join(f"{r.requirement_id}:{r.kind}" for r in state.get("requirements", []))
-        requirements_hash = hashlib.sha256(req_str.encode()).hexdigest()
-        corpus_fp = getattr(state.get("snapshot"), "fingerprint", "") or ""
-        snapshot_citations = [registry[cid].model_copy(deep=True) for cid in used_cids]
-
-        # Set-based coverage check: all requirements must be in answered set
-        answered_set = set(answered_ids)
-        is_fully_answered = (
-            (bool(all_req_ids) or state.get("answer_kind") == "coaching")
-            and (all_req_ids <= answered_set)
-            and not verdict.missing_information
-        )
-        snap_status = "answered" if is_fully_answered else "partial"
-
-        snapshot_missing: list[str] = []
-        if snap_status == "partial":
-            snapshot_missing = [str(m).strip() for m in verdict.missing_information if str(m).strip()]
-            if not snapshot_missing:
-                for mid in missing_ids:
-                    req = req_map.get(mid)
-                    if req and req.description:
-                        snapshot_missing.append(f"Chưa có đủ dữ liệu xác thực cho: {req.description}"[:500])
-                    else:
-                        snapshot_missing.append(f"Chưa có đủ dữ liệu xác thực cho yêu cầu {mid}."[:500])
-            if not snapshot_missing:
-                snapshot_missing.append("Một số nội dung yêu cầu chưa có đủ tài liệu xác thực để đối chiếu.")
-
-        suggestions_safe = getattr(verdict, "suggestions_safe", True)
-        suggested_message = state.get("suggested_message") if suggestions_safe else None
-        suggested_next_question = state.get("suggested_next_question") if suggestions_safe else None
-
-        snapshot = VerifiedAnswerSnapshot(
-            answer=draft,
-            draft_hash=draft_hash,
-            context_hash=context_hash,
-            requirements_hash=requirements_hash,
-            resolved_date=str(state.get("resolved_date", "")),
-            corpus_fingerprint=corpus_fp,
-            citations=snapshot_citations,
-            answered_requirement_ids=answered_ids,
-            missing_requirement_ids=missing_ids,
-            missing_information=snapshot_missing,
-            status=snap_status,
-            reason_code="insufficient_evidence" if snap_status == "partial" else None,
-            created_at_attempt=state.get("generation_count", 0),
-            answer_kind=state.get("answer_kind", "factual"),
-            suggested_message=suggested_message,
-            suggested_next_question=suggested_next_question,
-        )
-
-        # If there are missing factual requirements, evaluate targeted recovery
-        if has_missing_fact:
-            # Relevance heuristics cannot establish factual support. Follow the
-            # checker; absent an explicit regeneration request, retrieve facts.
-            if verdict.recovery == "regenerate" and can_regenerate(state):
-                return {
-                    "self_check": verdict,
-                    "verified_snapshot": snapshot,
-                    "feedback": verdict.feedback
-                    or f"Bổ sung dữ kiện còn thiếu cho yêu cầu {', '.join(missing_fact_ids)}.",
-                    "recovery_requirement_ids": missing_fact_ids,
-                    "route": "generate_answer",
-                }
-            if verdict.recovery != "regenerate":
-                corrective = schedule_corrective(
-                    state, feedback=verdict.feedback or "Tìm kiếm nguồn bổ sung cho dữ kiện còn thiếu."
-                )
-                if corrective:
-                    return {
-                        "self_check": verdict,
-                        "verified_snapshot": snapshot,
-                        "recovery_requirement_ids": missing_fact_ids,
-                        **corrective,
-                    }
-
+    sufficient_ids = {
+        v.requirement_id for v in verdict.requirement_diagnostics
+        if v.evidence_status == "sufficient" and v.requirement_id in missing_fact_ids
+    }
+    actionable_gaps = [
+        rid for rid in missing_fact_ids
+        if next(v for v in verdict.requirement_diagnostics if v.requirement_id == rid).blocker
+        not in {"missing_input", "external_data", "source_conflict"}
+    ]
+    # Source sufficiency is separate from answer coverage. Repair omissions using
+    # the current context before spending another search or selection round.
+    if sufficient_ids and can_regenerate(state):
         return {
-            "self_check": verdict,
-            "verified_snapshot": snapshot,
-            "feedback": "",
-            "unsupported_claims": [],
-            "route": "finalize_response",
-        }
-
-    # Not grounded (extrapolation or unsupported claims detected)
-    if verdict.recovery != "regenerate" and has_missing_fact:
-        corrective = schedule_corrective(
-            state,
-            feedback=verdict.feedback or "Tìm kiếm nguồn bổ sung cho phát biểu thiếu dẫn chứng.",
-        )
-        if corrective:
-            return {
-                "self_check": verdict,
-                "recovery_requirement_ids": missing_fact_ids,
-                **corrective,
-            }
-
-    if can_regenerate(state):
-        annotate(recovery="regenerate")
-        return {
-            "self_check": verdict,
-            "feedback": verdict.feedback or "Phát hiện suy diễn vượt chứng cứ hoặc thiếu nguồn hỗ trợ.",
-            "unsupported_claims": verdict.unsupported_claims,
+            **result,
+            "feedback": ("Nguồn trong context đã đủ cho " + ", ".join(sorted(sufficient_ids))
+                         + "; bổ sung/sửa đúng các mục này và giữ các phần đã xác minh. " + verdict.feedback)[:500],
+            "recovery_requirement_ids": actionable_gaps,
             "route": "generate_answer",
         }
-
-    # Recovery exhausted:
-    # If a previous snapshot was verified, fall back to that snapshot!
-    if state.get("verified_snapshot"):
+    if actionable_gaps and verdict.recovery != "regenerate":
+        search_ids = [rid for rid in actionable_gaps if rid not in sufficient_ids]
+        corrective = schedule_corrective(
+            {**state, "recovery_requirement_ids": search_ids},
+            feedback=verdict.feedback or "Tìm nguồn bổ sung cho dữ kiện còn thiếu.",
+        ) if search_ids else None
+        if corrective:
+            return {**result, "recovery_requirement_ids": search_ids, **corrective}
+    if (not verdict.grounded or actionable_gaps and verdict.recovery == "regenerate") and can_regenerate(state):
         return {
-            "self_check": verdict,
-            "fallback_reason": "verification_failed",
-            "route": "finalize_response",
+            **result,
+            "feedback": verdict.feedback or "Sửa phát biểu thiếu nguồn hoặc điều kiện áp dụng.",
+            "unsupported_claims": verdict.unsupported_claims,
+            "recovery_requirement_ids": missing_fact_ids,
+            "route": "generate_answer",
         }
-
-    # No valid snapshot ever -> ABSTAIN dứt khoát
+    if result.get("verified_snapshot") or state.get("verified_snapshot"):
+        return {**result, "route": "finalize_response"}
     return {
-        "self_check": verdict,
-        "feedback": verdict.feedback,
-        "unsupported_claims": verdict.unsupported_claims,
-        "fallback_reason": "verification_failed",
+        **result,
+        "fallback_reason": "insufficient_evidence" if verdict.grounded else "verification_failed",
         "route": "fallback_response",
     }
